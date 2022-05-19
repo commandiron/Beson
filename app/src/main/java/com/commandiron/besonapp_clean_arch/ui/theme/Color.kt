@@ -12,3 +12,4 @@ val TextWhite = Color(0xFFEEEEEE)
 
 val backgroundLightColor = Color(0xFFf5f5f5)
 val backgroundDarkColor = Color(0xFF2b2b2b)
+val logoColor = Color(0xFFF7CB1D)
