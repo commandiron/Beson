@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.BesonApp_Clean_Arch" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/backgroundDarkColor</item>
+        <item name="android:navigationBarColor">@color/backgroundDarkColor</item>
+    </style>
+</resources>
+
