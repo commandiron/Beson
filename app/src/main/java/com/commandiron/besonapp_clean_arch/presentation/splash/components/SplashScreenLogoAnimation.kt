@@ -1,11 +1,14 @@
 package com.example.besonapp.presentation.floating_components
 
+import android.app.UiModeManager
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -20,19 +23,18 @@ import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.ui.theme.logoColor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreenLogoAnimation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinish:() -> Unit,
 ){
-
-    //BUNU XML'DE SPLASH SCREEN OLARAK KULLANMAK GEREKİYOR BUNU YAPACAĞIM
-
     val scope = rememberCoroutineScope()
 
     val logoRotateAnim = remember { Animatable(0f) }
-    val logoBottomPaddingAnim = remember { Animatable(0f) }
+    val logoBottomPaddingAnim = remember { Animatable(10f) }
     val textAlphaAnim = remember { Animatable(0f) }
     val textPaddingAnim = remember { Animatable(200f) }
     val textRotationXAnim = remember { Animatable(-30f) }
@@ -79,19 +81,23 @@ fun SplashScreenLogoAnimation(
                     delayMillis = 2800,
                     durationMillis = 500,
                 )
-            )
+            ).also {
+                delay(2000)
+                onFinish()
+            }
         }
     }
     Icon(
-        painter = painterResource(id = R.drawable.ic_baseline_document_scanner_24),
+        imageVector = Icons.Default.DocumentScanner,
         contentDescription = null,
         modifier = modifier
             .padding(
                 bottom = Dp(logoBottomPaddingAnim.value)
             )
-            .size(260.dp)
+            .size(70.dp)
             .alpha(1f)
-            .rotate(logoRotateAnim.value),
+            .rotate(logoRotateAnim.value)
+        ,
         tint = logoColor
     )
     Text(

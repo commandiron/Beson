@@ -13,7 +13,7 @@ class SplashViewModel: ViewModel() {
     private val _isSplashScreenVisible: MutableState<Boolean> = mutableStateOf(true)
     val isSplashScreenVisible: State<Boolean> = _isSplashScreenVisible
 
-    private val splashScreenDelay = 500L
+    private val splashScreenDelay = 1000L
 
     init {
         viewModelScope.launch {

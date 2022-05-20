@@ -2,8 +2,7 @@
 <resources>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/backgroundDarkColor</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_baseline_document_scanner_24</item>
-        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_baseline_document_scanner_24</item>ü
         <item name="postSplashScreenTheme">@style/Theme.BesonApp_Clean_Arch</item>
     </style>
 </resources>

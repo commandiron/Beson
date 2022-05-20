@@ -36,6 +36,21 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += listOf(
+            "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
+            "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
+            "-Xuse-experimental=androidx.compose.ExperimentalComposeApi",
+            "-Xuse-experimental=androidx.compose.material.ExperimentalMaterialApi",
+            "-Xuse-experimental=androidx.compose.runtime.ExperimentalComposeApi",
+            "-Xuse-experimental=androidx.compose.ui.ExperimentalComposeUiApi",
+            "-Xuse-experimental=coil.annotation.ExperimentalCoilApi",
+            "-Xuse-experimental=kotlinx.serialization.ExperimentalSerializationApi",
+            "-Xuse-experimental=com.google.accompanist.pager.ExperimentalPagerApi",
+            "-Xuse-experimental=androidx.constraintlayout.compose.ExperimentalMotionApi",
+            "-Xuse-experimental=com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi",
+        )
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Compose.composeCompilerVersion
@@ -65,6 +80,12 @@ dependencies {
     implementation(AndroidX.appCompat)
 
     implementation(Google.material)
+    implementation(Google.materialIconsCore)
+    implementation(Google.materialIconsExtended)
 
     implementation(AndroidX.splashScreen)
+
+    implementation(Accompanist.accompanistSystemUi)
+    implementation(Accompanist.accompanistPager)
+    implementation(Accompanist.accompanistPagerIndicators)
 }
