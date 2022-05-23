@@ -1,6 +1,5 @@
 package com.example.besonapp.presentation.floating_components
 
-import android.app.UiModeManager
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -17,12 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings
-import com.commandiron.besonapp_clean_arch.ui.theme.logoColor
+import com.commandiron.besonapp_clean_arch.core.Strings.BESON
+import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -98,15 +96,15 @@ fun SplashScreenLogoAnimation(
             .alpha(1f)
             .rotate(logoRotateAnim.value)
         ,
-        tint = logoColor
+        tint = PrimaryColor
     )
     Text(
-        text = Strings.BESON,
+        text = BESON,
         modifier = Modifier
             .alpha(alpha = textAlphaAnim.value)
             .padding(top = Dp(textPaddingAnim.value))
             .graphicsLayer { rotationX = textRotationXAnim.value },
-        color = logoColor,
+        color = PrimaryColor,
         style = MaterialTheme.typography.h1
     )
 }

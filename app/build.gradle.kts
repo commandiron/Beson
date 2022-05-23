@@ -36,7 +36,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += listOf(
+        freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
@@ -72,6 +72,7 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
+    implementation(Compose.hiltNavigationCompose)
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
@@ -88,4 +89,8 @@ dependencies {
     implementation(Accompanist.accompanistSystemUi)
     implementation(Accompanist.accompanistPager)
     implementation(Accompanist.accompanistPagerIndicators)
+
+    implementation(Coil.coil)
+    implementation(Coil.coilCompose)
+    implementation(Coil.coilComposeBase)
 }
