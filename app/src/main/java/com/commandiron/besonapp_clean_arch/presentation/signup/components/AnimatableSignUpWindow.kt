@@ -3,6 +3,7 @@ package com.commandiron.besonapp_clean_arch.presentation.signup.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
@@ -58,16 +60,18 @@ fun AnimatableSignUpWindow(
     }
     Surface(
         modifier = modifier
+            .border(1.dp, MaterialTheme.colors.onSurface)
             .offset(y = Dp(offsetAnim.value)),
         color = surfaceColor
     ) {
         Box(
+            modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
             val matrix = ColorMatrix()
             matrix.setToSaturation(0F)
             Image(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 painter = rememberAsyncImagePainter(
                     model = ImageRequest
                         .Builder(LocalContext.current)

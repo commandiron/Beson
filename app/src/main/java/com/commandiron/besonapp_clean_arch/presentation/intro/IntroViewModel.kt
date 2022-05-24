@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.START
 import com.commandiron.besonapp_clean_arch.core.Strings.START_NOW
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
+import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroEvent
 import com.commandiron.besonapp_clean_arch.presentation.intro.state.IntroState
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor

@@ -8,6 +8,6 @@ sealed class SignUpEvent {
     object OnCustomerWindowSignUpClick: SignUpEvent()
     object OnCompanyWindowSignUpClick: SignUpEvent()
     object OnLogInClick: SignUpEvent()
-    object OnSignUpCustomerClick: SignUpEvent()
-    object OnSignUpCompanyClick: SignUpEvent()
+    object OnSignUpAsCustomerClick: SignUpEvent()
+    object OnSignUpAsCompanyClick: SignUpEvent()
 }

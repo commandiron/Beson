@@ -15,6 +15,7 @@ object Strings {
     const val SIGN_UP_AS_CUSTOMER_TEXT = "Müşteri Olarak Kayıt Ol"
     const val SIGN_UP_AS_COMPANY_TEXT = "Firma Olarak Kayıt Ol"
     const val LOGIN_TEXT = "Giriş Yap"
+    const val SIGN_UP_SUCCESSFUL = "Kayıt Başarılı."
 
     const val I_AM_CUSTOMER_TEXT = "MÜŞTERİYİM"
     const val I_AM_COMPANY_TEXT = "FİRMAYIM"

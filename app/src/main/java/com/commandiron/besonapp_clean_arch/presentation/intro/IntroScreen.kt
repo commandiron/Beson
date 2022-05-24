@@ -12,18 +12,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.intro.components.CustomHorizontalPager
+import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroEvent
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.systemuicontroller.SystemUiController
 
 @Composable
 fun IntroScreen(
-    systemUiController: SystemUiController,
     onNextClick:() -> Unit,
     viewModel: IntroViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
+    val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->

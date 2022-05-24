@@ -15,18 +15,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import com.commandiron.besonapp_clean_arch.core.Strings.APP_STATEMENT
+import com.commandiron.besonapp_clean_arch.presentation.components.toDpSize
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun AnimatedAppExplainingStrip(
+    screenSize: Size,
     modifier: Modifier = Modifier,
     isAnimated: Boolean = false
 ){
     val spacing = LocalSpacing.current
-    val offsetAnimInitialValue = if(isAnimated) -400f else 0f
+    val dpScreenSize = screenSize.toDpSize()
+
+    val offsetAnimInitialValue = if(isAnimated) -dpScreenSize.width.value else 0f
     val offsetAnim = remember { Animatable(offsetAnimInitialValue) }
     LaunchedEffect(key1 = Unit){
         if(isAnimated){

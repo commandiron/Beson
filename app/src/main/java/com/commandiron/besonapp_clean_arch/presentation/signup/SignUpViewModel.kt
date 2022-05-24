@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.UiEvent
-import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.state.SignUpState
+import com.commandiron.besonapp_clean_arch.presentation.signup.state.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -74,13 +74,13 @@ class SignUpViewModel @Inject constructor(
                     )
                 )
             }
-            is SignUpEvent.OnSignUpCustomerClick -> {
+            is SignUpEvent.OnSignUpAsCustomerClick -> {
                 state = state.copy(
                     userType = UserType.CUSTOMER
                 )
                 submitSignUpData()
             }
-            is SignUpEvent.OnSignUpCompanyClick -> {
+            is SignUpEvent.OnSignUpAsCompanyClick -> {
                 state = state.copy(
                     userType = UserType.COMPANY
                 )
@@ -90,7 +90,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun submitSignUpData() {
-
         val emailResult = useCases.validateEmail.execute(state.registrationFormState.email)
         val passwordResult = useCases.validatePassword.execute(state.registrationFormState.password)
         val repeatedPasswordResult = useCases
@@ -121,6 +120,4 @@ class SignUpViewModel @Inject constructor(
             //Firebase Kayıt işlemi yap.
         }
     }
-
-
 }

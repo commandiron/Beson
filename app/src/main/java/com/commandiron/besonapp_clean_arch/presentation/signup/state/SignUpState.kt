@@ -1,7 +1,5 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup.state
 
-import com.commandiron.besonapp_clean_arch.presentation.signup.UserType
-
 data class SignUpState(
     val isUserSignUpBefore: Boolean = false,
     val isCustomerUiWindowOpen: Boolean = false,

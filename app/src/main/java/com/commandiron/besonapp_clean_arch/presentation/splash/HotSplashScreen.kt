@@ -10,7 +10,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.SplashBackgroundColor
 import com.example.besonapp.presentation.floating_components.SplashScreenLogoAnimation
 
 @Composable
-fun SplashScreen(
+fun HotSplashScreen(
     onFinish:() -> Unit
 ) {
     Box(

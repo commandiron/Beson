@@ -1,7 +1,7 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
 object Route {
-    const val SPLASH = "splash"
+    const val HOT_SPLASH = "hotSplash"
     const val INTRO = "intro"
     const val SIGN_UP = "signUp"
     const val LOG_IN = "logIn"

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun SignUpFormTextField(
@@ -44,7 +45,9 @@ fun SignUpFormTextField(
             modifier = Modifier
                 .border(
                     width =  1.dp,
-                    color = MaterialTheme.colors.onBackground
+                    color = if(textFieldErrorMessage == null ){
+                        MaterialTheme.colors.onBackground
+                    } else MaterialTheme.colors.error
                 )
                 .size(size),
             value = text,
@@ -61,7 +64,7 @@ fun SignUpFormTextField(
             ),
             decorationBox = { innerTextField ->
                 Row(
-                    Modifier.padding(horizontal = 10.dp),
+                    Modifier.padding(horizontal = size.height/3),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
