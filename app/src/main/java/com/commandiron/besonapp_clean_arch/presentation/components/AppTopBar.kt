@@ -15,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
@@ -46,14 +45,12 @@ fun AppTopBar(){
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                navigationItems.forEach { item ->
-                    if(item.route == currentRoute){
-                        Text(
-                            text =  item.title ?: "Title",
-                            style = MaterialTheme.typography.h4,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                    }
+                if(topBarVisibleRouteList.contains(currentRoute)){
+                    Text(
+                        text =  NavigationItem.fromRouteString(currentRoute).title ?: "Title",
+                        style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.onPrimary
+                    )
                 }
             }
         }

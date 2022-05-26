@@ -22,7 +22,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
-import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatedAppExplainingStrip
+import com.commandiron.besonapp_clean_arch.presentation.components.AnimatedAppExplainingStrip
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.CustomLogInButton
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.SignUpForm
 import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUiEvent

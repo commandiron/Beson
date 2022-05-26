@@ -21,7 +21,7 @@ import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.login.event.LogInUiEvent
 import com.commandiron.besonapp_clean_arch.presentation.login.event.LogInUserEvent
-import com.commandiron.besonapp_clean_arch.presentation.signup.components.FormTextField
+import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 

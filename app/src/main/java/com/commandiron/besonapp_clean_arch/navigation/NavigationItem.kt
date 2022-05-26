@@ -44,4 +44,20 @@ sealed class NavigationItem(
         iconResource = R.drawable.ic_prices_icon,
         route = "prices"
     )
+    companion object {
+        fun fromRouteString(route: String?): NavigationItem {
+            return when(route){
+                HotSplash.route -> HotSplash
+                Intro.route -> Intro
+                SignUp.route -> SignUp
+                LogIn.route -> LogIn
+                SignUpSteps1.route -> SignUpSteps1
+                Profile.route -> Profile
+                EditProfile.route -> EditProfile
+                MyPriceUpdates.route -> MyPriceUpdates
+                Prices.route -> Prices
+                else -> HotSplash
+            }
+        }
+    }
 }

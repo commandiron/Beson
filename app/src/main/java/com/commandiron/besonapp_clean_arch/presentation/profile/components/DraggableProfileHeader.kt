@@ -46,7 +46,6 @@ fun DraggableProfileHeader(
             .decodeToString()
     }
     var progressWithDrag by remember { mutableStateOf(0f) } //Between 0.0 and 1.0 72px to 182px
-
     MotionLayout(
         motionScene = MotionScene(content = motionScene),
         progress = progressWithDrag,
@@ -54,7 +53,6 @@ fun DraggableProfileHeader(
     ) {
         BoxWithConstraints(
             modifier = Modifier
-                .background(MaterialTheme.colors.background)
                 .layoutId("box")
                 .pointerInput(Unit) {
                     detectVerticalDragGestures(
@@ -62,18 +60,14 @@ fun DraggableProfileHeader(
                             val newValue = dragAmount.coerceIn(-50.dp.toPx(), 50.dp.toPx())
                             if (newValue > 0) {
                                 if (progressWithDrag < 1.0) {
-
                                     progressWithDrag += newValue / 364
-
                                     if (progressWithDrag > 1.0) {
                                         progressWithDrag = 1.0f
                                     }
                                 }
                             } else if (newValue < 0) {
                                 if (progressWithDrag > 0) {
-
                                     progressWithDrag += newValue / 364
-
                                     if (progressWithDrag < 0.0) {
                                         progressWithDrag = 0f
                                     }
@@ -85,20 +79,22 @@ fun DraggableProfileHeader(
             contentAlignment = Alignment.TopEnd
         ){
             onVerticalDrag(this.constraints.minHeight.toDp())
-            CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme){
-                IconButton(
-                    modifier = Modifier
-                        .padding(top = 26.dp, bottom = 16.dp, end = 36.dp)
-                        .size(20.dp),
-                    onClick = { onEditButtonClick() }
-                ){
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        tint = MaterialTheme.colors.onBackground,
-                        contentDescription = null
+            IconButton(
+                modifier = Modifier
+                    .padding(
+                        top = 26.dp,
+                        bottom = 16.dp,
+                        end = 36.dp
                     )
-                }
+                    .size(20.dp),
+                onClick = { onEditButtonClick() }
+            ){
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
             }
+
         }
         Image(
             painter = rememberAsyncImagePainter(
@@ -124,7 +120,6 @@ fun DraggableProfileHeader(
         Text(
             text = text,
             style = MaterialTheme.typography.h3,
-            color = MaterialTheme.colors.onBackground,
             modifier = Modifier.layoutId("username")
         )
     }

@@ -12,6 +12,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.PASSWORD_AGAIN_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.PASSWORD_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_TEXT
+import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
 import com.commandiron.besonapp_clean_arch.presentation.signup.state.RegistrationFormState
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 

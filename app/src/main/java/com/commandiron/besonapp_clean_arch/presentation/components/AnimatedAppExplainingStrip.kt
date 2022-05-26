@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.signup.components
+package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.repeatable

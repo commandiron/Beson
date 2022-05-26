@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
-    val preferences: Preferences,
+    private val preferences: Preferences,
 ): ViewModel() {
 
     var state by mutableStateOf(IntroState())
