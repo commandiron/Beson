@@ -4,15 +4,7 @@ Cleaner version of this [app](https://github.com/commandiron/BesonApp)
 
 BESON is a native android construction market price tracking application written in Kotlin using Jetpack Compose.
 
-* Video 🧪
-
-<img src="https://user-images.githubusercontent.com/50905347/164015414-bc654376-d3cf-4d0e-bbd7-94d8c5e92326.gif" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/165187531-9bd0e639-2d7f-479a-9d86-342f12fcc5b6.gif" width="250" height="530">
-
-* Screenshots (Dark Theme) 🖼️
-
-<img src="https://user-images.githubusercontent.com/50905347/163470343-bfcab4b7-75df-4588-bbf8-3cfccb5945a7.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/163471241-3b3df951-b09d-4422-a6a5-952a407d96dd.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/163470350-f92a7508-2145-46aa-94a4-35c15eee84dc.png" width="250" height="530">
-
-* Screenshots (Light Theme) 🖼️
+* Screenshots 🖼️
 
 <img src="https://user-images.githubusercontent.com/50905347/163888639-e90c743e-4f78-4000-9241-69319bd0b1c3.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/163889168-ae0ce1ee-4dc2-44ab-b3a1-643f92d98744.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/163888646-10d2ec66-a216-4d1c-88d3-68f77b995a10.png" width="250" height="530">
 
@@ -38,3 +30,4 @@ BESON is a native android construction market price tracking application written
  
  * Todo ✔️
    * Language - English ❌
+   * Dark Theme ❌
