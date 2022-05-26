@@ -7,4 +7,7 @@ object AndroidX {
 
     private const val splashScreenVersion = "1.0.0-alpha02"
     const val splashScreen = "androidx.core:core-splashscreen:$splashScreenVersion"
+
+    private const val constraintlayoutVersion = "2.1.3"
+    const val constraintLayout = "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 }

@@ -34,7 +34,7 @@ fun SignUpForm(
             style = MaterialTheme.typography.h2
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
-        SignUpFormTextField(
+        FormTextField(
             text = registrationFormState.email,
             hint = EMAIL_TEXT,
             textFieldErrorMessage = registrationFormState.emailError,
@@ -43,7 +43,7 @@ fun SignUpForm(
             onEmailChanged(it)
         }
         Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
-        SignUpFormTextField(
+        FormTextField(
             text = registrationFormState.password,
             hint =  PASSWORD_TEXT,
             textFieldErrorMessage = registrationFormState.passwordError,
@@ -52,7 +52,7 @@ fun SignUpForm(
             onPasswordChanged(it)
         }
         Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
-        SignUpFormTextField(
+        FormTextField(
             text = registrationFormState.repeatedPassword,
             hint =  PASSWORD_AGAIN_TEXT,
             textFieldErrorMessage = registrationFormState.repeatedPasswordError,
@@ -64,8 +64,7 @@ fun SignUpForm(
         Button(onClick = { onSignUpButtonClick() }) {
             Text(
                 text = buttonText,
-                style = MaterialTheme.typography.h4,
-                color = MaterialTheme.colors.onSurface
+                style = MaterialTheme.typography.h4
             )
         }
     }

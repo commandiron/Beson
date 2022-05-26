@@ -5,12 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.components.AppLogoIcon
@@ -76,10 +78,10 @@ fun SignUpScreenLogoAnimation(
                 .clickable{ onSignUpScreenLogoClick() },
             color = SplashBackgroundColor
         ) {
-            AppLogoIcon(
-                modifier = Modifier.padding(20.dp),
-                sizeAnimValue = Dp(sizeAnim.value),
-                rotateAnimValue = rotateAnim.value
+            AppLogoIcon(modifier = Modifier
+                .padding(20.dp)
+                .size(Dp(sizeAnim.value))
+                .rotate(rotateAnim.value)
             )
         }
     }

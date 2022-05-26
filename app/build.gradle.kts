@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -73,24 +71,34 @@ dependencies {
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
     implementation(Compose.hiltNavigationCompose)
+    implementation(Compose.constraintLayout)
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
+    implementation(AndroidX.splashScreen)
+    implementation(AndroidX.constraintLayout)
 
     implementation(Google.material)
     implementation(Google.materialIconsCore)
     implementation(Google.materialIconsExtended)
 
-    implementation(AndroidX.splashScreen)
-
-    implementation(Accompanist.accompanistSystemUi)
-    implementation(Accompanist.accompanistPager)
-    implementation(Accompanist.accompanistPagerIndicators)
+    implementation(Accompanist.systemUi)
+    implementation(Accompanist.pager)
+    implementation(Accompanist.pagerIndicators)
 
     implementation(Coil.coil)
-    implementation(Coil.coilCompose)
-    implementation(Coil.coilComposeBase)
+    implementation(Coil.compose)
+    implementation(Coil.composeBase)
+
+    debugImplementation(Compose.uiTooling)
+
+    testImplementation(Testing.junit4)
+    testImplementation(Testing.junitAndroidExt)
+
+    androidTestImplementation(Testing.junit4)
+    androidTestImplementation(Testing.junitAndroidExt)
+    androidTestImplementation(Testing.testRunner)
 }

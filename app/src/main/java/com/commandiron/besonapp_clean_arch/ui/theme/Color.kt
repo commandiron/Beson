@@ -3,9 +3,11 @@ package com.commandiron.besonapp_clean_arch.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val PrimaryColor = Color(0xFFF7CB1D)
+val OnPrimaryColor = Color.Black
 val BackgroundColor = Color(0xFFf5f5f5)
-val OnBackgroundColor = Color(0xFF2b2b2b)
-val OnSurfaceColor = Color(0xFF202020)
+val OnBackgroundColor = Color.Black
+val SurfaceColor = Color(0xFF2b2b2b)
+val OnSurfaceColor = Color.White
 
 val Orange =  Color(0xFFFFAA00)
 

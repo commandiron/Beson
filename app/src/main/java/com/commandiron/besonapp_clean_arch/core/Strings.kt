@@ -1,13 +1,10 @@
 package com.commandiron.besonapp_clean_arch.core
 
 object Strings {
-    const val BESON = "beson"
-
+    const val BESON = "Beson"
     const val APP_STATEMENT = "Beşon; Bina yapım fiyatları takip ve taşeron bulma uygulamasıdır."
-
     const val START = "BAŞLA"
     const val START_NOW = "HEMEN BAŞLA"
-
     const val SIGNUP_TEXT = "Kayıt Ol"
     const val EMAIL_TEXT = "Eposta"
     const val PASSWORD_TEXT = "Şifre"
@@ -15,18 +12,23 @@ object Strings {
     const val SIGN_UP_AS_CUSTOMER_TEXT = "Müşteri Olarak Kayıt Ol"
     const val SIGN_UP_AS_COMPANY_TEXT = "Firma Olarak Kayıt Ol"
     const val LOGIN_TEXT = "Giriş Yap"
+    const val LOGIN_TEXT_2 = "Giriş"
+    const val OR_TEXT = "ya da"
     const val SIGN_UP_SUCCESSFUL = "Kayıt Başarılı."
-
     const val I_AM_CUSTOMER_TEXT = "MÜŞTERİYİM"
     const val I_AM_COMPANY_TEXT = "FİRMAYIM"
     const val CUSTOMER_STATEMENT_TEXT = "Fiyat görmek ve taşeron firma bulmak istiyorum."
     const val COMPANY_STATEMENT_TEXT = "Fiyat güncellemek ve müşteri bulmak istiyorum."
     const val SIGNUP_UPPERCASE_TEXT = "KAYIT OL"
-
     const val EMPTY_TEXT_FIELD_ERROR_MESSAGE = "Boş bıraktınız."
     const val WRONG_EMAIL_REGEX_ERROR_MESSAGE = "Doğru bir Eposta adresi giriniz."
     const val LEAST_EIGHT_CHAR_EMAIL_ERROR_MESSAGE = "En az 6 karakter giriniz."
     const val NOT_SAME_PASSWORD_ERROR_MESSAGE = "Aynı değil."
+    const val LOGIN_BESON_TEXT = "Beşon'a Giriş Yapın"
+    const val MY_PROFILE = "Profilim"
+    const val EDIT_MY_PROFILE = "Profilimi Düzenle"
+    const val MY_PRICE_UPDATES = "Fiyat Güncellemelerim"
+    const val PRICES = "Fiyatlar"
 
     //Bu değiştirilecek
     const val SIGNUP_SCREEN_CUSTOMER_IMAGE_URL = "https://archello.s3.eu-central-1.amazonaws.com/images/2021/02/28/addline-group-interior-design-of-the-construction-company-office-offices-archello.1614525239.7456.jpg"

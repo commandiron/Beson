@@ -3,6 +3,7 @@ package com.commandiron.besonapp_clean_arch.presentation.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 
 @Composable
@@ -14,4 +15,10 @@ fun Size.toDpSize(): DpSize{
         this@toDpSize.height.toDp()
     }
     return DpSize(width, height)
+}
+@Composable
+fun Int.toDp(): Dp{
+    return with(LocalDensity.current) {
+        this@toDp.toDp()
+    }
 }

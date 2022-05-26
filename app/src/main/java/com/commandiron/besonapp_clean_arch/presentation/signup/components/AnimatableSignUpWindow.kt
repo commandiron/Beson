@@ -60,7 +60,7 @@ fun AnimatableSignUpWindow(
     }
     Surface(
         modifier = modifier
-            .border(1.dp, MaterialTheme.colors.onSurface)
+            .border(1.dp, MaterialTheme.colors.surface)
             .offset(y = Dp(offsetAnim.value)),
         color = surfaceColor
     ) {
@@ -88,21 +88,22 @@ fun AnimatableSignUpWindow(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Medium),
+                    style = MaterialTheme.typography.h1,
                     color = MaterialTheme.colors.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 Text(
                     text = details,
-                    style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Medium),
+                    style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Surface(
                     modifier = Modifier
-                        .fillMaxWidth(fraction = 0.5f)
+                        .fillMaxWidth(fraction = 0.45f)
                         .clickable { onButtonClick() },
                     shape = RoundedCornerShape(spacing.spaceMedium),
+                    color = Color.White,
                     elevation = spacing.defaultElevation
                 ) {
                     Box(contentAlignment = Alignment.Center) {

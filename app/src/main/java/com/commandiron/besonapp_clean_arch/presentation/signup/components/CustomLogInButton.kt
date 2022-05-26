@@ -38,8 +38,7 @@ fun CustomLogInButton(
                     .clickable{ onClick() },
                 text = text,
                 style = MaterialTheme.typography.h5.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = 16.sp
                 )
             )
         }

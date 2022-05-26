@@ -67,7 +67,7 @@ fun AnimatedAppExplainingStrip(
             Text(
                 text = APP_STATEMENT,
                 color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.overline.copy(fontWeight = FontWeight.Medium)
+                style = MaterialTheme.typography.overline
             )
         }
     }

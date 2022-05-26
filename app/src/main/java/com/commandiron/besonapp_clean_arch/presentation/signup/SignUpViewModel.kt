@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
-import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUiEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.state.SignUpState
 import com.commandiron.besonapp_clean_arch.presentation.signup.state.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,66 +25,62 @@ class SignUpViewModel @Inject constructor(
     var state by mutableStateOf(SignUpState())
         private set
 
-    private val _uiEvent = Channel<UiEvent>()
+    private val _uiEvent = Channel<SignUpUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: SignUpEvent) {
-        when(event){
-            is SignUpEvent.OnLogoClick -> {
+    fun onEvent(userEvent: SignUpUserEvent) {
+        when(userEvent){
+            is SignUpUserEvent.OnLogoClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = false,
                     isCompanyUiWindowOpen = false
                 )
             }
-            is SignUpEvent.OnCustomerWindowSignUpClick -> {
+            is SignUpUserEvent.OnCustomerWindowSignUpUserClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = true,
-                    isCompanyUiWindowOpen = false
+                    isCompanyUiWindowOpen = false,
+                    userType = UserType.CUSTOMER
                 )
             }
-            is SignUpEvent.OnCompanyWindowSignUpClick -> {
+            is SignUpUserEvent.OnCompanyWindowSignUpUserClick -> {
                 state = state.copy(
+                    isCustomerUiWindowOpen = false,
                     isCompanyUiWindowOpen = true,
-                    isCustomerUiWindowOpen = false
+                    userType = UserType.COMPANY
                 )
             }
-            is SignUpEvent.OnLogInClick -> {
+            is SignUpUserEvent.OnLogInClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = true,
                     isCompanyUiWindowOpen = true
                 )
             }
-            is SignUpEvent.EmailChanged -> {
+            is SignUpUserEvent.EmailChanged -> {
                 state = state.copy(
                     registrationFormState = state.registrationFormState.copy(
-                        email = event.email,
+                        email = userEvent.email,
                     )
                 )
             }
-            is SignUpEvent.PasswordChanged -> {
+            is SignUpUserEvent.PasswordChanged -> {
                 state = state.copy(
                     registrationFormState = state.registrationFormState.copy(
-                        password = event.password
+                        password = userEvent.password
                     )
                 )
             }
-            is SignUpEvent.RepeatedPasswordChanged -> {
+            is SignUpUserEvent.RepeatedPasswordChanged -> {
                 state = state.copy(
                     registrationFormState = state.registrationFormState.copy(
-                        repeatedPassword = event.repeatedPassword
+                        repeatedPassword = userEvent.repeatedPassword
                     )
                 )
             }
-            is SignUpEvent.OnSignUpAsCustomerClick -> {
-                state = state.copy(
-                    userType = UserType.CUSTOMER
-                )
+            is SignUpUserEvent.OnSignUpUserAsCustomerClick -> {
                 submitSignUpData()
             }
-            is SignUpEvent.OnSignUpAsCompanyClick -> {
-                state = state.copy(
-                    userType = UserType.COMPANY
-                )
+            is SignUpUserEvent.OnSignUpUserAsCompanyClick -> {
                 submitSignUpData()
             }
         }
@@ -115,9 +112,17 @@ class SignUpViewModel @Inject constructor(
             )
             return
         }
+        //Eğer firebaseden başarılı olursa
+        when(state.userType){
+            UserType.CUSTOMER -> sendUiEvent(SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCustomer)
+            UserType.COMPANY -> sendUiEvent(SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCompany)
+        }
+        sendUiEvent(SignUpUiEvent.ShowSnackbar(SIGN_UP_SUCCESSFUL))
+    }
+
+    private fun sendUiEvent(uiEvent: SignUpUiEvent){
         viewModelScope.launch {
-            _uiEvent.send(UiEvent.Success)
-            //Firebase Kayıt işlemi yap.
+            _uiEvent.send(uiEvent)
         }
     }
 }

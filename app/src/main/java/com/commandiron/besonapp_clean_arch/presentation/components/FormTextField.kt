@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -28,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
-fun SignUpFormTextField(
+fun FormTextField(
     size: DpSize = DpSize(240.dp, 42.dp),
     text: String,
     hint: String,
@@ -49,7 +50,8 @@ fun SignUpFormTextField(
                         MaterialTheme.colors.onBackground
                     } else MaterialTheme.colors.error
                 )
-                .size(size),
+                .size(size)
+                .background(Color.White),
             value = text,
             onValueChange = { onChange(it) },
             singleLine = true,

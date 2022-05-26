@@ -1,7 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,26 +20,23 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_SCREEN_CUSTOMER_I
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_UPPERCASE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
-import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_SUCCESSFUL
-import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatedAppExplainingStrip
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.CustomLogInButton
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.SignUpForm
-import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUiEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.state.SignUpState
-import com.commandiron.besonapp_clean_arch.presentation.signup.state.UserType
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.example.besonapp.presentation.SignUpScreenLogoAnimation
 import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
-    onSignUpAsCustomerClick:() -> Unit,
-    onSignUpAsCompanyClick:() -> Unit,
-    onLogInClick: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
+    val navController = LocalNavController.current
     val coroutineScope = LocalCoroutineScope.current
     val snackbarHostState = LocalSnackbarHostState.current
     val systemUiController = LocalSystemUiController.current
@@ -49,29 +45,30 @@ fun SignUpScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.Success -> {
-                    when(state.userType){
-                        UserType.CUSTOMER -> {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = SIGN_UP_SUCCESSFUL
-                                )
-                            }
-                            onSignUpAsCustomerClick()
-                            keyboardController?.hide()
-                        }
-                        UserType.COMPANY -> {
-                            onSignUpAsCompanyClick()
-                            keyboardController?.hide()
-                        }
+                is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCustomer -> {
+                    navController.navigate(
+                        NavigationItem.SignUpSteps1.route
+                    )
+                    keyboardController?.hide()
+                }
+                is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCompany -> {
+                    navController.navigate(
+                        NavigationItem.SignUpSteps1.route
+                    )
+                    keyboardController?.hide()
+                }
+                is SignUpUiEvent.ShowSnackbar -> {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = event.message
+                        )
                     }
                 }
-                else -> Unit
             }
         }
     }
     systemUiController.setSystemBarsColor(
-        color = MaterialTheme.colors.onBackground
+        color = MaterialTheme.colors.surface
     )
     BoxWithConstraints {
         SignUpScreenBackground(
@@ -82,43 +79,58 @@ fun SignUpScreen(
             state = state,
             viewModel = viewModel,
             constraints = constraints,
-            onLogInClick = onLogInClick
+            onLogInClick = {
+                navController.popBackStack()
+                navController.navigate(
+                    NavigationItem.LogIn.route
+                )
+            }
         )
     }
 }
-
 
 @Composable
 fun SignUpScreenBackground(
     state: SignUpState,
     viewModel: SignUpViewModel
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        items(2){ item ->
-            SignUpForm(
-                registrationFormState = state.registrationFormState,
-                buttonText = if(item == 0) SIGN_UP_AS_CUSTOMER_TEXT else SIGN_UP_AS_COMPANY_TEXT,
-                onEmailChanged = {
-                    viewModel.onEvent(SignUpEvent.EmailChanged(it))
-                },
-                onPasswordChanged = {
-                    viewModel.onEvent(SignUpEvent.PasswordChanged(it))
-                },
-                onRepeatedPasswordChanged = {
-                    viewModel.onEvent(SignUpEvent.RepeatedPasswordChanged(it))
-                },
-                onSignUpButtonClick = {
-                    when(item){
-                        0 -> viewModel.onEvent(SignUpEvent.OnSignUpAsCustomerClick)
-                        1 -> viewModel.onEvent(SignUpEvent.OnSignUpAsCompanyClick)
-                    }
-                }
-            )
-        }
+        SignUpForm(
+            registrationFormState = state.registrationFormState,
+            buttonText = SIGN_UP_AS_CUSTOMER_TEXT,
+            onEmailChanged = {
+                viewModel.onEvent(SignUpUserEvent.EmailChanged(it))
+            },
+            onPasswordChanged = {
+                viewModel.onEvent(SignUpUserEvent.PasswordChanged(it))
+            },
+            onRepeatedPasswordChanged = {
+                viewModel.onEvent(SignUpUserEvent.RepeatedPasswordChanged(it))
+            },
+            onSignUpButtonClick = {
+                viewModel.onEvent(SignUpUserEvent.OnSignUpUserAsCustomerClick)
+            }
+        )
+        SignUpForm(
+            registrationFormState = state.registrationFormState,
+            buttonText = SIGN_UP_AS_COMPANY_TEXT,
+            onEmailChanged = {
+                viewModel.onEvent(SignUpUserEvent.EmailChanged(it))
+            },
+            onPasswordChanged = {
+                viewModel.onEvent(SignUpUserEvent.PasswordChanged(it))
+            },
+            onRepeatedPasswordChanged = {
+                viewModel.onEvent(SignUpUserEvent.RepeatedPasswordChanged(it))
+            },
+            onSignUpButtonClick = {
+                viewModel.onEvent(SignUpUserEvent.OnSignUpUserAsCompanyClick)
+            }
+        )
     }
 }
 
@@ -143,7 +155,7 @@ fun SignUpScreenForeground(
             targetOffsetValue = -constraints.maxHeight/4.toFloat() + 130f,
             isUiWindowOpen = state.isCustomerUiWindowOpen,
             onButtonClick = {
-                viewModel.onEvent(SignUpEvent.OnCustomerWindowSignUpClick)
+                viewModel.onEvent(SignUpUserEvent.OnCustomerWindowSignUpUserClick)
             }
         )
         AnimatableSignUpWindow(
@@ -158,14 +170,14 @@ fun SignUpScreenForeground(
             targetOffsetValue = constraints.maxHeight/4.toFloat() - 130f,
             isUiWindowOpen = state.isCompanyUiWindowOpen,
             onButtonClick = {
-                viewModel.onEvent(SignUpEvent.OnCompanyWindowSignUpClick)
+                viewModel.onEvent(SignUpUserEvent.OnCompanyWindowSignUpUserClick)
             }
         )
     }
     BoxWithConstraints {
         SignUpScreenLogoAnimation(
             onSignUpScreenLogoClick = {
-                viewModel.onEvent(SignUpEvent.OnLogoClick)
+                viewModel.onEvent(SignUpUserEvent.OnLogoClick)
             }
         )
         CustomLogInButton(
@@ -174,7 +186,7 @@ fun SignUpScreenForeground(
                 .padding(end = spacing.spaceMedium),
             text = LOGIN_TEXT,
             onClick = {
-                viewModel.onEvent(SignUpEvent.OnLogInClick)
+                viewModel.onEvent(SignUpUserEvent.OnLogInClick)
                 onLogInClick()
             }
         )

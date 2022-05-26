@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Strings.START
 import com.commandiron.besonapp_clean_arch.core.Strings.START_NOW
-import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
-import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroEvent
+import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUiEvent
+import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.intro.state.IntroState
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
@@ -27,13 +27,13 @@ class IntroViewModel @Inject constructor(
     var state by mutableStateOf(IntroState())
         private set
 
-    private val _uiEvent = Channel<UiEvent>()
+    private val _uiEvent = Channel<IntroUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onEvent(event: IntroEvent) {
-        when(event){
-            is IntroEvent.OnSwipe -> {
-                state = if(event.lastPageFlag){
+    fun onEvent(userEvent: IntroUserEvent) {
+        when(userEvent){
+            is IntroUserEvent.OnSwipe -> {
+                state = if(userEvent.lastPageFlag){
                     state.copy(
                         footerColor = Orange,
                         bottomBarText = START
@@ -45,12 +45,16 @@ class IntroViewModel @Inject constructor(
                     )
                 }
             }
-            is IntroEvent.OnStartClick -> {
+            is IntroUserEvent.OnStartClick -> {
                 preferences.saveShouldShowSplashAndIntro(false)
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Success)
-                }
+                sendUiEvent(IntroUiEvent.ShouldShowSplashAndIntroSaveSuccess)
             }
+        }
+    }
+
+    private fun sendUiEvent(uiEvent: IntroUiEvent){
+        viewModelScope.launch {
+            _uiEvent.send(uiEvent)
         }
     }
 }

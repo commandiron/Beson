@@ -1,72 +1,56 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.commandiron.besonapp_clean_arch.presentation.edit_profile.EditProfileScreen
 import com.commandiron.besonapp_clean_arch.presentation.intro.IntroScreen
 import com.commandiron.besonapp_clean_arch.presentation.login.LogInScreen
 import com.commandiron.besonapp_clean_arch.presentation.signup.SignUpScreen
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsCompany1
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsCustomer1
-import com.commandiron.besonapp_clean_arch.presentation.splash.HotSplashScreen
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpSteps1
+import com.commandiron.besonapp_clean_arch.presentation.hot_splash.HotSplashScreen
+import com.commandiron.besonapp_clean_arch.presentation.my_price_updates.MyPriceUpdatesScreen
+import com.commandiron.besonapp_clean_arch.presentation.prices.PricesScreen
+import com.commandiron.besonapp_clean_arch.presentation.profile.ProfileScreen
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 
 @Composable
 fun NavigationHost(
-    navController: NavHostController,
     shouldShowSplashAndIntro: Boolean
 ) {
+    val navController = LocalNavController.current
     NavHost(
         navController = navController,
         startDestination = if(shouldShowSplashAndIntro) {
-            Route.HOT_SPLASH
-        } else Route.SIGN_UP
+            NavigationItem.HotSplash.route
+        } else NavigationItem.Profile.route
     ){
-        composable(Route.HOT_SPLASH){
-            HotSplashScreen(
-                onFinish = {
-                    navController.navigate(
-                        Route.INTRO
-                    )
-                }
-            )
+        composable(NavigationItem.HotSplash.route){
+            HotSplashScreen()
         }
-        composable(Route.INTRO){
-            IntroScreen(
-                onNextClick = {
-                    navController.navigate(
-                        Route.SIGN_UP
-                    )
-                }
-            )
+        composable(NavigationItem.Intro.route){
+            IntroScreen()
         }
-        composable(Route.SIGN_UP){
-            SignUpScreen(
-                onSignUpAsCustomerClick = {
-                    navController.navigate(
-                        Route.SIGN_UP_STEPS_CUSTOMER
-                    )
-                },
-                onSignUpAsCompanyClick = {
-                    navController.navigate(
-                        Route.SIGN_UP_STEPS_COMPANY
-                    )
-                },
-                onLogInClick = {
-                    navController.navigate(
-                        Route.LOG_IN
-                    )
-                }
-            )
+        composable(NavigationItem.SignUp.route){
+            SignUpScreen()
         }
-        composable(Route.LOG_IN){
+        composable(NavigationItem.LogIn.route){
             LogInScreen()
         }
-        composable(Route.SIGN_UP_STEPS_CUSTOMER){
-            SignUpStepsCustomer1()
+        composable(NavigationItem.SignUpSteps1.route){
+            SignUpSteps1()
         }
-        composable(Route.SIGN_UP_STEPS_COMPANY){
-            SignUpStepsCompany1()
+        composable(NavigationItem.Profile.route){
+            ProfileScreen()
+        }
+        composable(NavigationItem.EditProfile.route){
+            EditProfileScreen()
+        }
+        composable(NavigationItem.MyPriceUpdates.route){
+            MyPriceUpdatesScreen()
+        }
+        composable(NavigationItem.Prices.route){
+            PricesScreen()
         }
     }
 }

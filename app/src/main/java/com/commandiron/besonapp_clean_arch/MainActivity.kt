@@ -8,13 +8,17 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
-import com.commandiron.besonapp_clean_arch.navigation.NavigationHost
-import com.commandiron.besonapp_clean_arch.presentation.splash.SplashViewModel
+import com.commandiron.besonapp_clean_arch.navigation.*
+import com.commandiron.besonapp_clean_arch.presentation.components.AddPriceButton
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,17 +46,24 @@ class MainActivity : ComponentActivity() {
                 val coroutineScope = rememberCoroutineScope()
                 val systemUiController = rememberSystemUiController()
                 CompositionLocalProvider(
-                    values = getProvidedValues(coroutineScope,scaffoldState, systemUiController)
+                    values = getProvidedValues(
+                        navController = navController,
+                        coroutineScope = coroutineScope,
+                        scaffoldState = scaffoldState,
+                        systemUiController = systemUiController
+                    )
                 ) {
                     Scaffold(
                         modifier = Modifier
                             .fillMaxSize(),
                         scaffoldState = scaffoldState,
+                        topBar = { AppTopBar() },
+                        floatingActionButton = { AddPriceButton(onClick = {}) },
+                        isFloatingActionButtonDocked = true,
+                        floatingActionButtonPosition = FabPosition.Center,
+                        bottomBar ={ AppBottomNavigation() }
                     ) {
-                        NavigationHost(
-                            navController = navController,
-                            shouldShowSplashAndIntro = shouldShowSplashAndIntro
-                        )
+                        NavigationHost(shouldShowSplashAndIntro = shouldShowSplashAndIntro)
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.splash
+package com.commandiron.besonapp_clean_arch
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
