@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.navigation
+package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -15,6 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem.Companion.navigationItems
+import com.commandiron.besonapp_clean_arch.navigation.currentRoute
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
@@ -23,18 +26,10 @@ fun AppTopBar(){
     val spacing = LocalSpacing.current
     val navController = LocalNavController.current
     val currentRoute = navController.currentRoute()
-    val topBarVisibleState = remember { MutableTransitionState(false) }
-    val navigationItems = listOf(
-        NavigationItem.Profile,
-        NavigationItem.EditProfile,
-        NavigationItem.MyPriceUpdates
-    )
-    val topBarVisibleRouteList = navigationItems.map { it.route }
-    LaunchedEffect(key1 = currentRoute){
-        topBarVisibleState.targetState = topBarVisibleRouteList.contains(currentRoute)
-    }
+    val topBarVisibleNavigationItemsList = navigationItems.filter { it.isTopBarVisible }
+    val topBarIsVisible = topBarVisibleNavigationItemsList.map { it.route }.contains(currentRoute)
     AnimatedVisibility(
-        visibleState = topBarVisibleState,
+        visible = topBarIsVisible,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -45,13 +40,11 @@ fun AppTopBar(){
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                if(topBarVisibleRouteList.contains(currentRoute)){
-                    Text(
-                        text =  NavigationItem.fromRouteString(currentRoute).title ?: "Title",
-                        style = MaterialTheme.typography.h4,
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
+                Text(
+                    text =  NavigationItem.fromRouteString(currentRoute).title ?: "Title",
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.onPrimary
+                )
             }
         }
     }

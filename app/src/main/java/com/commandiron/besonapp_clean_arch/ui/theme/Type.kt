@@ -25,16 +25,6 @@ val Roboto = FontFamily(
 )
 
 val Typography = Typography(
-    body1 = TextStyle(
-        fontFamily = Roboto,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
-    ),
-    button = TextStyle(
-        fontFamily = Roboto,
-        fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
-    ),
     h1 = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,

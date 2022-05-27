@@ -7,11 +7,13 @@ import com.commandiron.besonapp_clean_arch.presentation.edit_profile.EditProfile
 import com.commandiron.besonapp_clean_arch.presentation.intro.IntroScreen
 import com.commandiron.besonapp_clean_arch.presentation.login.LogInScreen
 import com.commandiron.besonapp_clean_arch.presentation.signup.SignUpScreen
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpSteps1
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsScreen1
 import com.commandiron.besonapp_clean_arch.presentation.hot_splash.HotSplashScreen
 import com.commandiron.besonapp_clean_arch.presentation.my_price_updates.MyPriceUpdatesScreen
 import com.commandiron.besonapp_clean_arch.presentation.prices.PricesScreen
 import com.commandiron.besonapp_clean_arch.presentation.profile.ProfileScreen
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsScreen2
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsScreen3
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 
 @Composable
@@ -23,7 +25,7 @@ fun NavigationHost(
         navController = navController,
         startDestination = if(shouldShowSplashAndIntro) {
             NavigationItem.HotSplash.route
-        } else NavigationItem.Profile.route
+        } else NavigationItem.SignUpSteps1.route
     ){
         composable(NavigationItem.HotSplash.route){
             HotSplashScreen()
@@ -38,7 +40,13 @@ fun NavigationHost(
             LogInScreen()
         }
         composable(NavigationItem.SignUpSteps1.route){
-            SignUpSteps1()
+            SignUpStepsScreen1()
+        }
+        composable(NavigationItem.SignUpSteps2.route){
+            SignUpStepsScreen2()
+        }
+        composable(NavigationItem.SignUpSteps3.route){
+            SignUpStepsScreen3()
         }
         composable(NavigationItem.Profile.route){
             ProfileScreen()

@@ -41,7 +41,7 @@ fun IntroScreen(
         }
     }
     systemUiController.setStatusBarColor(
-        color = MaterialTheme.colors.surface
+        color = MaterialTheme.colors.background
     )
     systemUiController.setNavigationBarColor(
         color = state.footerColor,
@@ -87,9 +87,4 @@ fun IntroScreen(
             )
         }
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .border(2.dp, state.footerColor)
-    )
 }

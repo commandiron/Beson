@@ -12,14 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.core.Strings
+import com.commandiron.besonapp_clean_arch.core.Strings.APP_STATEMENT
 import com.commandiron.besonapp_clean_arch.core.Strings.BESON
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,6 +33,7 @@ fun SplashScreenLogoAnimation(
     modifier: Modifier = Modifier,
     onFinish:() -> Unit,
 ){
+    val spacing = LocalSpacing.current
     val scope = rememberCoroutineScope()
 
     val logoRotateAnim = remember { Animatable(0f) }
@@ -85,26 +90,41 @@ fun SplashScreenLogoAnimation(
             }
         }
     }
-    Icon(
-        imageVector = Icons.Default.DocumentScanner,
-        contentDescription = null,
-        modifier = modifier
-            .padding(
-                bottom = Dp(logoBottomPaddingAnim.value)
-            )
-            .size(70.dp)
-            .alpha(1f)
-            .rotate(logoRotateAnim.value)
-        ,
-        tint = PrimaryColor
-    )
-    Text(
-        text = BESON,
-        modifier = Modifier
-            .alpha(alpha = textAlphaAnim.value)
-            .padding(top = Dp(textPaddingAnim.value))
-            .graphicsLayer { rotationX = textRotationXAnim.value },
-        color = PrimaryColor,
-        style = MaterialTheme.typography.h1
-    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.DocumentScanner,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(
+                    bottom = Dp(logoBottomPaddingAnim.value)
+                )
+                .size(70.dp)
+                .alpha(1f)
+                .rotate(logoRotateAnim.value)
+            ,
+            tint = PrimaryColor
+        )
+        Text(
+            text = BESON,
+            modifier = Modifier
+                .alpha(alpha = textAlphaAnim.value)
+                .padding(top = Dp(textPaddingAnim.value))
+                .graphicsLayer { rotationX = textRotationXAnim.value },
+            color = PrimaryColor,
+            style = MaterialTheme.typography.h1
+        )
+        Text(
+            text = APP_STATEMENT,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = spacing.spaceExtraLarge)
+                .alpha(alpha = textAlphaAnim.value),
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.caption,
+            textAlign = TextAlign.Center
+        )
+    }
 }

@@ -29,8 +29,8 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 fun LogInScreen(
     viewModel: LogInViewModel = hiltViewModel(),
 ) {
-    val navController = LocalNavController.current
     val spacing = LocalSpacing.current
+    val navController = LocalNavController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->

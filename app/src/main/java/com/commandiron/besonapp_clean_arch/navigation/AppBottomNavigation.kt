@@ -14,19 +14,11 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 fun AppBottomNavigation() {
     val navController = LocalNavController.current
     val currentRoute = navController.currentRoute()
-    val bottomNavigationVisibleState = remember {
-        MutableTransitionState(false)
-    }
-    val navigationItems = listOf(
-        NavigationItem.Profile,
-        NavigationItem.Prices
-    )
-    val bottomNavigationVisibleRouteList = navigationItems.map { it.route }
-    LaunchedEffect(key1 = currentRoute){
-        bottomNavigationVisibleState.targetState = bottomNavigationVisibleRouteList.contains(currentRoute)
-    }
+    val bottomNavigationVisibleNavigationItemsList = NavigationItem.navigationItems
+        .filter { it.isBottomNavigationVisible }
+    val bottomNavigationIsVisible = bottomNavigationVisibleNavigationItemsList.map { it.route }.contains(currentRoute)
     AnimatedVisibility(
-        visibleState = bottomNavigationVisibleState,
+        visible = bottomNavigationIsVisible,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -34,7 +26,7 @@ fun AppBottomNavigation() {
             backgroundColor = MaterialTheme.colors.background,
             elevation = 0.dp
         ) {
-            navigationItems.forEach { item ->
+            bottomNavigationVisibleNavigationItemsList.forEach { item ->
                 BottomNavigationItem(
                     icon = {
                         Icon(

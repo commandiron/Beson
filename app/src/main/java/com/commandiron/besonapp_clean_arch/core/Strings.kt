@@ -29,6 +29,14 @@ object Strings {
     const val EDIT_MY_PROFILE = "Profilimi Düzenle"
     const val MY_PRICE_UPDATES = "Fiyat Güncellemelerim"
     const val PRICES = "Fiyatlar"
+    const val BACK_TO_SIGN_UP_SCREEN = "← Kayıt Sayfasına Geri Dön"
+    const val CREATE_PROFILE_TEXT = "Profil Oluştur"
+    const val ENTER_YOUR_NAME = "Adınızı Giriniz"
+    const val ENTER_YOUR_PHONE_NUMBER = "Telefon Numaranızı Giriniz"
+    const val YOUR_NAME = "Adınız"
+    const val YOUR_PHONE_NUMBER = "Telefon no:"
+    const val NEXT = "İleri"
+    const val COMPLETE_REGISTRATION = "Kaydı Tamamla"
 
     //Bu değiştirilecek
     const val SIGNUP_SCREEN_CUSTOMER_IMAGE_URL = "https://archello.s3.eu-central-1.amazonaws.com/images/2021/02/28/addline-group-interior-design-of-the-construction-company-office-offices-archello.1614525239.7456.jpg"
