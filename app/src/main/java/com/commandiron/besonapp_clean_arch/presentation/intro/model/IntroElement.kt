@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.intro.state
+package com.commandiron.besonapp_clean_arch.presentation.intro.model
 
 import com.commandiron.besonapp_clean_arch.R
 

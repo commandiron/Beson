@@ -1,10 +1,11 @@
 package com.commandiron.besonapp_clean_arch.presentation.profile
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +15,7 @@ import com.commandiron.besonapp_clean_arch.presentation.profile.components.Dragg
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.ProfileItem
 import com.commandiron.besonapp_clean_arch.presentation.profile.event.ProfileUiEvent
 import com.commandiron.besonapp_clean_arch.presentation.profile.event.ProfileUserEvent
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalCoroutineScope
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
@@ -43,7 +45,10 @@ fun ProfileScreen(
         }
     }
     systemUiController.setStatusBarColor(
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colorScheme.primary
+    )
+    systemUiController.setNavigationBarColor(
+        color = MaterialTheme.colorScheme.primary
     )
     DraggableProfileHeader(
         text = state.name,
@@ -62,7 +67,6 @@ fun ProfileScreen(
             modifier = Modifier
                 .padding(horizontal = spacing.spaceMedium),
             thickness = 1.dp,
-            color = MaterialTheme.colors.onBackground
         )
         ProfileItem(
             title = MY_PRICE_UPDATES,
@@ -72,7 +76,6 @@ fun ProfileScreen(
             modifier = Modifier
                 .padding(horizontal = spacing.spaceMedium),
             thickness = 1.dp,
-            color = MaterialTheme.colors.onBackground
         )
     }
 }

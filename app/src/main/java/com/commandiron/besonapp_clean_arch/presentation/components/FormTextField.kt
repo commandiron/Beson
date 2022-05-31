@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +33,7 @@ fun FormTextField(
     size: DpSize = DpSize(240.dp, 42.dp),
     text: String,
     hint: String,
-    textFieldErrorMessage: String?,
+    textFieldErrorMessage: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     onChange:(String) -> Unit = {}
 ) {
@@ -44,8 +47,8 @@ fun FormTextField(
                 .border(
                     width =  1.dp,
                     color = if(textFieldErrorMessage == null ){
-                        MaterialTheme.colors.onBackground
-                    } else MaterialTheme.colors.error
+                        MaterialTheme.colorScheme.background
+                    } else MaterialTheme.colorScheme.error
                 )
                 .size(size)
                 .background(Color.White),
@@ -53,7 +56,7 @@ fun FormTextField(
             onValueChange = { onChange(it) },
             singleLine = true,
             maxLines = 1,
-            textStyle = MaterialTheme.typography.h5,
+            textStyle = MaterialTheme.typography.bodyMedium,
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,
                 imeAction =  ImeAction.Next
@@ -73,8 +76,8 @@ fun FormTextField(
                         if (text.isEmpty())
                             Text(
                                 text = hint,
-                                style = MaterialTheme.typography.h5.copy(
-                                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                                 )
                             )
                         innerTextField()
@@ -115,13 +118,13 @@ fun FormTextField(
                 Icon(
                     modifier = Modifier.size(size.width/20),
                     imageVector = Icons.Default.ErrorOutline,
-                    tint = MaterialTheme.colors.error,
+                    tint = MaterialTheme.colorScheme.error,
                     contentDescription = null
                 )
                 Text(
                     text = textFieldErrorMessage,
-                    style = MaterialTheme.typography.overline.copy(fontSize = 8.sp),
-                    color = MaterialTheme.colors.error
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         }

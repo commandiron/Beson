@@ -4,6 +4,7 @@ import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings.EDIT_MY_PROFILE
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PRICE_UPDATES
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PROFILE
+import com.commandiron.besonapp_clean_arch.core.Strings.POST_PRICES
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICES
 
 sealed class NavigationItem(
@@ -25,14 +26,29 @@ sealed class NavigationItem(
     object LogIn : NavigationItem(
         route = "logIn"
     )
-    object SignUpSteps1 : NavigationItem(
-        route = "signUpSteps1"
+    object SignUpStepsAsCustomer1 : NavigationItem(
+        route = "signUpStepsAsCustomer1"
     )
-    object SignUpSteps2 : NavigationItem(
-        route = "signUpSteps2"
+    object SignUpStepsAsCustomer2 : NavigationItem(
+        route = "signUpStepsAsCustomer2"
     )
-    object SignUpSteps3 : NavigationItem(
-        route = "signUpSteps3"
+    object SignUpStepsAsCustomer3 : NavigationItem(
+        route = "signUpStepsAsCustomer3"
+    )
+    object SignUpStepsAsCompany1 : NavigationItem(
+        route = "signUpStepsAsCompany1"
+    )
+    object SignUpStepsAsCompany2 : NavigationItem(
+        route = "signUpStepsAsCompany2"
+    )
+    object SignUpStepsAsCompany3 : NavigationItem(
+        route = "signUpStepsAsCompany3"
+    )
+    object SignUpStepsAsCompany4 : NavigationItem(
+        route = "signUpStepsAsCompany4"
+    )
+    object SignUpStepsAsCompany5 : NavigationItem(
+        route = "signUpStepsAsCompany5"
     )
     object Profile : NavigationItem(
         title = MY_PROFILE,
@@ -57,19 +73,25 @@ sealed class NavigationItem(
         iconResource = R.drawable.ic_prices_icon,
         route = "prices"
     )
+    object PostPrice: NavigationItem(
+        title = POST_PRICES,
+        route = "postPrice",
+        isTopBarVisible = true
+    )
     companion object {
         val navigationItems = listOf(
             HotSplash,
             Intro,
             SignUp,
             LogIn,
-            SignUpSteps1,
-            SignUpSteps2,
-            SignUpSteps3,
+            SignUpStepsAsCustomer1,
+            SignUpStepsAsCustomer2,
+            SignUpStepsAsCustomer3,
             Profile,
             EditProfile,
             MyPriceUpdates,
-            Prices
+            Prices,
+            PostPrice
         )
         fun fromRouteString(route: String?): NavigationItem {
             return when(route){
@@ -77,13 +99,14 @@ sealed class NavigationItem(
                 Intro.route -> Intro
                 SignUp.route -> SignUp
                 LogIn.route -> LogIn
-                SignUpSteps1.route -> SignUpSteps1
-                SignUpSteps2.route -> SignUpSteps2
-                SignUpSteps3.route -> SignUpSteps3
+                SignUpStepsAsCustomer1.route -> SignUpStepsAsCustomer1
+                SignUpStepsAsCustomer2.route -> SignUpStepsAsCustomer2
+                SignUpStepsAsCustomer3.route -> SignUpStepsAsCustomer3
                 Profile.route -> Profile
                 EditProfile.route -> EditProfile
                 MyPriceUpdates.route -> MyPriceUpdates
                 Prices.route -> Prices
+                PostPrice.route -> PostPrice
                 else -> HotSplash
             }
         }

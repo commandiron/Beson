@@ -1,29 +1,32 @@
-package com.commandiron.besonapp_clean_arch.presentation.signup_steps
+package com.commandiron.besonapp_clean_arch.presentation.signup_steps.as_company
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.BACK_TO_SIGN_UP_SCREEN
-import com.commandiron.besonapp_clean_arch.core.Strings.COMPLETE_REGISTRATION
 import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_YOUR_PHONE_NUMBER
+import com.commandiron.besonapp_clean_arch.core.Strings.NEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PHONE_NUMBER
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.components.ClickableToGalleryImage
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsUiEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsUserEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsViewModel
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps.components.RegistrationTextField
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 
 @Composable
-fun SignUpStepsScreen3(
+fun SignUpStepsAsCompanyScreen2(
     viewModel: SignUpStepsViewModel = hiltViewModel(),
 ) {
     val spacing = LocalSpacing.current
@@ -38,16 +41,17 @@ fun SignUpStepsScreen3(
                         NavigationItem.SignUp.route
                     )
                 }
-                is SignUpStepsUiEvent.RegistrationSuccess -> {
+                is SignUpStepsUiEvent.NavigateToNextScreen -> {
                     navController.navigate(
-                        NavigationItem.Profile.route
+                        NavigationItem.SignUpStepsAsCompany3.route
                     )
                 }
+                else -> {}
             }
         }
     }
     systemUiController.setSystemBarsColor(
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colorScheme.background
     )
     Column(
         modifier = Modifier
@@ -61,29 +65,28 @@ fun SignUpStepsScreen3(
                 .clickable { viewModel.onEvent(SignUpStepsUserEvent.OnBackToSignUpClick) }
                 .align(Alignment.Start),
             text = BACK_TO_SIGN_UP_SCREEN,
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h5,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
         Text(
             text = CREATE_PROFILE_TEXT,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
             text = ENTER_YOUR_PHONE_NUMBER,
-            style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Normal)
+            style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        ClickableToGalleryImage(
-            uri = state.profilePictureUri,
-            onImageChange = { viewModel.onEvent(SignUpStepsUserEvent.PictureChanged(it)) }
+        RegistrationTextField(
+            text = state.phoneNumber,
+            hint = YOUR_PHONE_NUMBER,
+            onChange = { viewModel.onEvent(SignUpStepsUserEvent.PhoneNumberChanged(it)) }
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        Button(
-            onClick = { viewModel.onEvent(SignUpStepsUserEvent.OnCompleteClick) }
-        ) {
-            Text(text = COMPLETE_REGISTRATION)
+        Button(onClick = { viewModel.onEvent(SignUpStepsUserEvent.PhoneNumberScreenNext) }) {
+            Text(text = NEXT)
         }
     }
     Box(

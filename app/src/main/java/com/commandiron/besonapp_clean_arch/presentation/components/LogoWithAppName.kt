@@ -1,8 +1,8 @@
 package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +24,8 @@ fun LogoWithAppName(
         Text(
             text = BESON,
             modifier = Modifier.align(Alignment.Bottom),
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h4,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
     }

@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -49,8 +51,8 @@ fun AddPriceButton(
         Surface(
             onClick = onClick,
             shape = RoundedCornerShape(4.dp).copy(CornerSize(percent = 50)),
-            color = MaterialTheme.colors.primary,
-            elevation = spacing.defaultElevation
+            color = MaterialTheme.colorScheme.primary,
+            shadowElevation = spacing.defaultElevation
         ) {
             Box(
                 modifier = Modifier

@@ -1,6 +1,6 @@
 package com.commandiron.besonapp_clean_arch.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -25,44 +25,39 @@ val Roboto = FontFamily(
 )
 
 val Typography = Typography(
-    h1 = TextStyle(
+    displayMedium = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
         fontSize = 30.sp
     ),
-    h2 = TextStyle(
+    headlineMedium = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
-        fontSize = 26.sp
+        fontSize = 24.sp
     ),
-    h3 = TextStyle(
-        fontFamily = Roboto,
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp
-    ),
-    h4 = TextStyle(
+    titleMedium = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     ),
-    h5 = TextStyle(
+    bodyLarge = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp
     ),
-    h6 = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp
     ),
-    caption = TextStyle(
+    labelMedium = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
         fontSize = 10.sp
     ),
-    overline = TextStyle(
+    labelSmall = TextStyle(
         fontFamily = Roboto,
         fontWeight = FontWeight.Medium,
-        fontSize = 8.sp
-    ),
+        fontSize = 9.sp
+    )
 )

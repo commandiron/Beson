@@ -40,12 +40,13 @@ android {
             "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
             "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xuse-experimental=androidx.compose.ExperimentalComposeApi",
-            "-Xuse-experimental=androidx.compose.material.ExperimentalMaterialApi",
+            "-Xuse-experimental=androidx.compose.material3.ExperimentalMaterial3Api",
             "-Xuse-experimental=androidx.compose.runtime.ExperimentalComposeApi",
             "-Xuse-experimental=androidx.compose.ui.ExperimentalComposeUiApi",
             "-Xuse-experimental=coil.annotation.ExperimentalCoilApi",
             "-Xuse-experimental=kotlinx.serialization.ExperimentalSerializationApi",
             "-Xuse-experimental=com.google.accompanist.pager.ExperimentalPagerApi",
+            "-Xuse-experimental=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-Xuse-experimental=androidx.constraintlayout.compose.ExperimentalMotionApi",
             "-Xuse-experimental=com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi",
         )
@@ -65,7 +66,6 @@ dependencies {
     implementation(Compose.compiler)
     implementation(Compose.ui)
     implementation(Compose.uiToolingPreview)
-    implementation(Compose.material)
     implementation(Compose.runtime)
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
@@ -81,13 +81,15 @@ dependencies {
     implementation(AndroidX.splashScreen)
     implementation(AndroidX.constraintLayout)
 
-    implementation(Google.material)
+    implementation(Google.material3)
     implementation(Google.materialIconsCore)
     implementation(Google.materialIconsExtended)
 
     implementation(Accompanist.systemUi)
     implementation(Accompanist.pager)
     implementation(Accompanist.pagerIndicators)
+    implementation(Accompanist.permissions)
+    implementation(Accompanist.navigationMaterial)
 
     implementation(Coil.coil)
     implementation(Coil.compose)

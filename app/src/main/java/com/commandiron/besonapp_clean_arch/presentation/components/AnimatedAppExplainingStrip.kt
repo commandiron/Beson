@@ -4,12 +4,12 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.core.Strings.APP_STATEMENT
 import com.commandiron.besonapp_clean_arch.presentation.components.toDpSize
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 
 @Composable
 fun AnimatedAppExplainingStrip(
@@ -51,23 +53,22 @@ fun AnimatedAppExplainingStrip(
         modifier = modifier
             .fillMaxWidth()
             .offset(x = Dp(offsetAnim.value)),
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colorScheme.primary
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                modifier = Modifier,
+                modifier = Modifier.size(spacing.spaceMediumLarge),
                 imageVector = Icons.Default.DocumentScanner,
                 contentDescription = null,
-                tint = MaterialTheme.colors.onBackground
+                tint = TertiaryColor
             )
             Spacer(modifier = Modifier.padding(spacing.spaceExtraSmall))
             Text(
                 text = APP_STATEMENT,
-                color = MaterialTheme.colors.onBackground,
-                style = MaterialTheme.typography.overline
+                style = MaterialTheme.typography.labelSmall,
             )
         }
     }

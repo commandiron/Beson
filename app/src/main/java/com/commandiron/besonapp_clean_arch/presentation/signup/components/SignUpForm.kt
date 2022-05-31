@@ -1,9 +1,9 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,8 +31,7 @@ fun SignUpForm(
     ) {
         Text(
             text = SIGNUP_TEXT,
-            color = MaterialTheme.colors.onBackground,
-            style = MaterialTheme.typography.h2
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         FormTextField(
@@ -65,7 +64,6 @@ fun SignUpForm(
         Button(onClick = { onSignUpButtonClick() }) {
             Text(
                 text = buttonText,
-                style = MaterialTheme.typography.h4
             )
         }
     }

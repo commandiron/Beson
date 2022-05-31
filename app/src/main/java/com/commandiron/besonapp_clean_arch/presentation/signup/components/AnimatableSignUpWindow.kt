@@ -7,9 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -33,7 +32,7 @@ fun AnimatableSignUpWindow(
     title: String,
     details: String,
     buttonText: String,
-    imageUrl: String,
+    backgroundImageUrl: String,
     surfaceColor: Color,
     targetOffsetValue: Float,
     isUiWindowOpen: Boolean,
@@ -60,7 +59,7 @@ fun AnimatableSignUpWindow(
     }
     Surface(
         modifier = modifier
-            .border(1.dp, MaterialTheme.colors.surface)
+            .border(1.dp, MaterialTheme.colorScheme.onSurface)
             .offset(y = Dp(offsetAnim.value)),
         color = surfaceColor
     ) {
@@ -75,7 +74,7 @@ fun AnimatableSignUpWindow(
                 painter = rememberAsyncImagePainter(
                     model = ImageRequest
                         .Builder(LocalContext.current)
-                        .data(imageUrl)
+                        .data(backgroundImageUrl)
                         .build()
                 ),
                 contentDescription = null,
@@ -88,14 +87,14 @@ fun AnimatableSignUpWindow(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.primary
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 Text(
                     text = details,
-                    style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.primary
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Surface(
@@ -104,14 +103,13 @@ fun AnimatableSignUpWindow(
                         .clickable { onButtonClick() },
                     shape = RoundedCornerShape(spacing.spaceMedium),
                     color = Color.White,
-                    elevation = spacing.defaultElevation
+                    shadowElevation = spacing.defaultElevation
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
                             modifier = Modifier.padding(spacing.spaceExtraSmall),
                             text = buttonText,
-                            style = MaterialTheme.typography.body2
-                                .copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }

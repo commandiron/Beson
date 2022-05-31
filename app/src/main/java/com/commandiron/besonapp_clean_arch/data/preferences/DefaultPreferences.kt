@@ -41,13 +41,14 @@ class DefaultPreferences(
         return sharedPref.getString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_PHONE_NUMBER, "").toString()
     }
 
-    override fun saveTemporalSignUpStepsPictureUriString(uri: String) {
+    override fun saveTemporalSignUpStepsSelectedConsItemId(id: Int) {
         sharedPref.edit()
-            .putString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_PICTURE_URI, uri)
+            .putInt(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_CONS_ITEM_ID, id)
             .apply()
     }
 
-    override fun loadTemporalSignUpStepsPictureUriString(): String? {
-        return sharedPref.getString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_PICTURE_URI, "")
+    override fun loadTemporalSignUpStepsSelectedConsItemId(): Int {
+        return sharedPref.getInt(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_CONS_ITEM_ID, 0)
+
     }
 }

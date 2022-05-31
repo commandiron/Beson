@@ -6,10 +6,7 @@ import android.content.SharedPreferences
 import com.commandiron.besonapp_clean_arch.data.preferences.DefaultPreferences
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
-import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
-import com.commandiron.besonapp_clean_arch.domain.use_case.ValidateEmail
-import com.commandiron.besonapp_clean_arch.domain.use_case.ValidatePassword
-import com.commandiron.besonapp_clean_arch.domain.use_case.ValidateRepeatedPassword
+import com.commandiron.besonapp_clean_arch.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,11 +33,20 @@ object AppModule {
 
     @Provides
     fun provideUseCases(
+        preferences: Preferences
     ): UseCases {
         return UseCases(
+            saveShouldShowSplashAndIntro = SaveShouldShowSplashAndIntro(preferences = preferences),
+            loadShouldShowSplashAndIntro = LoadShouldShowSplashAndIntro(preferences = preferences),
             validateEmail = ValidateEmail(),
             validatePassword = ValidatePassword(),
-            validateRepeatedPassword = ValidateRepeatedPassword()
+            validateRepeatedPassword = ValidateRepeatedPassword(),
+            saveTemporalSignUpStepsName = SaveTemporalSignUpStepsName(preferences = preferences),
+            loadTemporalSignUpStepsName = LoadTemporalSignUpStepsName(preferences = preferences),
+            saveTemporalSignUpStepsPhoneNumber = SaveTemporalSignUpStepsPhoneNumber(preferences = preferences),
+            loadTemporalSignUpStepsPhoneNumber = LoadTemporalSignUpStepsPhoneNumber(preferences = preferences),
+            saveTemporalSignUpStepsSelectedConsItem = SaveTemporalSignUpStepsSelectedConsItem(preferences = preferences),
+            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences = preferences)
         )
     }
 }

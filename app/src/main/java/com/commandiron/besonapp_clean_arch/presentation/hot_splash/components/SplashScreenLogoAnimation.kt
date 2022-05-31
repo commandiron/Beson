@@ -3,11 +3,11 @@ package com.example.besonapp.presentation.floating_components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.APP_STATEMENT
 import com.commandiron.besonapp_clean_arch.core.Strings.BESON
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
@@ -114,7 +113,7 @@ fun SplashScreenLogoAnimation(
                 .padding(top = Dp(textPaddingAnim.value))
                 .graphicsLayer { rotationX = textRotationXAnim.value },
             color = PrimaryColor,
-            style = MaterialTheme.typography.h1
+            style = MaterialTheme.typography.headlineMedium
         )
         Text(
             text = APP_STATEMENT,
@@ -122,8 +121,8 @@ fun SplashScreenLogoAnimation(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = spacing.spaceExtraLarge)
                 .alpha(alpha = textAlphaAnim.value),
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.caption,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelMedium,
             textAlign = TextAlign.Center
         )
     }

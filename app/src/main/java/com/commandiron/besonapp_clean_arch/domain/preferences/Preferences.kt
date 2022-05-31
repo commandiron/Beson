@@ -7,13 +7,14 @@ interface Preferences {
     fun loadTemporalSignUpStepsName(): String
     fun saveTemporalSignUpStepsPhoneNumber(phoneNumber: String)
     fun loadTemporalSignUpStepsPhoneNumber(): String
-    fun saveTemporalSignUpStepsPictureUriString(uri: String)
-    fun loadTemporalSignUpStepsPictureUriString(): String?
+    fun saveTemporalSignUpStepsSelectedConsItemId(id: Int)
+    fun loadTemporalSignUpStepsSelectedConsItemId(): Int
 
     companion object {
         const val KEY_SHOULD_SHOW_SPLASH_AND_INTRO = "should_show_splash_and_intro"
         const val KEY_TEMPORAL_SIGN_UP_STEPS_NAME = "save_temporal_signUp_steps_name"
         const val KEY_TEMPORAL_SIGN_UP_STEPS_PHONE_NUMBER = "save_temporal_signUp_steps_phone_number"
-        const val KEY_TEMPORAL_SIGN_UP_STEPS_PICTURE_URI = "save_temporal_signUp_steps_picture_uri"
+        const val KEY_TEMPORAL_SIGN_UP_STEPS_CONS_ITEM_ID = "save_temporal_signUp_steps_cons_item_id"
+
     }
 }

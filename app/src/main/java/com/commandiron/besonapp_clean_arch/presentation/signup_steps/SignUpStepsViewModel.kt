@@ -1,13 +1,11 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
+import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -17,14 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpStepsViewModel @Inject constructor(
-    private val preferences: Preferences,
+    private val useCases: UseCases
 ): ViewModel() {
 
     var state by mutableStateOf(
         SignUpStepsState(
-            name = preferences.loadTemporalSignUpStepsName(),
-            phoneNumber = preferences.loadTemporalSignUpStepsPhoneNumber(),
-            profilePictureUri = preferences.loadTemporalSignUpStepsPictureUriString()?.toUri()
+            name = useCases.loadTemporalSignUpStepsName(),
+            phoneNumber = useCases.loadTemporalSignUpStepsPhoneNumber(),
+            selectedMainConstructionItem = useCases.loadTemporalSignUpStepsSelectedConsItem()
         )
     )
         private set
@@ -49,23 +47,46 @@ class SignUpStepsViewModel @Inject constructor(
             }
             is SignUpStepsUserEvent.PictureChanged -> {
                 state = state.copy(
-                    profilePictureUri = userEvent.uri
+                    profilePictureUri= userEvent.uri
                 )
             }
-            is SignUpStepsUserEvent.OnNextClick1 -> {
-                preferences.saveTemporalSignUpStepsName(state.name)
-                sendUiEvent(SignUpStepsUiEvent.NavigateToSignUpStepsScreen2)
-            }
-            is SignUpStepsUserEvent.OnNextClick2 -> {
-                preferences.saveTemporalSignUpStepsPhoneNumber(state.phoneNumber)
-                sendUiEvent(SignUpStepsUiEvent.RegistrationSuccess)
-            }
-            is SignUpStepsUserEvent.OnCompleteClick -> {
-                preferences.saveTemporalSignUpStepsPictureUriString(
-                    state.profilePictureUri.toString()
+            is SignUpStepsUserEvent.MainCategorySelected -> {
+                state = state.copy(
+                    selectedMainConstructionItem = userEvent.itemMain
                 )
-                //Burda firebase kaydı yapılacak ve başarılı olursa gidilecek.
-                sendUiEvent(SignUpStepsUiEvent.RegistrationSuccess)
+            }
+            is SignUpStepsUserEvent.SubCategoriesSelected -> {
+                state = state.copy(
+                    selectedSubConstructionItems = userEvent.itemList
+                )
+            }
+            is SignUpStepsUserEvent.NameScreenNext -> {
+                useCases.saveTemporalSignUpStepsName(state.name)
+                sendUiEvent(SignUpStepsUiEvent.NavigateToNextScreen)
+            }
+            is SignUpStepsUserEvent.PhoneNumberScreenNext -> {
+                useCases.saveTemporalSignUpStepsPhoneNumber(state.phoneNumber)
+                sendUiEvent(SignUpStepsUiEvent.NavigateToNextScreen)
+            }
+            is SignUpStepsUserEvent.PictureScreenNext -> {
+                sendUiEvent(SignUpStepsUiEvent.NavigateToNextScreen)
+            }
+            is SignUpStepsUserEvent.ConstructionCategoryScreenNext -> {
+                if(state.selectedMainConstructionItem == null){
+                    //Seçmediniz snack bar
+                }else{
+                    useCases.saveTemporalSignUpStepsSelectedConsItem(state.selectedMainConstructionItem!!)
+                    sendUiEvent(SignUpStepsUiEvent.NavigateToNextScreen)
+                }
+            }
+            is SignUpStepsUserEvent.SubConstructionCategoryScreenNext -> {
+                if(state.selectedSubConstructionItems == null){
+                    //Seçmediniz snack bar
+                }else{
+                    //Save picture to firebase
+                    //Save profile info to firebase
+                    sendUiEvent(SignUpStepsUiEvent.RegistrationSuccess)
+                }
             }
         }
     }

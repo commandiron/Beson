@@ -1,14 +1,15 @@
 package com.commandiron.besonapp_clean_arch.presentation.profile.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
@@ -25,11 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.presentation.components.toDp
-import com.commandiron.besonapp_clean_arch.ui.theme.NoRippleTheme
 
 @Composable
 fun DraggableProfileHeader(
@@ -119,7 +118,7 @@ fun DraggableProfileHeader(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.layoutId("username")
         )
     }

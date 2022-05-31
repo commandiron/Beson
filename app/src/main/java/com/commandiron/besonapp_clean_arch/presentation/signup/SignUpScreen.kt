@@ -1,7 +1,8 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -15,8 +16,6 @@ import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_CUSTOMER_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.LOGIN_TEXT
-import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_SCREEN_COMPANY_IMAGE_URL
-import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_SCREEN_CUSTOMER_IMAGE_URL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_UPPERCASE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
@@ -38,7 +37,6 @@ fun SignUpScreen(
 ) {
     val navController = LocalNavController.current
     val coroutineScope = LocalCoroutineScope.current
-    val snackbarHostState = LocalSnackbarHostState.current
     val systemUiController = LocalSystemUiController.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val state = viewModel.state
@@ -47,28 +45,26 @@ fun SignUpScreen(
             when(event) {
                 is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCustomer -> {
                     navController.navigate(
-                        NavigationItem.SignUpSteps1.route
+                        NavigationItem.SignUpStepsAsCustomer1.route
                     )
                     keyboardController?.hide()
                 }
                 is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCompany -> {
                     navController.navigate(
-                        NavigationItem.SignUpSteps1.route
+                        NavigationItem.SignUpStepsAsCompany1.route
                     )
                     keyboardController?.hide()
                 }
                 is SignUpUiEvent.ShowSnackbar -> {
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = event.message
-                        )
+                        //snackbar uygulanacak
                     }
                 }
             }
         }
     }
     systemUiController.setSystemBarsColor(
-        color = MaterialTheme.colors.surface
+        color = MaterialTheme.colorScheme.tertiary
     )
     BoxWithConstraints {
         SignUpScreenBackground(
@@ -150,7 +146,7 @@ fun SignUpScreenForeground(
             title =  I_AM_CUSTOMER_TEXT,
             details = CUSTOMER_STATEMENT_TEXT,
             buttonText = SIGNUP_UPPERCASE_TEXT,
-            imageUrl = SIGNUP_SCREEN_CUSTOMER_IMAGE_URL,
+            backgroundImageUrl = state.customerWindowsBackgroundUrl,
             surfaceColor = SignUpCustomerBackgroundColor,
             targetOffsetValue = -constraints.maxHeight/4.toFloat() + 130f,
             isUiWindowOpen = state.isCustomerUiWindowOpen,
@@ -165,7 +161,7 @@ fun SignUpScreenForeground(
             title =  I_AM_COMPANY_TEXT,
             details = COMPANY_STATEMENT_TEXT,
             buttonText = SIGNUP_UPPERCASE_TEXT,
-            imageUrl = SIGNUP_SCREEN_COMPANY_IMAGE_URL,
+            backgroundImageUrl = state.companyWindowsBackgroundUrl,
             surfaceColor = SignUpCompanyBackgroundColor,
             targetOffsetValue = constraints.maxHeight/4.toFloat() - 130f,
             isUiWindowOpen = state.isCompanyUiWindowOpen,

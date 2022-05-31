@@ -4,16 +4,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
-import com.commandiron.besonapp_clean_arch.ui.theme.SplashBackgroundColor
+import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 
 @Composable
 fun CustomLogInButton(
@@ -25,9 +23,8 @@ fun CustomLogInButton(
     Surface(
         modifier = modifier,
         shape = CircleShape,
-        color = SplashBackgroundColor,
-        elevation = spacing.defaultElevation,
-        contentColor = MaterialTheme.colors.primary
+        color = TertiaryColor,
+        shadowElevation = spacing.defaultElevation
     ) {
         Box(
             modifier = Modifier.padding(spacing.spaceMedium),
@@ -37,9 +34,8 @@ fun CustomLogInButton(
                 modifier = Modifier
                     .clickable{ onClick() },
                 text = text,
-                style = MaterialTheme.typography.h5.copy(
-                    fontSize = 16.sp
-                )
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

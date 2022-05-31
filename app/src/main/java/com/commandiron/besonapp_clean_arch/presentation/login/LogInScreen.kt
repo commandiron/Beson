@@ -1,14 +1,13 @@
 package com.commandiron.besonapp_clean_arch.presentation.login
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_TEXT
@@ -56,9 +55,7 @@ fun LogInScreen(
     ) {
         Text(
             text = LOGIN_BESON_TEXT,
-            style = MaterialTheme.typography.h3.copy(
-                fontWeight = FontWeight.Bold
-            )
+            style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         FormTextField(
@@ -86,13 +83,12 @@ fun LogInScreen(
         ) {
             Text(
                 text = LOGIN_TEXT_2,
-                style = MaterialTheme.typography.h5
             )
         }
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
             text = OR_TEXT,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Button(
@@ -101,7 +97,6 @@ fun LogInScreen(
         ) {
             Text(
                 text = SIGNUP_TEXT,
-                style = MaterialTheme.typography.h5
             )
         }
     }

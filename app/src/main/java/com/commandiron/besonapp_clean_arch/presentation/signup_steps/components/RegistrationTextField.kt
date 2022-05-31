@@ -1,30 +1,21 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun RegistrationTextField(
@@ -46,7 +37,7 @@ fun RegistrationTextField(
         onValueChange = { onChange(it) },
         singleLine = true,
         maxLines = 1,
-        textStyle = MaterialTheme.typography.h5,
+        textStyle = MaterialTheme.typography.bodyMedium,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction =  ImeAction.Next
@@ -64,8 +55,8 @@ fun RegistrationTextField(
                 if (text.isEmpty())
                     Text(
                         text = hint,
-                        style = MaterialTheme.typography.h5.copy(
-                            color = MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
                         )
                     )
                 innerTextField()

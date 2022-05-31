@@ -6,4 +6,8 @@ object Accompanist {
         "com.google.accompanist:accompanist-pager:$accompanistVersion"
     const val pagerIndicators =
         "com.google.accompanist:accompanist-pager-indicators:$accompanistVersion"
+    const val permissions =
+        "com.google.accompanist:accompanist-permissions:$accompanistVersion"
+    const val navigationMaterial =
+        "com.google.accompanist:accompanist-navigation-material:$accompanistVersion"
 }

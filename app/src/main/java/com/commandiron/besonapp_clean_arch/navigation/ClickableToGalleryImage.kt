@@ -16,13 +16,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.commandiron.besonapp_clean_arch.R
-
 @Composable
 fun ClickableToGalleryImage(
-    uri: Uri?,
+    imageUrl: String? = null,
     onImageChange:(Uri?) -> Unit = {}
 ){
     var imageUri by remember {
@@ -35,11 +33,10 @@ fun ClickableToGalleryImage(
         imageUri = uriFromGallery
     }
     Image(
-        //Buda kaldım nedense save ettiğim uri'yi gösteremiyorum.
         painter = rememberAsyncImagePainter(
             ImageRequest
                 .Builder(LocalContext.current)
-                .data(data = uri)
+                .data(data = if(imageUrl != null && imageUri == null) imageUrl else imageUri)
                 .apply(
                     block = fun ImageRequest.Builder.() {
                         crossfade(true)
@@ -47,13 +44,13 @@ fun ClickableToGalleryImage(
                         fallback(R.drawable.ic_blank_profile_picture)
                     }
                 )
-                .build().apply {
-                    println(uri)
-                }
+                .build()
         ),
         contentDescription = null,
         modifier = Modifier
-            .clickable { launcher.launch("image/*") }
+            .clickable {
+                launcher.launch("image/*")
+            }
             .size(100.dp)
             .clip(CircleShape)
             .border(2.dp, Color.Gray, CircleShape),

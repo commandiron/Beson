@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Surface
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.components.AppLogoIcon
-import com.commandiron.besonapp_clean_arch.ui.theme.SplashBackgroundColor
+import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 
 
 @Composable
@@ -76,7 +76,7 @@ fun SignUpScreenLogoAnimation(
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable{ onSignUpScreenLogoClick() },
-            color = SplashBackgroundColor
+            color = TertiaryColor
         ) {
             AppLogoIcon(modifier = Modifier
                 .padding(20.dp)
