@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,8 +24,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SUB_CONSTRUCTION_CATEGOR
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.presentation.components.CategoryItem
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
-import com.commandiron.besonapp_clean_arch.presentation.profile.event.ProfileUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.components.ClickableToGalleryImage
+import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController

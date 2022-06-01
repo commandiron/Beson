@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.ui.theme
 
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.compositionLocalOf
@@ -24,7 +25,7 @@ data class Dimensions(
     val spaceExtraLarge: Dp = 64.dp,
     val spaceXXLarge: Dp = 128.dp,
     val spaceXXXLarge: Dp = 256.dp,
-    val dropDownMenuHeight: Dp = 196.dp,
+    val dropDownMenuHeight: Dp = 110.dp,
     val topBarHeight: Dp = 36.dp,
     val navigationHeight: Dp = 56.dp,
     val defaultElevation: Dp = 6.dp,
@@ -43,12 +44,16 @@ val LocalCoroutineScope = compositionLocalOf<CoroutineScope> {
 val LocalSystemUiController = compositionLocalOf<SystemUiController> {
     error("No System Ui Controller")
 }
+val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
+    error("No Snackbar Host State")
+}
 
 fun getProvidedValues(
     multiplePermissionsState: MultiplePermissionsState,
     navController: NavHostController,
     coroutineScope: CoroutineScope,
-    systemUiController: SystemUiController
+    systemUiController: SystemUiController,
+    snackbarHostState: SnackbarHostState
 ): Array<ProvidedValue<*>> {
     return arrayOf(
         LocalRippleTheme provides NoRippleTheme,
@@ -56,7 +61,8 @@ fun getProvidedValues(
         LocalPermissionsState provides multiplePermissionsState,
         LocalNavController provides navController,
         LocalCoroutineScope provides coroutineScope,
-        LocalSystemUiController provides systemUiController
+        LocalSystemUiController provides systemUiController,
+        LocalSnackbarHostState provides snackbarHostState
     )
 }
 

@@ -48,4 +48,7 @@ object Strings {
     const val PHONE_NUMBER = "Telefon Numarası"
     const val MAIN_CONSTRUCTION_CATEGORY = "Ana Faaliyet Alanı"
     const val SUB_CONSTRUCTION_CATEGORIES = "Uzmanlık Alan(lar)ı"
+    const val YES = "Evet"
+    const val NO = "Hayır"
+    const val PRICE_WILL_BE_SENT_ARE_YOU_SURE = "Fiyat gönderilecek. Emin misiniz?"
 }

@@ -17,21 +17,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun CustomDropDown(
+    modifier: Modifier = Modifier,
     onCategoryBoxClick:() -> Unit,
     title: String,
     isExpanded: Boolean,
+    offset: DpOffset,
     dropDownItems: List<String>?,
     onSelect:(Int?) -> Unit,
     onDismissRequest:(Int?) -> Unit
 ) {
     val spacing = LocalSpacing.current
     Surface(
-        modifier = Modifier.clickable { onCategoryBoxClick() },
+        modifier = modifier.clickable { onCategoryBoxClick() },
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.tertiary
     ) {
@@ -43,7 +46,7 @@ fun CustomDropDown(
             Text(
                 text = title,
                 color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
             Icon(
@@ -60,6 +63,7 @@ fun CustomDropDown(
                 maxWidth = spacing.spaceXXLarge
             ),
             isExpanded = isExpanded,
+            offset = offset,
             dropDownItems = dropDownItems,
             onSelect = onSelect,
             onDismissRequest = onDismissRequest

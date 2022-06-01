@@ -19,7 +19,7 @@ import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppNa
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsUiEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps.SignUpStepsViewModel
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.components.ClickableToGalleryImage
+import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController

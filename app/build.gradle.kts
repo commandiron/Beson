@@ -90,6 +90,7 @@ dependencies {
     implementation(Accompanist.pagerIndicators)
     implementation(Accompanist.permissions)
     implementation(Accompanist.navigationMaterial)
+    implementation(Accompanist.placeholderMaterial)
 
     implementation(Coil.coil)
     implementation(Coil.compose)

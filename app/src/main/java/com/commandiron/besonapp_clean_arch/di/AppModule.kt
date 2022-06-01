@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.commandiron.besonapp_clean_arch.data.preferences.DefaultPreferences
+import com.commandiron.besonapp_clean_arch.data.repository.AppRepositoryImpl
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.domain.use_case.*
@@ -32,7 +33,14 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
+    fun provideRepository(): AppRepository {
+        return AppRepositoryImpl()
+    }
+
+    @Provides
     fun provideUseCases(
+        repository: AppRepository,
         preferences: Preferences
     ): UseCases {
         return UseCases(
@@ -46,7 +54,9 @@ object AppModule {
             saveTemporalSignUpStepsPhoneNumber = SaveTemporalSignUpStepsPhoneNumber(preferences = preferences),
             loadTemporalSignUpStepsPhoneNumber = LoadTemporalSignUpStepsPhoneNumber(preferences = preferences),
             saveTemporalSignUpStepsSelectedConsItem = SaveTemporalSignUpStepsSelectedConsItem(preferences = preferences),
-            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences = preferences)
+            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences = preferences),
+            validatePostPriceString = ValidatePostPriceString(),
+            pushPrice = PushPrice(repository = repository)
         )
     }
 }

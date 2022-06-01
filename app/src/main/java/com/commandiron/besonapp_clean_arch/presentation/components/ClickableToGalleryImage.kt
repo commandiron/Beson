@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.signup_steps.components
+package com.commandiron.besonapp_clean_arch.presentation.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
