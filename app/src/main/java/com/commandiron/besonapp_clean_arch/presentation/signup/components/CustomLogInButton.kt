@@ -10,18 +10,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 
 @Composable
 fun CustomLogInButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     text: String,
     onClick:() -> Unit
 ){
     val spacing = LocalSpacing.current
     Surface(
-        modifier = modifier,
+        modifier = modifier.then(placeholderModifier),
         shape = CircleShape,
         color = TertiaryColor,
         shadowElevation = spacing.defaultElevation

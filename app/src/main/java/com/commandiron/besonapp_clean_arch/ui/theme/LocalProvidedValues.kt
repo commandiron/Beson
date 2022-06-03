@@ -3,7 +3,9 @@ package com.commandiron.besonapp_clean_arch.ui.theme
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.State
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -28,6 +30,7 @@ data class Dimensions(
     val dropDownMenuHeight: Dp = 110.dp,
     val topBarHeight: Dp = 36.dp,
     val navigationHeight: Dp = 56.dp,
+    val expandableMenuHeight: Dp = 200.dp,
     val defaultElevation: Dp = 6.dp,
     val defaultButtonWidth: Dp = 100.dp
 )
@@ -47,7 +50,6 @@ val LocalSystemUiController = compositionLocalOf<SystemUiController> {
 val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
     error("No Snackbar Host State")
 }
-
 fun getProvidedValues(
     multiplePermissionsState: MultiplePermissionsState,
     navController: NavHostController,

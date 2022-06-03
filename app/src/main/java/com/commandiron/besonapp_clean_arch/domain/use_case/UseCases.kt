@@ -13,5 +13,8 @@ class UseCases(
     val saveTemporalSignUpStepsSelectedConsItem: SaveTemporalSignUpStepsSelectedConsItem,
     val loadTemporalSignUpStepsSelectedConsItem: LoadTemporalSignUpStepsSelectedConsItem,
     val validatePostPriceString: ValidatePostPriceString,
-    val pushPrice: PushPrice
+    val getUserAuthState: GetUserAuthState,
+    val signUp: SignUp,
+    val signIn: SignIn,
+    val signOut: SignOut
 )

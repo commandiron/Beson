@@ -16,11 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.core.Strings.APP_STATEMENT
-import com.commandiron.besonapp_clean_arch.presentation.components.toDpSize
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 
@@ -28,6 +25,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 fun AnimatedAppExplainingStrip(
     screenSize: Size,
     modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     isAnimated: Boolean = false
 ){
     val spacing = LocalSpacing.current
@@ -56,6 +54,7 @@ fun AnimatedAppExplainingStrip(
         color = MaterialTheme.colorScheme.primary
     ) {
         Row(
+            modifier = placeholderModifier,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {

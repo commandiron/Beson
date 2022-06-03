@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun FormTextField(
+    modifier: Modifier = Modifier,
     size: DpSize = DpSize(240.dp, 42.dp),
     text: String,
     hint: String,
@@ -40,6 +41,7 @@ fun FormTextField(
     val localFocusManager = LocalFocusManager.current
     var passwordVisibility by remember { mutableStateOf(false) }
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(

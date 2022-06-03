@@ -8,4 +8,5 @@ sealed class EditProfileUserEvent {
     data class PhoneNumberChanged(val phoneNumber: String): EditProfileUserEvent()
     data class PictureChanged(val uri: Uri?): EditProfileUserEvent()
     object Save: EditProfileUserEvent()
+    object LogOut: EditProfileUserEvent()
 }

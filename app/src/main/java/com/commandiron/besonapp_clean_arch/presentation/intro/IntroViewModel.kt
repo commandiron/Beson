@@ -8,12 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Strings.START
 import com.commandiron.besonapp_clean_arch.core.Strings.START_NOW
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
-import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUserEvent
-import com.commandiron.besonapp_clean_arch.presentation.intro.state.IntroState
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
-import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryContainerColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,7 +26,7 @@ class IntroViewModel @Inject constructor(
     var state by mutableStateOf(IntroState())
         private set
 
-    private val _uiEvent = Channel<IntroUiEvent>()
+    private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(userEvent: IntroUserEvent) {
@@ -48,12 +46,12 @@ class IntroViewModel @Inject constructor(
             }
             is IntroUserEvent.OnStartClick -> {
                 useCases.saveShouldShowSplashAndIntro(false)
-                sendUiEvent(IntroUiEvent.ShouldShowSplashAndIntroSaveSuccess)
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
             }
         }
     }
 
-    private fun sendUiEvent(uiEvent: IntroUiEvent){
+    private fun sendUiEvent(uiEvent: UiEvent){
         viewModelScope.launch {
             _uiEvent.send(uiEvent)
         }

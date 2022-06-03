@@ -5,14 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_ENTER_PRICE
+import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_SELECT_PRICE_CATEGORY
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
-import com.commandiron.besonapp_clean_arch.presentation.post_price.event.PostPriceUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.post_price.event.PostPriceUserEvent
-import com.commandiron.besonapp_clean_arch.presentation.post_price.state.PostPriceState
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +24,7 @@ class PostPriceViewModel @Inject constructor(
     var state by mutableStateOf(PostPriceState())
         private set
 
-    private val _uiEvent = Channel<PostPriceUiEvent>()
+    private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(userEvent: PostPriceUserEvent) {
@@ -66,7 +65,7 @@ class PostPriceViewModel @Inject constructor(
             }
             is PostPriceUserEvent.PriceTextFieldClick -> {
                 if(state.selectedPriceItemTitle == null){
-                    sendUiEvent(PostPriceUiEvent.ShowSnackBar("Lütfen Fiyat Kategorisi Seçiniz."))
+                    sendUiEvent(UiEvent.ShowSnackbar(PLEASE_SELECT_PRICE_CATEGORY))
                 }
             }
             is PostPriceUserEvent.PriceCategoryDismiss -> {
@@ -81,7 +80,7 @@ class PostPriceViewModel @Inject constructor(
                 )
             }
             is PostPriceUserEvent.KeyboardDone -> {
-                sendUiEvent(PostPriceUiEvent.CloseKeyboard)
+                sendUiEvent(UiEvent.HideKeyboard)
             }
             is PostPriceUserEvent.PostPrice -> {
                 if(state.price.isNotEmpty()){
@@ -89,7 +88,7 @@ class PostPriceViewModel @Inject constructor(
                         showAlertDialog = true
                     )
                 }else{
-                    sendUiEvent(PostPriceUiEvent.ShowSnackBar("Fiyat Giriniz."))
+                    sendUiEvent(UiEvent.ShowSnackbar(PLEASE_ENTER_PRICE))
                 }
             }
             PostPriceUserEvent.AlertDialogDismiss -> {
@@ -103,28 +102,20 @@ class PostPriceViewModel @Inject constructor(
                     placeholderIsVisible = true,
                     isLoading = true
                 )
-                viewModelScope.launch {
-                    useCases.pushPrice().onSuccess {
-                        state = state.copy(
-                            placeholderIsVisible = true,
-                            isLoading = false,
-                            priceIsSent = true
-                        )
-                    }
-                }
                 //Fiyatı Gönder
             }
-            PostPriceUserEvent.PriceSentDialogDismiss -> {
+            PostPriceUserEvent.DoneDialogDismiss -> {
                 state = state.copy(
                     placeholderIsVisible = false,
                     isLoading = false,
                     priceIsSent = false
                 )
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
             }
         }
     }
 
-    private fun sendUiEvent(uiEvent: PostPriceUiEvent){
+    private fun sendUiEvent(uiEvent: UiEvent){
         viewModelScope.launch {
             _uiEvent.send(uiEvent)
         }

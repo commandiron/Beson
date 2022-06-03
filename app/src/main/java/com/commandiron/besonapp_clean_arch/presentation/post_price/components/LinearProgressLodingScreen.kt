@@ -12,7 +12,7 @@ import androidx.compose.ui.window.Dialog
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
-fun LinearProgressLoadingScreen(
+fun LinearProgressLoadingDialog(
     title: String
 ) {
     val spacing = LocalSpacing.current

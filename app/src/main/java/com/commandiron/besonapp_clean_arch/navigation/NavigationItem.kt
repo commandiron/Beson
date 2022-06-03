@@ -23,8 +23,8 @@ sealed class NavigationItem(
     object SignUp : NavigationItem(
         route = "signUp"
     )
-    object LogIn : NavigationItem(
-        route = "logIn"
+    object SignIn : NavigationItem(
+        route = "signIn"
     )
     object SignUpStepsAsCustomer1 : NavigationItem(
         route = "signUpStepsAsCustomer1"
@@ -83,7 +83,7 @@ sealed class NavigationItem(
             HotSplash,
             Intro,
             SignUp,
-            LogIn,
+            SignIn,
             SignUpStepsAsCustomer1,
             SignUpStepsAsCustomer2,
             SignUpStepsAsCustomer3,
@@ -98,7 +98,7 @@ sealed class NavigationItem(
                 HotSplash.route -> HotSplash
                 Intro.route -> Intro
                 SignUp.route -> SignUp
-                LogIn.route -> LogIn
+                SignIn.route -> SignIn
                 SignUpStepsAsCustomer1.route -> SignUpStepsAsCustomer1
                 SignUpStepsAsCustomer2.route -> SignUpStepsAsCustomer2
                 SignUpStepsAsCustomer3.route -> SignUpStepsAsCustomer3

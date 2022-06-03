@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "379882483787",
+    "project_id": "besonappcleanarch",
+    "storage_bucket": "besonappcleanarch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379882483787:android:bc00d328d47bbfb0a0ddce",
+        "android_client_info": {
+          "package_name": "com.commandiron.besonapp_clean_arch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379882483787-0m37c63q7q03t7n5b2epkmmvggrnilf8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKIAdPt4yW_5yqlrtwi8AroBoCWmTOYuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379882483787-0m37c63q7q03t7n5b2epkmmvggrnilf8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

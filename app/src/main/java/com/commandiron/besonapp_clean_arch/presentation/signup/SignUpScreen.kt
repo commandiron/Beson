@@ -15,20 +15,22 @@ import com.commandiron.besonapp_clean_arch.core.Strings.COMPANY_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_CUSTOMER_TEXT
-import com.commandiron.besonapp_clean_arch.core.Strings.LOGIN_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_UPPERCASE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
-import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.presentation.components.AnimatedAppExplainingStrip
+import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.CustomLogInButton
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.SignUpForm
-import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.signup.event.SignUpUserEvent
-import com.commandiron.besonapp_clean_arch.presentation.signup.state.SignUpState
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.example.besonapp.presentation.SignUpScreenLogoAnimation
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,6 +38,7 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavController.current
+    val snackbarHostState = LocalSnackbarHostState.current
     val coroutineScope = LocalCoroutineScope.current
     val systemUiController = LocalSystemUiController.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -43,21 +46,15 @@ fun SignUpScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCustomer -> {
-                    navController.navigate(
-                        NavigationItem.SignUpStepsAsCustomer1.route
-                    )
+                UiEvent.HideKeyboard -> {
                     keyboardController?.hide()
                 }
-                is SignUpUiEvent.SignUpValidationAndFirebaseRegisterSuccessAsCompany -> {
-                    navController.navigate(
-                        NavigationItem.SignUpStepsAsCompany1.route
-                    )
-                    keyboardController?.hide()
+                is UiEvent.NavigateTo -> {
+                    navController.navigate(event.route)
                 }
-                is SignUpUiEvent.ShowSnackbar -> {
+                is UiEvent.ShowSnackbar -> {
                     coroutineScope.launch {
-                        //snackbar uygulanacak
+                        snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
                     }
                 }
             }
@@ -66,36 +63,42 @@ fun SignUpScreen(
     systemUiController.setSystemBarsColor(
         color = MaterialTheme.colorScheme.tertiary
     )
+    val placeholderModifier = Modifier.placeholder(
+        visible = state.isLoading,
+        highlight = PlaceholderHighlight.shimmer()
+    )
     BoxWithConstraints {
         SignUpScreenBackground(
+            modifier = Modifier.fillMaxSize(),
+            placeholderModifier = placeholderModifier,
             state = state,
             viewModel = viewModel
         )
         SignUpScreenForeground(
             state = state,
             viewModel = viewModel,
-            constraints = constraints,
-            onLogInClick = {
-                navController.popBackStack()
-                navController.navigate(
-                    NavigationItem.LogIn.route
-                )
-            }
+            constraints = constraints
         )
+    }
+    if(state.isLoading){
+        LinearProgressLoadingDialog(title = state.loadingMessage)
     }
 }
 
 @Composable
 fun SignUpScreenBackground(
+    modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     state: SignUpState,
     viewModel: SignUpViewModel
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         SignUpForm(
+            placeholderModifier = placeholderModifier,
             registrationFormState = state.registrationFormState,
             buttonText = SIGN_UP_AS_CUSTOMER_TEXT,
             onEmailChanged = {
@@ -112,6 +115,7 @@ fun SignUpScreenBackground(
             }
         )
         SignUpForm(
+            placeholderModifier = placeholderModifier,
             registrationFormState = state.registrationFormState,
             buttonText = SIGN_UP_AS_COMPANY_TEXT,
             onEmailChanged = {
@@ -132,17 +136,19 @@ fun SignUpScreenBackground(
 
 @Composable
 fun SignUpScreenForeground(
+    modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     state: SignUpState,
     viewModel: SignUpViewModel,
-    constraints: Constraints,
-    onLogInClick: () -> Unit
+    constraints: Constraints
 ) {
     val spacing = LocalSpacing.current
-    Column {
+    Column(modifier) {
         AnimatableSignUpWindow(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
+            placeholderModifier = placeholderModifier,
             title =  I_AM_CUSTOMER_TEXT,
             details = CUSTOMER_STATEMENT_TEXT,
             buttonText = SIGNUP_UPPERCASE_TEXT,
@@ -158,6 +164,7 @@ fun SignUpScreenForeground(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
+            placeholderModifier = placeholderModifier,
             title =  I_AM_COMPANY_TEXT,
             details = COMPANY_STATEMENT_TEXT,
             buttonText = SIGNUP_UPPERCASE_TEXT,
@@ -172,21 +179,23 @@ fun SignUpScreenForeground(
     }
     BoxWithConstraints {
         SignUpScreenLogoAnimation(
+            placeholderModifier = placeholderModifier,
             onSignUpScreenLogoClick = {
                 viewModel.onEvent(SignUpUserEvent.OnLogoClick)
             }
         )
         CustomLogInButton(
+            placeholderModifier = placeholderModifier,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = spacing.spaceMedium),
-            text = LOGIN_TEXT,
+            text = SIGN_IN_TEXT,
             onClick = {
-                viewModel.onEvent(SignUpUserEvent.OnLogInClick)
-                onLogInClick()
+                viewModel.onEvent(SignUpUserEvent.OnSignInClick)
             }
         )
         AnimatedAppExplainingStrip(
+            placeholderModifier = placeholderModifier,
             screenSize = Size(
                 width = constraints.maxWidth.toFloat(),
                 height = constraints.maxHeight.toFloat()

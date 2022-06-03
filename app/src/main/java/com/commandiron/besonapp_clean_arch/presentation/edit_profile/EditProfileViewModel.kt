@@ -5,9 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_OUT_SUCCESSFUL
+import com.commandiron.besonapp_clean_arch.domain.model.UserState
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
+import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,13 +33,13 @@ class EditProfileViewModel @Inject constructor(
     )
         private set
 
-    private val _uiEvent = Channel<EditProfileUiEvent>()
+    private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(userEvent: EditProfileUserEvent) {
         when (userEvent) {
             is EditProfileUserEvent.Cancel -> {
-                sendUiEvent(EditProfileUiEvent.ProfileUpdateCanceled)
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
             }
             is EditProfileUserEvent.NameChanged -> {
                 state = state.copy(
@@ -53,12 +58,25 @@ class EditProfileViewModel @Inject constructor(
             }
             is EditProfileUserEvent.Save -> {
                 //Save to Firebase
-                sendUiEvent(EditProfileUiEvent.ProfileUpdateSuccess)
+            }
+            EditProfileUserEvent.LogOut -> {
+                useCases.signOut()
+                viewModelScope.launch {
+                    useCases.getUserAuthState().collectLatest{
+                        when(it){
+                            UserState.SIGNED_OUT -> {
+                                sendUiEvent(UiEvent.ShowSnackbar(SIGN_OUT_SUCCESSFUL))
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                            }
+                            else -> {}
+                        }
+                    }
+                }
             }
         }
     }
 
-    private fun sendUiEvent(uiEvent: EditProfileUiEvent){
+    private fun sendUiEvent(uiEvent: UiEvent){
         viewModelScope.launch {
             _uiEvent.send(uiEvent)
         }

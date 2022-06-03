@@ -13,11 +13,13 @@ import com.commandiron.besonapp_clean_arch.core.Strings.PASSWORD_AGAIN_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.PASSWORD_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_TEXT
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
-import com.commandiron.besonapp_clean_arch.presentation.signup.state.RegistrationFormState
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.RegistrationFormState
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun SignUpForm(
+    modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     registrationFormState: RegistrationFormState,
     buttonText: String,
     onEmailChanged: (String) -> Unit,
@@ -27,14 +29,17 @@ fun SignUpForm(
 ) {
     val spacing = LocalSpacing.current
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
+            modifier = placeholderModifier,
             text = SIGNUP_TEXT,
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         FormTextField(
+            modifier = placeholderModifier,
             text = registrationFormState.email,
             hint = EMAIL_TEXT,
             textFieldErrorMessage = registrationFormState.emailError,
@@ -44,6 +49,7 @@ fun SignUpForm(
         }
         Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         FormTextField(
+            modifier = placeholderModifier,
             text = registrationFormState.password,
             hint =  PASSWORD_TEXT,
             textFieldErrorMessage = registrationFormState.passwordError,
@@ -53,6 +59,7 @@ fun SignUpForm(
         }
         Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         FormTextField(
+            modifier = placeholderModifier,
             text = registrationFormState.repeatedPassword,
             hint =  PASSWORD_AGAIN_TEXT,
             textFieldErrorMessage = registrationFormState.repeatedPasswordError,
@@ -61,7 +68,10 @@ fun SignUpForm(
             onRepeatedPasswordChanged(it)
         }
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
-        Button(onClick = { onSignUpButtonClick() }) {
+        Button(
+            modifier = placeholderModifier,
+            onClick = { onSignUpButtonClick() }
+        ) {
             Text(
                 text = buttonText,
             )

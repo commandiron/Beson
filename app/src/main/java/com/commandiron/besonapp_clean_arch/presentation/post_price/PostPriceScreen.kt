@@ -11,18 +11,22 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.core.Strings.CHOOSE
+import com.commandiron.besonapp_clean_arch.core.Strings.CURRENCY_SYMBOL
+import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_PRICE
+import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_WILL_BE_SENT_ARE_YOU_SURE
+import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_CATEGORY
+import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_PRICE_CATEGORY
+import com.commandiron.besonapp_clean_arch.core.Strings.SEND
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
+import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.*
-import com.commandiron.besonapp_clean_arch.presentation.post_price.event.PostPriceUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.post_price.event.PostPriceUserEvent
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalCoroutineScope
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSnackbarHostState
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
-import com.commandiron.besonapp_clean_arch.ui.theme.Orange
+import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlinx.coroutines.launch
 
 @Composable
 fun PostPriceScreen(
@@ -31,23 +35,24 @@ fun PostPriceScreen(
     val spacing = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = LocalSnackbarHostState.current
-    val coroutineScope = LocalCoroutineScope.current
+    val navController = LocalNavController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is PostPriceUiEvent.CloseKeyboard -> {
+                UiEvent.HideKeyboard -> {
                     keyboardController?.hide()
                 }
-                is PostPriceUiEvent.ShowSnackBar -> {
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(event.message, "Gizle")
-                    }
+                is UiEvent.NavigateTo -> {
+                    navController.navigate(event.route)
+                }
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
                 }
             }
         }
     }
-    val placeHolderModifier = Modifier.placeholder(
+    val placeholderModifier = Modifier.placeholder(
         visible = state.placeholderIsVisible,
         highlight = if(state.priceIsSent) null else PlaceholderHighlight.shimmer()
     )
@@ -72,17 +77,17 @@ fun PostPriceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        modifier = placeHolderModifier,
-                        text = "Kategori Seç",
+                        modifier = placeholderModifier,
+                        text = SELECT_CATEGORY,
                         style = MaterialTheme.typography.titleSmall
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     CustomDropDown(
-                        modifier = placeHolderModifier
+                        modifier = placeholderModifier
                             .fillMaxWidth()
                             .heightIn(min = 50.dp),
                         onCategoryBoxClick = { viewModel.onEvent(PostPriceUserEvent.SubConsCategorySelectionBoxClick) },
-                        title = state.selectedSubConsItemTitle ?: "Seçiniz",
+                        title = state.selectedSubConsItemTitle ?: CHOOSE,
                         isExpanded = state.subConsCategoryDropDownMenuIsExpanded,
                         offset = DpOffset(x= spacing.spaceMedium, y= spacing.spaceExtraSmall),
                         dropDownItems = state.subConsItems.map { it.title },
@@ -97,17 +102,17 @@ fun PostPriceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        modifier = placeHolderModifier,
-                        text = "Fiyat Kategorisi Seç",
+                        modifier = placeholderModifier,
+                        text = SELECT_PRICE_CATEGORY,
                         style = MaterialTheme.typography.titleSmall
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     CustomDropDown(
-                        modifier = placeHolderModifier
+                        modifier = placeholderModifier
                             .fillMaxWidth()
                             .heightIn(min = 50.dp),
                         onCategoryBoxClick = { viewModel.onEvent(PostPriceUserEvent.PriceCategorySelectionBoxClick) },
-                        title = state.selectedPriceItemTitle ?: "Seçiniz",
+                        title = state.selectedPriceItemTitle ?: CHOOSE,
                         isExpanded = state.priceCategoryDropDownMenuIsExpanded,
                         offset = DpOffset(x= spacing.spaceMedium, y= spacing.spaceExtraSmall),
                         dropDownItems = state.priceItems?.map { it.title },
@@ -118,13 +123,13 @@ fun PostPriceScreen(
             }
             Spacer(modifier = Modifier.height(spacing.spaceMediumLarge))
             Text(
-                modifier = placeHolderModifier,
-                text = "Fiyatı Gir",
+                modifier = placeholderModifier,
+                text = ENTER_PRICE,
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
             PriceTextField(
-                modifier = placeHolderModifier
+                modifier = placeholderModifier
                     .fillMaxWidth(0.65f)
                     .heightIn(min = 50.dp),
                 onClick = {
@@ -136,18 +141,18 @@ fun PostPriceScreen(
                 },
                 enabled = state.priceTextFieldEnabled,
                 onDone = {viewModel.onEvent(PostPriceUserEvent.KeyboardDone)},
-                addedSymbol = " TL/${state.selectedPriceItemUnit}"
+                addedSymbol = " $CURRENCY_SYMBOL/${state.selectedPriceItemUnit}"
             )
             Spacer(modifier = Modifier.height(spacing.spaceMediumLarge))
             Button(
-                modifier = placeHolderModifier,
+                modifier = placeholderModifier,
                 onClick = { viewModel.onEvent(PostPriceUserEvent.PostPrice) },
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = spacing.defaultElevation),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Orange
                 )
             ) {
-                Text(text = "Gönder!")
+                Text(text = SEND)
             }
         }
     }
@@ -160,11 +165,11 @@ fun PostPriceScreen(
         )
     }
     if(state.isLoading){
-        LinearProgressLoadingScreen(title = "Fiyat Gönderiliyor")
+        LinearProgressLoadingDialog(title = PRICE_SENDING)
     }
     if(state.priceIsSent){
-        PriceSentDialog{
-            viewModel.onEvent(PostPriceUserEvent.PriceSentDialogDismiss)
+        DoneDialog(title = "Fiyat Gönderildi"){
+            viewModel.onEvent(PostPriceUserEvent.DoneDialogDismiss)
         }
     }
 }

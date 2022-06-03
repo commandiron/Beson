@@ -1,15 +1,22 @@
 package com.commandiron.besonapp_clean_arch.presentation.post_price.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -19,6 +26,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -58,13 +66,34 @@ fun PriceTextField(
                 singleLine = true,
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Start
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 visualTransformation = ThousandSeparatorVisualTransformationWithAddedSymbol(
                     maxFractionDigits = 2,
                     addedSymbol = addedSymbol
-                )
+                ),
+                decorationBox = { innerTextField ->
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            innerTextField()
+                        }
+                        if(value.isEmpty()){
+                            Icon(
+                                modifier = Modifier.height(IntrinsicSize.Min),
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
             )
         }
     }

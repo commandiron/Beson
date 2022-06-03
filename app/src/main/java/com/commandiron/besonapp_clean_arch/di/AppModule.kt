@@ -8,6 +8,7 @@ import com.commandiron.besonapp_clean_arch.data.repository.AppRepositoryImpl
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.domain.use_case.*
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,9 +34,14 @@ object AppModule {
     }
 
     @Provides
+    fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()
+
+    @Provides
     @Singleton
-    fun provideRepository(): AppRepository {
-        return AppRepositoryImpl()
+    fun provideRepository(
+        auth: FirebaseAuth
+    ): AppRepository {
+        return AppRepositoryImpl(auth)
     }
 
     @Provides
@@ -44,19 +50,22 @@ object AppModule {
         preferences: Preferences
     ): UseCases {
         return UseCases(
-            saveShouldShowSplashAndIntro = SaveShouldShowSplashAndIntro(preferences = preferences),
-            loadShouldShowSplashAndIntro = LoadShouldShowSplashAndIntro(preferences = preferences),
+            saveShouldShowSplashAndIntro = SaveShouldShowSplashAndIntro(preferences),
+            loadShouldShowSplashAndIntro = LoadShouldShowSplashAndIntro(preferences),
             validateEmail = ValidateEmail(),
             validatePassword = ValidatePassword(),
             validateRepeatedPassword = ValidateRepeatedPassword(),
-            saveTemporalSignUpStepsName = SaveTemporalSignUpStepsName(preferences = preferences),
-            loadTemporalSignUpStepsName = LoadTemporalSignUpStepsName(preferences = preferences),
-            saveTemporalSignUpStepsPhoneNumber = SaveTemporalSignUpStepsPhoneNumber(preferences = preferences),
-            loadTemporalSignUpStepsPhoneNumber = LoadTemporalSignUpStepsPhoneNumber(preferences = preferences),
-            saveTemporalSignUpStepsSelectedConsItem = SaveTemporalSignUpStepsSelectedConsItem(preferences = preferences),
-            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences = preferences),
+            saveTemporalSignUpStepsName = SaveTemporalSignUpStepsName(preferences),
+            loadTemporalSignUpStepsName = LoadTemporalSignUpStepsName(preferences),
+            saveTemporalSignUpStepsPhoneNumber = SaveTemporalSignUpStepsPhoneNumber(preferences),
+            loadTemporalSignUpStepsPhoneNumber = LoadTemporalSignUpStepsPhoneNumber(preferences),
+            saveTemporalSignUpStepsSelectedConsItem = SaveTemporalSignUpStepsSelectedConsItem(preferences),
+            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences),
             validatePostPriceString = ValidatePostPriceString(),
-            pushPrice = PushPrice(repository = repository)
+            getUserAuthState = GetUserAuthState(repository),
+            signUp = SignUp(repository),
+            signIn = SignIn(repository),
+            signOut = SignOut(repository)
         )
     }
 }

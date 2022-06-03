@@ -29,6 +29,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 @Composable
 fun AnimatableSignUpWindow(
     modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     title: String,
     details: String,
     buttonText: String,
@@ -64,13 +65,13 @@ fun AnimatableSignUpWindow(
         color = surfaceColor
     ) {
         Box(
-            modifier = modifier,
+            modifier = Modifier,
             contentAlignment = Alignment.Center
         ) {
             val matrix = ColorMatrix()
             matrix.setToSaturation(0F)
             Image(
-                modifier = modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 painter = rememberAsyncImagePainter(
                     model = ImageRequest
                         .Builder(LocalContext.current)
@@ -86,19 +87,21 @@ fun AnimatableSignUpWindow(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
+                    modifier = placeholderModifier,
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 Text(
+                    modifier = placeholderModifier,
                     text = details,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Surface(
-                    modifier = Modifier
+                    modifier = placeholderModifier
                         .fillMaxWidth(fraction = 0.45f)
                         .clickable { onButtonClick() },
                     shape = RoundedCornerShape(spacing.spaceMedium),

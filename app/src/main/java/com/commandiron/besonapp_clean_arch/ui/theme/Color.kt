@@ -8,9 +8,12 @@ val PrimaryContainerColor = Color(0xFFBE9D17)
 val OnPrimaryContainerColor = Color.Black
 val TertiaryColor = Color(0xFF2b2b2b)
 val OnTertiaryColor = Color.White
+val TertiaryContainerColor = Color(0xDFF5F5F5)
+val OnTertiaryContainerColor = Color.Black
 val BackgroundColor = Color(0xFFf5f5f5)
 val OnBackgroundColor = Color.Black
 
 val Orange = Color(0xFFFFAA00)
 val SignUpCustomerBackgroundColor = Color(0xff333333)
 val SignUpCompanyBackgroundColor = Color(0xFF555454)
+val CarouselColor = Color(0xFFffff00)

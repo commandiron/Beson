@@ -5,51 +5,52 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.CANCEL
+import com.commandiron.besonapp_clean_arch.core.Strings.LOG_OUT
 import com.commandiron.besonapp_clean_arch.core.Strings.MAIN_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.NAME
 import com.commandiron.besonapp_clean_arch.core.Strings.PHONE_NUMBER
 import com.commandiron.besonapp_clean_arch.core.Strings.SAVE
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SUB_CONSTRUCTION_CATEGORIES
-import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.CategoryItem
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
 import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
+import com.commandiron.besonapp_clean_arch.ui.theme.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
     val spacing = LocalSpacing.current
+    val snackbarHostState = LocalSnackbarHostState.current
+    val coroutineScope = LocalCoroutineScope.current
     val navController = LocalNavController.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is EditProfileUiEvent.ProfileUpdateCanceled -> {
-                    navController.navigate(
-                        NavigationItem.Profile.route
-                    )
+                is UiEvent.NavigateTo -> {
+                    navController.navigate(event.route)
                 }
-                is EditProfileUiEvent.ProfileUpdateSuccess -> {
-                    navController.navigate(
-                        NavigationItem.Profile.route
-                    )
+                is UiEvent.ShowSnackbar -> {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
+                    }
                 }
+                else -> {}
             }
         }
     }
@@ -111,7 +112,7 @@ fun EditProfileScreen(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        Divider(thickness = 1.dp)
+        Divider()
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         state.selectedMainConstructionItem?.let {
             CategoryItem(
@@ -128,7 +129,7 @@ fun EditProfileScreen(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        Divider(thickness = 1.dp)
+        Divider()
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         state.selectedSubConstructionItems?.let {
             LazyRow() {
@@ -144,6 +145,29 @@ fun EditProfileScreen(
                     Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
                 }
             }
+        }
+        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Divider(
+                modifier = Modifier.weight(1f).padding(horizontal = spacing.spaceMedium),
+                color = MaterialTheme.colorScheme.primary
+            )
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { viewModel.onEvent(EditProfileUserEvent.LogOut) }
+            ) {
+                Text(
+                    text = LOG_OUT,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Normal)
+                )
+            }
+            Divider(
+                modifier = Modifier.weight(1f).padding(horizontal = spacing.spaceMedium),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

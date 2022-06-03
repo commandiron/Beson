@@ -9,10 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.intro.components.CustomHorizontalPager
-import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUiEvent
-import com.commandiron.besonapp_clean_arch.presentation.intro.event.IntroUserEvent
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
@@ -30,11 +28,10 @@ fun IntroScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is IntroUiEvent.ShouldShowSplashAndIntroSaveSuccess -> {
-                    navController.navigate(
-                        NavigationItem.SignUp.route
-                    )
+                is UiEvent.NavigateTo -> {
+                    navController.navigate(event.route)
                 }
+                else -> {}
             }
         }
     }

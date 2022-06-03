@@ -22,6 +22,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 @Composable
 fun SignUpScreenLogoAnimation(
     modifier: Modifier = Modifier,
+    placeholderModifier: Modifier = Modifier,
     onSignUpScreenLogoClick:() -> Unit
 ){
     val sizeAnim = remember { Animatable(100f) }
@@ -75,7 +76,7 @@ fun SignUpScreenLogoAnimation(
         Surface(
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable{ onSignUpScreenLogoClick() },
+                .clickable{ onSignUpScreenLogoClick() }.then(placeholderModifier),
             color = TertiaryColor
         ) {
             AppLogoIcon(modifier = Modifier
