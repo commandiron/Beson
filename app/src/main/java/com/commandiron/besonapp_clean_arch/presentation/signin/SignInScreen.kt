@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_TEXT
@@ -17,40 +16,29 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_TEXT_2
 import com.commandiron.besonapp_clean_arch.core.Strings.OR_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.PASSWORD_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_TEXT
-import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalCoroutineScope
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSnackbarHostState
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
+    hideKeyboard:() -> Unit,
+    navigateTo:(String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit,
+    showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
-    val snackbarHostState = LocalSnackbarHostState.current
-    val coroutineScope = LocalCoroutineScope.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val navController = LocalNavController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                UiEvent.HideKeyboard -> {
-                    keyboardController?.hide()
-                }
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
-                is UiEvent.ShowSnackbar -> {
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
-                    }
-                }
+                UiEvent.HideKeyboard -> hideKeyboard()
+                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowSnackbar -> showSnackbar(event.message)
+                else -> {}
             }
         }
     }

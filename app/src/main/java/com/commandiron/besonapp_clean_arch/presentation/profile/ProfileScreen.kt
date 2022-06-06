@@ -7,9 +7,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_FAVORITE_PROFILES
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PRICE_UPDATES
 import com.commandiron.besonapp_clean_arch.core.Strings.PROFILE_WILL_BE_REMOVED_FROM_FAVORITES_ARE_YOU_SURE
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PRICE_WILL_GONE_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
@@ -19,24 +21,27 @@ import com.commandiron.besonapp_clean_arch.presentation.profile.components.Custo
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.DraggableProfileHeader
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.MyUpdatesExpandedMenuWithCarousel
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.FavoriteProfilesExpandedMenuWithCarousel
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
+import com.commandiron.besonapp_clean_arch.ui.theme.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
+    hideKeyboard:() -> Unit,
+    navigateTo:(String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit,
+    showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
-    val navController = LocalNavController.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
+                UiEvent.HideKeyboard -> hideKeyboard()
+                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
         }
@@ -48,7 +53,7 @@ fun ProfileScreen(
         color = MaterialTheme.colorScheme.primary
     )
     DraggableProfileHeader(
-        text = state.name,
+        title = state.name,
         imageUrl = state.imageUrl,
         onEditButtonClick = {
             viewModel.onEvent(ProfileUserEvent.OnEditClick)
@@ -82,7 +87,7 @@ fun ProfileScreen(
         ){
             FavoriteProfilesExpandedMenuWithCarousel(
                 height = spacing.expandableMenuHeight,
-                profiles = state.favoriteProfiles,
+                userProfiles = state.favoriteUserProfiles,
                 unFavorite = {
                     viewModel.onEvent(ProfileUserEvent.UnFavoriteProfile(it))
                 }

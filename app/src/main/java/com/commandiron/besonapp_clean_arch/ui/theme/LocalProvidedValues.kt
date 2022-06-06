@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.commandiron.besonapp_clean_arch.AppState
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 //Local Provide test için sıkıntı çıkarıyor, fakat dışarı çıkarırsam complexity artıyor.
 
 val LocalSpacing = compositionLocalOf { Dimensions() }
-
 data class Dimensions(
     val default: Dp = 0.dp,
     val spaceExtraSmall: Dp = 4.dp,
@@ -34,37 +34,26 @@ data class Dimensions(
     val defaultElevation: Dp = 6.dp,
     val defaultButtonWidth: Dp = 100.dp
 )
-
 val LocalPermissionsState = compositionLocalOf<MultiplePermissionsState> {
     error("No Permission State")
 }
 val LocalNavController = compositionLocalOf<NavHostController> {
     error("No Nav Controller")
 }
-val LocalCoroutineScope = compositionLocalOf<CoroutineScope> {
-    error("No CoroutineScope")
-}
 val LocalSystemUiController = compositionLocalOf<SystemUiController> {
     error("No System Ui Controller")
-}
-val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
-    error("No Snackbar Host State")
 }
 fun getProvidedValues(
     multiplePermissionsState: MultiplePermissionsState,
     navController: NavHostController,
-    coroutineScope: CoroutineScope,
-    systemUiController: SystemUiController,
-    snackbarHostState: SnackbarHostState
+    systemUiController: SystemUiController
 ): Array<ProvidedValue<*>> {
     return arrayOf(
         LocalRippleTheme provides NoRippleTheme,
         LocalSpacing provides Dimensions(),
         LocalPermissionsState provides multiplePermissionsState,
         LocalNavController provides navController,
-        LocalCoroutineScope provides coroutineScope,
         LocalSystemUiController provides systemUiController,
-        LocalSnackbarHostState provides snackbarHostState
     )
 }
 

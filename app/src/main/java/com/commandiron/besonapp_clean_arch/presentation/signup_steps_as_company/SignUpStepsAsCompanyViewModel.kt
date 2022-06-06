@@ -5,11 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY
+import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,9 +27,9 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
 
     var state by mutableStateOf(
         SignUpStepsAsCompanyState(
-            name = useCases.loadTemporalSignUpStepsName(),
-            phoneNumber = useCases.loadTemporalSignUpStepsPhoneNumber(),
-            selectedMainConstructionItem = useCases.loadTemporalSignUpStepsSelectedConsItem()
+            name = useCases.loadSignUpStepsName(),
+            phoneNumber = useCases.loadSignUpStepsPhoneNumber(),
+            selectedMainConstructionItem = useCases.loadSignUpStepsSelectedConsItem()
         )
     )
         private set
@@ -31,11 +37,14 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    init {
+        viewModelScope.launch {
+            useCases.updateUserProfile(UserProfile(userType = UserType.COMPANY)).collect()
+        }
+    }
+
     fun onEvent(userEvent: SignUpStepsAsCompanyUserEvent) {
         when (userEvent) {
-            is SignUpStepsAsCompanyUserEvent.OnBackToSignUpClick -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
-            }
             is SignUpStepsAsCompanyUserEvent.NameChanged -> {
                 state = state.copy(
                     name = userEvent.name
@@ -43,7 +52,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.PhoneNumberChanged -> {
                 state = state.copy(
-                    phoneNumber = userEvent.phoneNumber
+                    phoneNumber = useCases.validatePhoneNumber(state.phoneNumber, userEvent.phoneNumber)
                 )
             }
             is SignUpStepsAsCompanyUserEvent.PictureChanged -> {
@@ -62,11 +71,11 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                 )
             }
             is SignUpStepsAsCompanyUserEvent.NameScreenNext -> {
-                useCases.saveTemporalSignUpStepsName(state.name)
+                useCases.saveSignUpStepsName(state.name)
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany2.route))
             }
             is SignUpStepsAsCompanyUserEvent.PhoneNumberScreenNext -> {
-                useCases.saveTemporalSignUpStepsPhoneNumber(state.phoneNumber)
+                useCases.saveSignUpStepsPhoneNumber(state.phoneNumber)
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany3.route))
             }
             is SignUpStepsAsCompanyUserEvent.PictureScreenNext -> {
@@ -74,19 +83,40 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.ConstructionCategoryScreenNext -> {
                 if(state.selectedMainConstructionItem == null){
-                    //Seçmediniz snack bar
+                    sendUiEvent(UiEvent.ShowSnackbar(NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY))
                 }else{
-                    useCases.saveTemporalSignUpStepsSelectedConsItem(state.selectedMainConstructionItem!!)
+                    useCases.saveSignUpStepsSelectedConsItemId(state.selectedMainConstructionItem!!.id)
                     sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany5.route))
                 }
             }
             is SignUpStepsAsCompanyUserEvent.SubConstructionCategoryScreenNext -> {
                 if(state.selectedSubConstructionItems == null){
-                    //Seçmediniz snack bar
+                    sendUiEvent(UiEvent.ShowSnackbar(NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY))
                 }else{
-                    //Save picture to firebase
-                    //Save profile info to firebase
-                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                    viewModelScope.launch {
+                        useCases.updateUserProfile(
+                            UserProfile(
+                                name = state.name,
+                                phoneNumber = state.phoneNumber,
+                                userType = UserType.COMPANY,
+                                selectedMainConstructionItem = state.selectedMainConstructionItem,
+                                selectedSubConstructionItems = state.selectedSubConstructionItems
+                            )
+                        ).collect{ result ->
+                            when(result){
+                                is Result.Loading -> {
+                                    //Yükleniyor
+                                }
+                                is Result.Error -> {
+                                    //Bir hata oluştu
+                                }
+                                is Result.Success -> {
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }

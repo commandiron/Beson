@@ -3,10 +3,10 @@ package com.commandiron.besonapp_clean_arch.presentation.profile
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.profile.model.MyUpdates
-import com.commandiron.besonapp_clean_arch.presentation.profile.model.Profile
+import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 
 data class ProfileState(
-    val name: String = "İsim Soyad",
+    val name: String = "",
     val imageUrl: String? = null,
     val profileHeaderHeight: Dp = 0.dp,
     val myUpdatesSurfaceExpanded: Boolean = false,
@@ -21,10 +21,10 @@ data class ProfileState(
         MyUpdates(itemId = 2, title = "title 3", unit = "m2", price = "5650", location = "İstanbul", date = "23.10.2022"),
         MyUpdates(itemId = 3, title = "title 4", unit = "m2", price = "230", location = "İstanbul", date = "14.10.2022")
     ),
-    val favoriteProfiles: List<Profile> = listOf(
-        Profile(name = "Emir Demirli", phoneNumber = "+905355085552", imageUrl = null),
-        Profile(name = "Emir Demirli", phoneNumber = "+905357227406", imageUrl = null),
-        Profile(name = "Yeşim Demirli", phoneNumber = "+905424129016", imageUrl = null)
+    val favoriteUserProfiles: List<UserProfile> = listOf(
+        UserProfile(name = "Emir Demirli", phoneNumber = "+905355085552"),
+        UserProfile(name = "Emir Demirli", phoneNumber = "+905357227406"),
+        UserProfile(name = "Yeşim Demirli", phoneNumber = "+905424129016")
     ),
     val showDeleteMyUpdateAlertDialog: Boolean = false,
     val showUnFavoriteAlertDialog: Boolean = false,

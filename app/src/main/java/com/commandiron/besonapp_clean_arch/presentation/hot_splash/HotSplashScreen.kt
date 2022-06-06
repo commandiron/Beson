@@ -10,16 +10,13 @@ import com.commandiron.besonapp_clean_arch.ui.theme.TertiaryColor
 import com.example.besonapp.presentation.floating_components.SplashScreenLogoAnimation
 
 @Composable
-fun HotSplashScreen() {
-    val navController = LocalNavController.current
+fun HotSplashScreen(
+    onFinish:() -> Unit
+) {
     SplashScreenLogoAnimation(
         modifier = Modifier
             .fillMaxSize()
             .background(TertiaryColor),
-        onFinish = {
-            navController.navigate(
-                NavigationItem.Intro.route
-            )
-        }
+        onFinish = onFinish
     )
 }

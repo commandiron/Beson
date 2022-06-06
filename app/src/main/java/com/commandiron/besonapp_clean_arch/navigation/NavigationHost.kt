@@ -1,6 +1,8 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.commandiron.besonapp_clean_arch.presentation.edit_profile.EditProfileScreen
@@ -20,7 +22,12 @@ import com.google.accompanist.navigation.material.bottomSheet
 
 @Composable
 fun NavigationHost(
-    shouldShowSplashAndIntro: Boolean
+    shouldShowSplashAndIntro: Boolean,
+    hideKeyboard:() -> Unit,
+    navigateUp:() -> Unit,
+    navigateTo:(String) -> Unit,
+    showSnackbar:(String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit
 ) {
     val navController = LocalNavController.current
     NavHost(
@@ -36,52 +43,80 @@ fun NavigationHost(
         }
     ){
         composable(NavigationItem.HotSplash.route){
-            HotSplashScreen()
+            HotSplashScreen(onFinish = { navigateTo(NavigationItem.Intro.route) })
         }
         composable(NavigationItem.Intro.route){
-            IntroScreen()
+            IntroScreen(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUp.route){
-            SignUpScreen()
+            SignUpScreen(
+                hideKeyboard = hideKeyboard,
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
         composable(NavigationItem.SignIn.route){
-            SignInScreen()
+            SignInScreen(
+                hideKeyboard = hideKeyboard,
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showSnackbar,
+                showSnackbar = showHideLoadingScreen
+            )
         }
         composable(NavigationItem.SignUpStepsAsCustomer1.route){
-            SignUpStepsAsCustomerScreen1()
+            SignUpStepsAsCustomerScreen1(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCustomer2.route){
-            SignUpStepsAsCustomerScreen2()
+            SignUpStepsAsCustomerScreen2(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCustomer3.route){
-            SignUpStepsAsCustomerScreen3()
+            SignUpStepsAsCustomerScreen3(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCompany1.route){
-            SignUpStepsAsCompanyScreen1()
+            SignUpStepsAsCompanyScreen1(
+                navigateUp = navigateUp,
+                navigateTo = navigateTo
+            )
         }
         composable(NavigationItem.SignUpStepsAsCompany2.route){
-            SignUpStepsAsCompanyScreen2()
+            SignUpStepsAsCompanyScreen2(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCompany3.route){
-            SignUpStepsAsCompanyScreen3()
+            SignUpStepsAsCompanyScreen3(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCompany4.route){
-            SignUpStepsAsCompanyScreen4()
+            SignUpStepsAsCompanyScreen4(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCompany5.route){
-            SignUpStepsAsCompanyScreen5()
+            SignUpStepsAsCompanyScreen5(navigateTo = navigateTo)
         }
         composable(NavigationItem.Profile.route){
-            ProfileScreen()
+            ProfileScreen(
+                hideKeyboard = hideKeyboard,
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
         composable(NavigationItem.EditProfile.route){
-            EditProfileScreen()
+            EditProfileScreen(
+                hideKeyboard = hideKeyboard,
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
         composable(NavigationItem.Prices.route){
             PricesScreen()
         }
         bottomSheet(NavigationItem.PostPrice.route){
-            PostPriceScreen()
+            PostPriceScreen(
+                hideKeyboard = hideKeyboard,
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
     }
 }

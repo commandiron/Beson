@@ -12,23 +12,27 @@ import androidx.compose.material.FabPosition
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.SnackbarHost
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.navigation.*
 import com.commandiron.besonapp_clean_arch.presentation.components.AddPriceButton
 import com.commandiron.besonapp_clean_arch.presentation.components.AppTopBar
 import com.commandiron.besonapp_clean_arch.presentation.components.CustomSnackBar
+import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
+import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
+import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -51,17 +55,18 @@ class MainActivity : ComponentActivity() {
                 )
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
                 val navController = rememberNavController(bottomSheetNavigator)
-                val coroutineScope = rememberCoroutineScope()
                 val systemUiController = rememberSystemUiController()
                 val scaffoldState = rememberScaffoldState()
+                val coroutineScope = rememberCoroutineScope()
                 val snackbarHostState = scaffoldState.snackbarHostState
+                val keyboardController = LocalSoftwareKeyboardController.current
+                var isLoading by remember { mutableStateOf(false)}
+                var loadingMessage by remember { mutableStateOf("")}
                 CompositionLocalProvider(
                     values = getProvidedValues(
                         multiplePermissionsState = multiplePermissionsState,
                         navController = navController,
-                        coroutineScope = coroutineScope,
-                        systemUiController = systemUiController,
-                        snackbarHostState = snackbarHostState
+                        systemUiController = systemUiController
                     )
                 ) {
                     Scaffold(
@@ -91,8 +96,23 @@ class MainActivity : ComponentActivity() {
                             NavigationHost(
                                 shouldShowSplashAndIntro = viewModel
                                     .state
-                                    .shouldShowSplashAndIntro
+                                    .shouldShowSplashAndIntro,
+                                hideKeyboard = { keyboardController?.hide() },
+                                navigateUp = { navController.navigateUp() },
+                                navigateTo = { navController.navigate(it) },
+                                showSnackbar = {
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(it, SNACKBAR_HIDE_ACTION_TEXT)
+                                    }
+                                },
+                                showHideLoadingScreen = {
+                                    isLoading = !isLoading
+                                    loadingMessage = it
+                                }
                             )
+                            if(isLoading){
+                                LinearProgressLoadingDialog(loadingMessage)
+                            }
                         }
                     }
                 }

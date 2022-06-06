@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +33,7 @@ import com.commandiron.besonapp_clean_arch.presentation.components.toDp
 
 @Composable
 fun DraggableProfileHeader(
-    text: String,
+    title: String,
     imageUrl: String? = null,
     onEditButtonClick:() -> Unit,
     onVerticalDrag:(Dp) -> Unit
@@ -93,7 +94,6 @@ fun DraggableProfileHeader(
                     contentDescription = null
                 )
             }
-
         }
         Image(
             painter = rememberAsyncImagePainter(
@@ -117,7 +117,7 @@ fun DraggableProfileHeader(
             contentScale = ContentScale.Crop
         )
         Text(
-            text = text,
+            text = title,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.layoutId("username")
         )

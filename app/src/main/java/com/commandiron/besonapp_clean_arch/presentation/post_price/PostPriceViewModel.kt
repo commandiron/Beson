@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_ENTER_PRICE
 import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_SELECT_PRICE_CATEGORY
+import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
@@ -100,14 +101,13 @@ class PostPriceViewModel @Inject constructor(
                 state = state.copy(
                     showAlertDialog = false,
                     placeholderIsVisible = true,
-                    isLoading = true
                 )
+                sendUiEvent(UiEvent.ShowHideLoadingScreen(PRICE_SENDING))
                 //Fiyatı Gönder
             }
             PostPriceUserEvent.DoneDialogDismiss -> {
                 state = state.copy(
                     placeholderIsVisible = false,
-                    isLoading = false,
                     priceIsSent = false
                 )
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))

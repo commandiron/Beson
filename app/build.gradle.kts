@@ -97,7 +97,10 @@ dependencies {
     implementation(Coil.compose)
     implementation(Coil.composeBase)
 
-    implementation(Firebase.firebaseAuth)
+    implementation(Firebase.auth)
+    implementation(Firebase.database)
+
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.12.49")
 
     debugImplementation(Compose.uiTooling)
 

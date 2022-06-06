@@ -1,10 +1,10 @@
 package com.commandiron.besonapp_clean_arch.domain.use_case
 
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
-import com.commandiron.besonapp_clean_arch.domain.model.MainConstructionItem
-import com.commandiron.besonapp_clean_arch.domain.model.defaultConstructionItems
+import com.commandiron.besonapp_clean_arch.presentation.model.MainConstructionItem
+import com.commandiron.besonapp_clean_arch.presentation.model.defaultConstructionItems
 
-class LoadTemporalSignUpStepsSelectedConsItem(
+class LoadSignUpStepsSelectedConsItem(
     private val preferences: Preferences
 ) {
     operator fun invoke(): MainConstructionItem {

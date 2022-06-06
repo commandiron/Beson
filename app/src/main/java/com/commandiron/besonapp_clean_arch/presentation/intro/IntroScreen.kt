@@ -19,18 +19,16 @@ import com.google.accompanist.pager.rememberPagerState
 
 @Composable
 fun IntroScreen(
-    viewModel: IntroViewModel = hiltViewModel()
+    viewModel: IntroViewModel = hiltViewModel(),
+    navigateTo: (String) -> Unit
 ) {
-    val navController = LocalNavController.current
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
+                is UiEvent.NavigateTo -> navigateTo(event.route)
                 else -> {}
             }
         }

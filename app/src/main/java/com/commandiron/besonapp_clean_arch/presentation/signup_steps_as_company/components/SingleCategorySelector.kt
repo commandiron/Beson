@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.components.CategoryItem
-import com.commandiron.besonapp_clean_arch.domain.model.MainConstructionItem
+import com.commandiron.besonapp_clean_arch.presentation.model.MainConstructionItem
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable

@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.signup_steps.components
+package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
@@ -34,7 +35,9 @@ fun RegistrationTextField(
                 RoundedCornerShape(percent = 50)
             ),
         value = text,
-        onValueChange = { onChange(it) },
+        onValueChange = {
+            onChange(it)
+        },
         singleLine = true,
         maxLines = 1,
         textStyle = MaterialTheme.typography.bodyMedium,
@@ -47,6 +50,9 @@ fun RegistrationTextField(
                 onNext()
             }
         ),
+        visualTransformation = if(keyboardType == KeyboardType.Phone) {
+            PhoneNumberVisualTransformation()
+        } else VisualTransformation.None,
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier.padding(horizontal = size.height/3),

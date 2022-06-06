@@ -2,10 +2,10 @@ package com.commandiron.besonapp_clean_arch.domain.use_case
 
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 
-class LoadTemporalSignUpStepsPhoneNumber(
+class SaveSignUpStepsPhoneNumber(
     private val preferences: Preferences
 ) {
-    operator fun invoke(): String{
-        return preferences.loadTemporalSignUpStepsPhoneNumber()
+    operator fun invoke(phoneNumber: String){
+        preferences.saveTemporalSignUpStepsPhoneNumber(phoneNumber)
     }
 }

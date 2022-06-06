@@ -1,7 +1,6 @@
-package com.commandiron.besonapp_clean_arch.domain.model
+package com.commandiron.besonapp_clean_arch.presentation.model
 
 import com.commandiron.besonapp_clean_arch.R
-import com.commandiron.besonapp_clean_arch.presentation.model.ConstructionItem
 
 data class SubConstructionItem(
     override val id: Int,

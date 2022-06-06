@@ -9,6 +9,7 @@ import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.domain.use_case.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,11 +38,17 @@ object AppModule {
     fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()
 
     @Provides
+    fun provideFirebaseDatabaseInstance() =
+        FirebaseDatabase
+            .getInstance(FirebaseDatabaseUrl)
+
+    @Provides
     @Singleton
     fun provideRepository(
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        firebaseDatabase: FirebaseDatabase
     ): AppRepository {
-        return AppRepositoryImpl(auth)
+        return AppRepositoryImpl(auth, firebaseDatabase)
     }
 
     @Provides
@@ -55,17 +62,22 @@ object AppModule {
             validateEmail = ValidateEmail(),
             validatePassword = ValidatePassword(),
             validateRepeatedPassword = ValidateRepeatedPassword(),
-            saveTemporalSignUpStepsName = SaveTemporalSignUpStepsName(preferences),
-            loadTemporalSignUpStepsName = LoadTemporalSignUpStepsName(preferences),
-            saveTemporalSignUpStepsPhoneNumber = SaveTemporalSignUpStepsPhoneNumber(preferences),
-            loadTemporalSignUpStepsPhoneNumber = LoadTemporalSignUpStepsPhoneNumber(preferences),
-            saveTemporalSignUpStepsSelectedConsItem = SaveTemporalSignUpStepsSelectedConsItem(preferences),
-            loadTemporalSignUpStepsSelectedConsItem = LoadTemporalSignUpStepsSelectedConsItem(preferences),
+            saveSignUpStepsName = SaveSignUpStepsName(preferences),
+            loadSignUpStepsName = LoadSignUpStepsName(preferences),
+            saveSignUpStepsPhoneNumber = SaveSignUpStepsPhoneNumber(preferences),
+            loadSignUpStepsPhoneNumber = LoadSignUpStepsPhoneNumber(preferences),
+            saveSignUpStepsSelectedConsItemId = SaveSignUpStepsSelectedConsItemId(preferences),
+            loadSignUpStepsSelectedConsItem = LoadSignUpStepsSelectedConsItem(preferences),
             validatePostPriceString = ValidatePostPriceString(),
-            getUserAuthState = GetUserAuthState(repository),
+            validatePhoneNumber = ValidatePhoneNumber(),
             signUp = SignUp(repository),
             signIn = SignIn(repository),
-            signOut = SignOut(repository)
+            signOut = SignOut(repository),
+            getUserState = GetUserState(repository),
+            updateUserProfile = UpdateUserProfile(repository),
+            getUserProfile = GetUserProfile(repository)
         )
     }
 }
+
+private const val FirebaseDatabaseUrl = "https://besonappcleanarch-default-rtdb.europe-west1.firebasedatabase.app/"

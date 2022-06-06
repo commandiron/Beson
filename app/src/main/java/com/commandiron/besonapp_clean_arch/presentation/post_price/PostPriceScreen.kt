@@ -7,19 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.CHOOSE
 import com.commandiron.besonapp_clean_arch.core.Strings.CURRENCY_SYMBOL
 import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_PRICE
-import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
+import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_POSTED
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_WILL_BE_SENT_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_PRICE_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.SEND
-import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.*
@@ -31,24 +29,21 @@ import com.google.accompanist.placeholder.material.shimmer
 @Composable
 fun PostPriceScreen(
     viewModel: PostPriceViewModel = hiltViewModel(),
+    hideKeyboard:() -> Unit,
+    navigateTo:(String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit,
+    showSnackbar:(String) -> Unit
 ) {
     val spacing = LocalSpacing.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val snackbarHostState = LocalSnackbarHostState.current
-    val navController = LocalNavController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                UiEvent.HideKeyboard -> {
-                    keyboardController?.hide()
-                }
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
-                is UiEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
-                }
+                UiEvent.HideKeyboard -> hideKeyboard()
+                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowSnackbar -> showSnackbar(event.message)
+                else -> {}
             }
         }
     }
@@ -164,12 +159,9 @@ fun PostPriceScreen(
             onDismiss = { viewModel.onEvent(PostPriceUserEvent.AlertDialogDismiss) }
         )
     }
-    if(state.isLoading){
-        LinearProgressLoadingDialog(title = PRICE_SENDING)
-    }
     if(state.priceIsSent){
-        DoneDialog(title = "Fiyat Gönderildi"){
-            viewModel.onEvent(PostPriceUserEvent.DoneDialogDismiss)
+        DoneDialog(PRICE_POSTED){
+            viewModel.onEvent(PostPriceUserEvent.AlertDialogDismiss)
         }
     }
 }

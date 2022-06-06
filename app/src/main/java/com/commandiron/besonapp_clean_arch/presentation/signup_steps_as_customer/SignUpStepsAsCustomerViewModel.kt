@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +26,8 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
 
     var state by mutableStateOf(
         SignUpStepsAsCustomerState(
-            name = useCases.loadTemporalSignUpStepsName(),
-            phoneNumber = useCases.loadTemporalSignUpStepsPhoneNumber()
+            name = useCases.loadSignUpStepsName(),
+            phoneNumber = useCases.loadSignUpStepsPhoneNumber()
         )
     )
         private set
@@ -31,11 +35,14 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    init {
+        viewModelScope.launch {
+            useCases.updateUserProfile(UserProfile(userType = UserType.CUSTOMER)).collect()
+        }
+    }
+
     fun onEvent(userEvent: SignUpStepsAsCustomerUserEvent) {
         when (userEvent) {
-            is SignUpStepsAsCustomerUserEvent.OnBackToSignUpClick -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
-            }
             is SignUpStepsAsCustomerUserEvent.NameChanged -> {
                 state = state.copy(
                     name = userEvent.name
@@ -43,7 +50,7 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
             }
             is SignUpStepsAsCustomerUserEvent.PhoneNumberChanged -> {
                 state = state.copy(
-                    phoneNumber = userEvent.phoneNumber
+                    phoneNumber = useCases.validatePhoneNumber(state.phoneNumber, userEvent.phoneNumber)
                 )
             }
             is SignUpStepsAsCustomerUserEvent.PictureChanged -> {
@@ -52,15 +59,35 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
                 )
             }
             is SignUpStepsAsCustomerUserEvent.NameScreenNext -> {
-                useCases.saveTemporalSignUpStepsName(state.name)
+                useCases.saveSignUpStepsName(state.name)
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer2.route))
             }
             is SignUpStepsAsCustomerUserEvent.PhoneNumberScreenNext -> {
-                useCases.saveTemporalSignUpStepsPhoneNumber(state.phoneNumber)
+                useCases.saveSignUpStepsPhoneNumber(state.phoneNumber)
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer3.route))
             }
             is SignUpStepsAsCustomerUserEvent.PictureScreenNext -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                viewModelScope.launch {
+                    useCases.updateUserProfile(
+                        UserProfile(
+                            name = state.name,
+                            phoneNumber = state.phoneNumber,
+                            userType = UserType.CUSTOMER
+                        )
+                    ).collect{ result ->
+                        when(result){
+                            is Result.Loading -> {
+                                //Yükleniyor
+                            }
+                            is Result.Error -> {
+                                //Bir hata oluştu
+                            }
+                            is Result.Success -> {
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                            }
+                        }
+                    }
+                }
             }
         }
     }

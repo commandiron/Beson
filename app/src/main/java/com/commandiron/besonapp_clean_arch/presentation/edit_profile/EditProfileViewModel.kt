@@ -5,14 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_OUT_SUCCESSFUL
-import com.commandiron.besonapp_clean_arch.domain.model.UserState
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
+import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PROFILE_UPDATED
+import com.commandiron.besonapp_clean_arch.presentation.model.UserState
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.MainConstructionItem
+import com.commandiron.besonapp_clean_arch.presentation.model.SubConstructionItem
+import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,19 +30,37 @@ class EditProfileViewModel @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
 
-    var state by mutableStateOf(
-        EditProfileState(
-            imageUrl = "", //Firebase usecase
-            name = "", //Firebase usecase
-            phoneNumber = "", //Firebase usecase
-//            selectedMainConstructionItem = null, //Firebase usecase
-//            selectedSubConstructionItems = null //Firebase usecase
-        )
-    )
+    var state by mutableStateOf(EditProfileState())
         private set
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        viewModelScope.launch {
+            useCases.getUserProfile().collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+
+                    }
+                    is Result.Error -> {
+
+                    }
+                    is Result.Success -> {
+                        val userProfile = result.data ?: UserProfile()
+                        state = state.copy(
+                            name = userProfile.name,
+                            phoneNumber = userProfile.phoneNumber,
+                            imageUrl = userProfile.imageUrl,
+                            userType = userProfile.userType,
+                            selectedMainConstructionItem = userProfile.selectedMainConstructionItem,
+                            selectedSubConstructionItems = userProfile.selectedSubConstructionItems
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun onEvent(userEvent: EditProfileUserEvent) {
         when (userEvent) {
@@ -44,6 +70,7 @@ class EditProfileViewModel @Inject constructor(
             is EditProfileUserEvent.NameChanged -> {
                 state = state.copy(
                     name = userEvent.name
+
                 )
             }
             is EditProfileUserEvent.PhoneNumberChanged -> {
@@ -57,18 +84,68 @@ class EditProfileViewModel @Inject constructor(
                 )
             }
             is EditProfileUserEvent.Save -> {
-                //Save to Firebase
+                viewModelScope.launch {
+                    useCases.updateUserProfile(
+                        UserProfile(
+                            name = state.name,
+                            phoneNumber = state.phoneNumber,
+                            imageUrl = state.imageUrl,
+                            selectedMainConstructionItem = state.selectedMainConstructionItem,
+                            selectedSubConstructionItems = state.selectedSubConstructionItems
+                        )
+                    ).collect{ result ->
+                        when(result){
+                            is Result.Loading -> {
+                                state = state.copy(
+                                    isLoading = true
+                                )
+                            }
+                            is Result.Error -> {
+                                state = state.copy(
+                                    isLoading = false
+                                )
+                                sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                            }
+                            is Result.Success -> {
+                                state = state.copy(
+                                    isLoading = true
+                                )
+                                sendUiEvent(UiEvent.ShowSnackbar(YOUR_PROFILE_UPDATED))
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                            }
+                        }
+                    }
+                }
+
             }
             EditProfileUserEvent.LogOut -> {
                 useCases.signOut()
                 viewModelScope.launch {
-                    useCases.getUserAuthState().collectLatest{
-                        when(it){
-                            UserState.SIGNED_OUT -> {
-                                sendUiEvent(UiEvent.ShowSnackbar(SIGN_OUT_SUCCESSFUL))
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                    useCases.getUserState().collect{ result ->
+                        when(result){
+                            is Result.Loading -> {
+                                state = state.copy(
+                                    isLoading = true
+                                )
                             }
-                            else -> {}
+                            is Result.Error-> {
+                                state = state.copy(
+                                    isLoading = false
+                                )
+                                sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                            }
+                            is Result.Success -> {
+                                state = state.copy(
+                                    isLoading = false
+                                )
+                                when(result.data){
+                                    UserState.SIGNED_OUT -> {
+                                        sendUiEvent(UiEvent.ShowSnackbar(SIGN_OUT_SUCCESSFUL))
+                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                                    }
+                                    else -> {}
+                                }
+                            }
                         }
                     }
                 }

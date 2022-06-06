@@ -11,14 +11,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.components.carousel.Carousel
 import com.commandiron.besonapp_clean_arch.presentation.components.carousel.CarouselDefaults
-import com.commandiron.besonapp_clean_arch.presentation.profile.model.Profile
+import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.ui.theme.CarouselColor
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun FavoriteProfilesExpandedMenuWithCarousel(
     height: Dp,
-    profiles: List<Profile>,
+    userProfiles: List<UserProfile>,
     unFavorite:(Int) -> Unit
 ) {
     val spacing = LocalSpacing.current
@@ -32,8 +32,8 @@ fun FavoriteProfilesExpandedMenuWithCarousel(
                 .heightIn(max = height)
                 .padding(end = spacing.spaceMedium)
         ){
-            items(profiles){ item ->
-                ProfileMenuItem(profile = item, unFavorite = unFavorite)
+            items(userProfiles){ item ->
+                ProfileMenuItem(userProfile = item, unFavorite = unFavorite)
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
             }
         }

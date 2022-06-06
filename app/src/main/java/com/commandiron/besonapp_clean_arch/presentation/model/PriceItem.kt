@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.domain.model
+package com.commandiron.besonapp_clean_arch.presentation.model
 
 data class PriceItem(
     val itemId: Int,

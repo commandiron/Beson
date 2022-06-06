@@ -24,17 +24,14 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 @Composable
 fun SignUpStepsAsCompanyScreen3(
     viewModel: SignUpStepsAsCompanyViewModel = hiltViewModel(),
+    navigateTo: (String) -> Unit
 ) {
     val spacing = LocalSpacing.current
-    val navController = LocalNavController.current
     val systemUiController = LocalSystemUiController.current
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
-
+                is UiEvent.NavigateTo -> navigateTo(event.route)
                 else -> {}
             }
         }
@@ -49,16 +46,6 @@ fun SignUpStepsAsCompanyScreen3(
             .padding(horizontal = spacing.spaceMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            modifier = Modifier
-                .clickable {
-                    viewModel.onEvent(SignUpStepsAsCompanyUserEvent.OnBackToSignUpClick)
-                }
-                .align(Alignment.Start),
-            text = BACK_TO_SIGN_UP_SCREEN,
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.bodyMedium
-        )
         Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
         Text(
             text = CREATE_PROFILE_TEXT,

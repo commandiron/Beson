@@ -1,8 +1,8 @@
 package com.commandiron.besonapp_clean_arch.presentation.post_price
 
-import com.commandiron.besonapp_clean_arch.domain.model.PriceItem
-import com.commandiron.besonapp_clean_arch.domain.model.SubConstructionItem
-import com.commandiron.besonapp_clean_arch.domain.model.defaultConstructionItems
+import com.commandiron.besonapp_clean_arch.presentation.model.PriceItem
+import com.commandiron.besonapp_clean_arch.presentation.model.SubConstructionItem
+import com.commandiron.besonapp_clean_arch.presentation.model.defaultConstructionItems
 
 data class PostPriceState(
 
@@ -21,6 +21,5 @@ data class PostPriceState(
 
     val showAlertDialog: Boolean = false,
     val placeholderIsVisible: Boolean = false,
-    val isLoading: Boolean = false,
     val priceIsSent: Boolean = false,
 )

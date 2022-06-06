@@ -32,24 +32,21 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel(),
+    hideKeyboard:() -> Unit,
+    navigateTo:(String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit,
+    showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
-    val snackbarHostState = LocalSnackbarHostState.current
-    val coroutineScope = LocalCoroutineScope.current
-    val navController = LocalNavController.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> {
-                    navController.navigate(event.route)
-                }
-                is UiEvent.ShowSnackbar -> {
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(event.message, SNACKBAR_HIDE_ACTION_TEXT)
-                    }
-                }
+                UiEvent.HideKeyboard -> hideKeyboard()
+                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
         }
@@ -124,6 +121,7 @@ fun EditProfileScreen(
                 iconPadding = spacing.spaceExtraSmall
             ){}
         }
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
             text = SUB_CONSTRUCTION_CATEGORIES,
             style = MaterialTheme.typography.titleMedium
