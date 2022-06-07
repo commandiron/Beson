@@ -110,7 +110,6 @@ class SignInViewModel @Inject constructor(
             )
             return
         }
-
         signIn()
     }
 

@@ -1,11 +1,13 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
@@ -25,10 +27,12 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
 
+    //Bunları shared pref. kaydederek sağlıyorum, farklı bir yol bulabilirm.
     var state by mutableStateOf(
         SignUpStepsAsCompanyState(
             name = useCases.loadSignUpStepsName(),
             phoneNumber = useCases.loadSignUpStepsPhoneNumber(),
+            profilePictureUrl = useCases.loadSignUpStepsProfilePictureUrl(),
             selectedMainConstructionItem = useCases.loadSignUpStepsSelectedConsItem()
         )
     )
@@ -80,6 +84,9 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.PictureScreenNext -> {
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany4.route))
+                state.profilePictureUri?.let { uri ->
+                    uploadProfilePicture(uri)
+                }
             }
             is SignUpStepsAsCompanyUserEvent.ConstructionCategoryScreenNext -> {
                 if(state.selectedMainConstructionItem == null){
@@ -93,30 +100,61 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                 if(state.selectedSubConstructionItems == null){
                     sendUiEvent(UiEvent.ShowSnackbar(NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY))
                 }else{
-                    viewModelScope.launch {
-                        useCases.updateUserProfile(
-                            UserProfile(
-                                name = state.name,
-                                phoneNumber = state.phoneNumber,
-                                userType = UserType.COMPANY,
-                                selectedMainConstructionItem = state.selectedMainConstructionItem,
-                                selectedSubConstructionItems = state.selectedSubConstructionItems
-                            )
-                        ).collect{ result ->
-                            when(result){
-                                is Result.Loading -> {
-                                    //Yükleniyor
-                                }
-                                is Result.Error -> {
-                                    //Bir hata oluştu
-                                }
-                                is Result.Success -> {
-                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
-                                }
-                            }
-                        }
-                    }
+                    updateUserProfile()
+                }
+            }
+        }
+    }
 
+    private fun uploadProfilePicture(uri: Uri){
+        viewModelScope.launch {
+            useCases.uploadProfilePicture(uri).collect{ result ->
+                when(result){
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(Strings.SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Loading -> {
+
+                    }
+                    is Result.Success -> {
+                        useCases.saveSignUpStepsProfilePictureUrl(result.data ?: "")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUserProfile(){
+        viewModelScope.launch {
+            useCases.updateUserProfile(
+                UserProfile(
+                    name = state.name,
+                    phoneNumber = state.phoneNumber,
+                    imageUrl = state.profilePictureUrl,
+                    userType = UserType.COMPANY,
+                    selectedMainConstructionItem = state.selectedMainConstructionItem,
+                    selectedSubConstructionItems = state.selectedSubConstructionItems
+                )
+            ).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        state = state.copy(
+                            isLoading = true,
+                            loadingMessage = Strings.LOADING
+                        )
+                    }
+                    is Result.Error -> {
+                        state = state.copy(
+                            isLoading = false
+                        )
+                        sendUiEvent(UiEvent.ShowSnackbar(Strings.SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            isLoading = false
+                        )
+                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                    }
                 }
             }
         }

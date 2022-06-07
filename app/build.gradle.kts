@@ -100,6 +100,7 @@ dependencies {
     implementation(Firebase.auth)
     implementation(Firebase.database)
     implementation(Firebase.playServicesAuth)
+    implementation(Firebase.storage)
 
     debugImplementation(Compose.uiTooling)
 

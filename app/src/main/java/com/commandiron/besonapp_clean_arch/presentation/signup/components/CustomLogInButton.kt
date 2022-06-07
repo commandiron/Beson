@@ -37,7 +37,7 @@ fun CustomLogInButton(
                 modifier = Modifier
                     .clickable{ onClick() },
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary
             )
         }

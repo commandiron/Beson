@@ -11,8 +11,8 @@ data class EditProfileState(
     val phoneNumber: String = "",
     val imageUrl: String = "",
     val userType: UserType? = null,
-    val selectedMainConstructionItem: MainConstructionItem? = defaultConstructionItems[1],
-    val selectedSubConstructionItems: List<SubConstructionItem>? = defaultConstructionItems[1].subConstructionItems,
+    val selectedMainConstructionItem: MainConstructionItem? = null,
+    val selectedSubConstructionItems: List<SubConstructionItem>? = null,
     val newPictureUri: Uri? = null,
     val isLoading: Boolean = false
 )

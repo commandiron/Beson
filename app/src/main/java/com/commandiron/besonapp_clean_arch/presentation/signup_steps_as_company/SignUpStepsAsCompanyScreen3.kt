@@ -28,6 +28,7 @@ fun SignUpStepsAsCompanyScreen3(
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
+    val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
@@ -58,6 +59,7 @@ fun SignUpStepsAsCompanyScreen3(
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         ClickableToGalleryImage(
+            imageUrl = state.profilePictureUrl,
             onImageChange = {
                 viewModel.onEvent(SignUpStepsAsCompanyUserEvent.PictureChanged(it))
             }

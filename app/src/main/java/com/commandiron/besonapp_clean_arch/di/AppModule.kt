@@ -11,6 +11,7 @@ import com.commandiron.besonapp_clean_arch.domain.use_case.*
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,12 +45,16 @@ object AppModule {
             .getInstance(FirebaseDatabaseUrl)
 
     @Provides
+    fun provideFirebaseStorageInstance() = FirebaseStorage.getInstance()
+
+    @Provides
     @Singleton
     fun provideRepository(
         auth: FirebaseAuth,
-        firebaseDatabase: FirebaseDatabase
+        firebaseDatabase: FirebaseDatabase,
+        firebaseStorage: FirebaseStorage
     ): AppRepository {
-        return AppRepositoryImpl(auth, firebaseDatabase)
+        return AppRepositoryImpl(auth, firebaseDatabase, firebaseStorage)
     }
 
     @Provides
@@ -67,6 +72,8 @@ object AppModule {
             loadSignUpStepsName = LoadSignUpStepsName(preferences),
             saveSignUpStepsPhoneNumber = SaveSignUpStepsPhoneNumber(preferences),
             loadSignUpStepsPhoneNumber = LoadSignUpStepsPhoneNumber(preferences),
+            saveSignUpStepsProfilePictureUrl =  SaveSignUpStepsProfilePictureUrl(preferences),
+            loadSignUpStepsProfilePictureUrl =  LoadSignUpStepsProfilePictureUrl(preferences),
             saveSignUpStepsSelectedConsItemId = SaveSignUpStepsSelectedConsItemId(preferences),
             loadSignUpStepsSelectedConsItem = LoadSignUpStepsSelectedConsItem(preferences),
             validatePostPriceString = ValidatePostPriceString(),
@@ -77,7 +84,8 @@ object AppModule {
             signOut = SignOut(repository),
             getUserState = GetUserState(repository),
             updateUserProfile = UpdateUserProfile(repository),
-            getUserProfile = GetUserProfile(repository)
+            getUserProfile = GetUserProfile(repository),
+            uploadProfilePicture = UploadProfilePicture(repository)
         )
     }
 }

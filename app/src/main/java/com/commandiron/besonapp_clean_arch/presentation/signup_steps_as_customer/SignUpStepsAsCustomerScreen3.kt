@@ -1,6 +1,5 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -10,28 +9,31 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.core.Strings.BACK_TO_SIGN_UP_SCREEN
 import com.commandiron.besonapp_clean_arch.core.Strings.COMPLETE_REGISTRATION
 import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_YOUR_PROFILE_PICTURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 
 @Composable
 fun SignUpStepsAsCustomerScreen3(
     viewModel: SignUpStepsAsCustomerViewModel = hiltViewModel(),
-    navigateTo: (String) -> Unit
+    navigateTo: (String) -> Unit,
+    showHideLoadingScreen:(String) -> Unit,
+    showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
+    val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
         }
@@ -42,11 +44,10 @@ fun SignUpStepsAsCustomerScreen3(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .padding(horizontal = spacing.spaceMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+        Spacer(modifier = Modifier.height(spacing.spaceXXLarge))
         Text(
             text = CREATE_PROFILE_TEXT,
             style = MaterialTheme.typography.headlineMedium
@@ -58,6 +59,7 @@ fun SignUpStepsAsCustomerScreen3(
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         ClickableToGalleryImage(
+            imageUrl = state.profilePictureUrl,
             onImageChange = {
                 viewModel.onEvent(SignUpStepsAsCustomerUserEvent.PictureChanged(it))
             }

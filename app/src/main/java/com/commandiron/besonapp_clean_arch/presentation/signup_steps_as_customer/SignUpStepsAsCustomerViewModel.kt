@@ -1,11 +1,14 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
@@ -67,25 +70,65 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer3.route))
             }
             is SignUpStepsAsCustomerUserEvent.PictureScreenNext -> {
-                viewModelScope.launch {
-                    useCases.updateUserProfile(
-                        UserProfile(
-                            name = state.name,
-                            phoneNumber = state.phoneNumber,
-                            userType = UserType.CUSTOMER
+                state.profilePictureUri?.let { uri ->
+                    uploadProfilePicture(uri)
+                } ?: updateUserProfile()
+            }
+        }
+    }
+
+    private fun uploadProfilePicture(uri: Uri){
+        viewModelScope.launch {
+            useCases.uploadProfilePicture(uri).collect{ result ->
+                when(result){
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Loading -> {
+                        state = state.copy(
+                            isLoading = true,
+                            loadingMessage = LOADING
                         )
-                    ).collect{ result ->
-                        when(result){
-                            is Result.Loading -> {
-                                //Yükleniyor
-                            }
-                            is Result.Error -> {
-                                //Bir hata oluştu
-                            }
-                            is Result.Success -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
-                            }
-                        }
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            profilePictureUrl = result.data
+                        )
+                        updateUserProfile()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUserProfile(){
+        viewModelScope.launch {
+            useCases.updateUserProfile(
+                UserProfile(
+                    name = state.name,
+                    phoneNumber = state.phoneNumber,
+                    imageUrl = state.profilePictureUrl,
+                    userType = UserType.CUSTOMER
+                )
+            ).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        state = state.copy(
+                            isLoading = true,
+                            loadingMessage = LOADING
+                        )
+                    }
+                    is Result.Error -> {
+                        state = state.copy(
+                            isLoading = false
+                        )
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            isLoading = false
+                        )
+                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
                     }
                 }
             }

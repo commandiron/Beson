@@ -8,8 +8,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Constraints
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.R
+import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.COMPANY_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_COMPANY_TEXT
@@ -21,7 +24,10 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.presentation.components.AnimatedAppExplainingStrip
+import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInButton
+import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInLauncher
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
+import com.commandiron.besonapp_clean_arch.presentation.signin.SignInUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.CustomLogInButton
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.SignUpForm
 import com.commandiron.besonapp_clean_arch.ui.theme.*
@@ -168,8 +174,11 @@ fun SignUpScreenForeground(
             }
         )
     }
-    BoxWithConstraints {
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
         SignUpScreenLogoAnimation(
+            modifier = Modifier.align(Alignment.Center),
             placeholderModifier = placeholderModifier,
             onSignUpScreenLogoClick = {
                 viewModel.onEvent(SignUpUserEvent.OnLogoClick)
@@ -180,10 +189,25 @@ fun SignUpScreenForeground(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = spacing.spaceMedium),
-            text = SIGN_IN_TEXT,
+            text = "Mail Girişi",
             onClick = {
                 viewModel.onEvent(SignUpUserEvent.OnSignInClick)
             }
+        )
+        GoogleSignInButton(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = spacing.spaceMedium),
+            text = "Google Girişi",
+            loadingText = Strings.SIGNING_IN,
+            isLoading = false, //
+            textColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = MaterialTheme.colorScheme.tertiary,
+            borderColor = MaterialTheme.colorScheme.tertiary,
+            onClick = {
+                //
+            },
+            icon = painterResource(id = R.drawable.ic_google_logo)
         )
         AnimatedAppExplainingStrip(
             placeholderModifier = placeholderModifier,
@@ -197,6 +221,14 @@ fun SignUpScreenForeground(
             isAnimated = true
         )
     }
+    GoogleSignInLauncher(
+        signInRequestCode = 1,
+        enabled = false, //
+        onFailed = { SignInUserEvent.GoogleSignInFailed(Strings.SORRY_SOMETHING_BAD_HAPPENED) },
+        onSuccessful = {
+            //
+        }
+    )
 }
 
 

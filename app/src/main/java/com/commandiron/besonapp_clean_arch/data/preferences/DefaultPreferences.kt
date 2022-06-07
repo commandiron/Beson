@@ -41,6 +41,16 @@ class DefaultPreferences(
         return sharedPref.getString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_PHONE_NUMBER, "").toString()
     }
 
+    override fun saveTemporalSignUpStepsProfilePictureUrl(url: String) {
+        sharedPref.edit()
+            .putString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_URL,url)
+            .apply()
+    }
+
+    override fun loadTemporalSignUpStepsProfilePictureUrl(): String {
+        return sharedPref.getString(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_URL, "").toString()
+    }
+
     override fun saveTemporalSignUpStepsSelectedConsItemId(id: Int) {
         sharedPref.edit()
             .putInt(Preferences.KEY_TEMPORAL_SIGN_UP_STEPS_CONS_ITEM_ID, id)

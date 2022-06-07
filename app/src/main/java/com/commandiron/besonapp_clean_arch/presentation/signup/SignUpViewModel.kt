@@ -194,7 +194,6 @@ class SignUpViewModel @Inject constructor(
                             sendUiEvent(UiEvent.ShowSnackbar(SIGN_UP_UNSUCCESSFUL))
                         }
                         is Result.Success ->{
-                            delay(3000) //Fake delay for user.
                             state = state.copy(isLoading = false)
                             sendUiEvent(UiEvent.ShowSnackbar(SIGN_UP_SUCCESSFUL))
                             when(state.userType){

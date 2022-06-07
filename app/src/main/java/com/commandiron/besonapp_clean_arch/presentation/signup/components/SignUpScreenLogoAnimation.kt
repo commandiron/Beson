@@ -2,14 +2,11 @@ package com.example.besonapp.presentation
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -69,21 +66,18 @@ fun SignUpScreenLogoAnimation(
             )
         }
     }
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Surface(
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable{ onSignUpScreenLogoClick() }.then(placeholderModifier),
+        color = TertiaryColor
     ) {
-        Surface(
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable{ onSignUpScreenLogoClick() }.then(placeholderModifier),
-            color = TertiaryColor
-        ) {
-            AppLogoIcon(modifier = Modifier
-                .padding(20.dp)
-                .size(Dp(sizeAnim.value))
-                .rotate(rotateAnim.value)
-            )
-        }
+        AppLogoIcon(modifier = Modifier
+            .padding(20.dp)
+            .size(Dp(sizeAnim.value))
+            .rotate(rotateAnim.value)
+        )
     }
 }
+
+

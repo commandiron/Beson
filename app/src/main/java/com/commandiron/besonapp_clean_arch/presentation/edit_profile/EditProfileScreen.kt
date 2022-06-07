@@ -103,7 +103,7 @@ fun EditProfileScreen(
                 viewModel.onEvent(EditProfileUserEvent.PhoneNumberChanged(it))
             }
         )
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
             text = MAIN_CONSTRUCTION_CATEGORY,
             style = MaterialTheme.typography.titleMedium

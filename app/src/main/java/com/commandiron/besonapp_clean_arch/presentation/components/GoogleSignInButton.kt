@@ -18,18 +18,20 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun GoogleSignInButton(
+    modifier: Modifier = Modifier,
     text: String,
     loadingText: String = "Giriş Yapılıyor...",
     icon: Painter,
     isLoading: Boolean = false,
     shape: Shape = Shapes.Full,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     borderColor: Color = Color.LightGray,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     progressIndicatorColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.clickable(
+        modifier = modifier.clickable(
             enabled = !isLoading,
             onClick = onClick
         ),
@@ -60,8 +62,11 @@ fun GoogleSignInButton(
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(8.dp))
-
-            Text(text = if (isLoading) loadingText else text)
+            Text(
+                text = if (isLoading) loadingText else text,
+                style = MaterialTheme.typography.labelSmall,
+                color = textColor
+            )
             if (isLoading) {
                 Spacer(modifier = Modifier.width(16.dp))
                 CircularProgressIndicator(

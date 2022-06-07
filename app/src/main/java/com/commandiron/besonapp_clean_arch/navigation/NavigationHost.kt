@@ -78,7 +78,11 @@ fun NavigationHost(
             SignUpStepsAsCustomerScreen2(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCustomer3.route){
-            SignUpStepsAsCustomerScreen3(navigateTo = navigateTo)
+            SignUpStepsAsCustomerScreen3(
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
         composable(NavigationItem.SignUpStepsAsCompany1.route){
             SignUpStepsAsCompanyScreen1(
@@ -96,7 +100,11 @@ fun NavigationHost(
             SignUpStepsAsCompanyScreen4(navigateTo = navigateTo)
         }
         composable(NavigationItem.SignUpStepsAsCompany5.route){
-            SignUpStepsAsCompanyScreen5(navigateTo = navigateTo)
+            SignUpStepsAsCompanyScreen5(
+                navigateTo = navigateTo,
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
         }
         composable(NavigationItem.Profile.route){
             ProfileScreen(

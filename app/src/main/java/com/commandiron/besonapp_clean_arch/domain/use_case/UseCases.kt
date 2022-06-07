@@ -10,6 +10,8 @@ class UseCases(
     val loadSignUpStepsName: LoadSignUpStepsName,
     val saveSignUpStepsPhoneNumber: SaveSignUpStepsPhoneNumber,
     val loadSignUpStepsPhoneNumber: LoadSignUpStepsPhoneNumber,
+    val saveSignUpStepsProfilePictureUrl: SaveSignUpStepsProfilePictureUrl,
+    val loadSignUpStepsProfilePictureUrl: LoadSignUpStepsProfilePictureUrl,
     val saveSignUpStepsSelectedConsItemId: SaveSignUpStepsSelectedConsItemId,
     val loadSignUpStepsSelectedConsItem: LoadSignUpStepsSelectedConsItem,
     val validatePostPriceString: ValidatePostPriceString,
@@ -20,5 +22,6 @@ class UseCases(
     val signOut: SignOut,
     val getUserState: GetUserState,
     val updateUserProfile: UpdateUserProfile,
-    val getUserProfile: GetUserProfile
+    val getUserProfile: GetUserProfile,
+    val uploadProfilePicture: UploadProfilePicture
 )

@@ -22,7 +22,9 @@ fun FirebaseUserProfile.toUserProfile(): UserProfile {
         phoneNumber = phoneNumber ?: "",
         imageUrl = imageUrl ?: "",
         userType = UserType.valueOf(userType ?: "CUSTOMER"),
-        selectedMainConstructionItem = defaultConstructionItems[selectedMainConstructionItemId ?: 0],
+        selectedMainConstructionItem = if(selectedMainConstructionItemId != null ) {
+            defaultConstructionItems[selectedMainConstructionItemId]
+        } else null,
         selectedSubConstructionItems =
         defaultConstructionItems[selectedMainConstructionItemId ?: 0]
             .subConstructionItems

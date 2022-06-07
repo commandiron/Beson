@@ -42,11 +42,10 @@ fun SignUpStepsAsCustomerScreen2(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .padding(horizontal = spacing.spaceMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+        Spacer(modifier = Modifier.height(spacing.spaceXXLarge))
         Text(
             text = CREATE_PROFILE_TEXT,
             style = MaterialTheme.typography.headlineMedium
