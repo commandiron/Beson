@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface AppRepository {
     suspend fun signUp(email: String, password: String): Flow<Result<Unit>>
     suspend fun signIn(email: String, password: String): Flow<Result<Unit>>
+    suspend fun signInWithCredential(idToken: String): Flow<Result<Unit>>
     fun signOut()
     suspend fun updateUserProfileToFirebaseDb(userProfile: UserProfile): Flow<Result<Unit>>
     suspend fun getUserProfileFromFirebaseDb(): Flow<Result<UserProfile?>>

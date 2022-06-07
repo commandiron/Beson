@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.commandiron.besonapp_clean_arch.presentation.customer_or_company.CustomerOrCompanyScreen
 import com.commandiron.besonapp_clean_arch.presentation.edit_profile.EditProfileScreen
 import com.commandiron.besonapp_clean_arch.presentation.intro.IntroScreen
 import com.commandiron.besonapp_clean_arch.presentation.signin.SignInScreen
@@ -60,8 +61,14 @@ fun NavigationHost(
             SignInScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showSnackbar,
-                showSnackbar = showHideLoadingScreen
+                showHideLoadingScreen = showHideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
+        }
+        composable(NavigationItem.CustomerOrCompany.route){
+            CustomerOrCompanyScreen(
+                navigateTo = navigateTo,
+                showSnackbar = showSnackbar
             )
         }
         composable(NavigationItem.SignUpStepsAsCustomer1.route){

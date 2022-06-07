@@ -26,6 +26,9 @@ sealed class NavigationItem(
     object SignIn : NavigationItem(
         route = "signIn"
     )
+    object CustomerOrCompany: NavigationItem(
+        route = "customerOrCompany"
+    )
     object SignUpStepsAsCustomer1 : NavigationItem(
         route = "signUpStepsAsCustomer1"
     )
@@ -84,9 +87,15 @@ sealed class NavigationItem(
             Intro,
             SignUp,
             SignIn,
+            CustomerOrCompany,
             SignUpStepsAsCustomer1,
             SignUpStepsAsCustomer2,
             SignUpStepsAsCustomer3,
+            SignUpStepsAsCompany1,
+            SignUpStepsAsCompany2,
+            SignUpStepsAsCompany3,
+            SignUpStepsAsCompany4,
+            SignUpStepsAsCompany5,
             Profile,
             EditProfile,
             MyPriceUpdates,
@@ -99,9 +108,15 @@ sealed class NavigationItem(
                 Intro.route -> Intro
                 SignUp.route -> SignUp
                 SignIn.route -> SignIn
+                CustomerOrCompany.route -> CustomerOrCompany
                 SignUpStepsAsCustomer1.route -> SignUpStepsAsCustomer1
                 SignUpStepsAsCustomer2.route -> SignUpStepsAsCustomer2
                 SignUpStepsAsCustomer3.route -> SignUpStepsAsCustomer3
+                SignUpStepsAsCompany1.route -> SignUpStepsAsCompany1
+                SignUpStepsAsCompany2.route -> SignUpStepsAsCompany2
+                SignUpStepsAsCompany3.route -> SignUpStepsAsCompany3
+                SignUpStepsAsCompany4.route -> SignUpStepsAsCompany4
+                SignUpStepsAsCompany5.route -> SignUpStepsAsCompany5
                 Profile.route -> Profile
                 EditProfile.route -> EditProfile
                 MyPriceUpdates.route -> MyPriceUpdates

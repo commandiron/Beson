@@ -78,4 +78,12 @@ object Strings {
     const val DONE_DIALOG_MESSAGE_REMOVED_FROM_FAVORITE = "Favoriden Çıkartıldı."
     const val YOUR_PROFILE_UPDATED = "Profiliniz Güncellendi."
     const val PRICE_POSTED = "Fiyat Gönderildi."
+    const val NOT_LOGGED_WITH_GOOGLE_ACCOUNT = "Google Hesabı İle Giriş Yapılmadı."
+    const val SIGN_IN_WITH_GOOGLE = "Google İle Giriş Yap"
+    const val SIGNING_IN = "Giriş Yapılıyor..."
+    const val PLEASE_MAKE_YOUR_CHOICE = "Lütfen seçiminizi yapınız."
+    const val REGISTER_AS_CUSTOMER_ARE_YOU_SURE = "Müşteri olarak kayıt olacaksınız. Devam etmek istiyor musunuz?"
+    const val REGISTER_AS_COMPANY_ARE_YOU_SURE = "Firma olarak kayıt olacaksınız. Devam etmek istiyor musunuz?"
+    const val LOADING = "Yükleniyor..."
+
 }

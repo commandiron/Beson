@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "379882483787",
+    "firebase_url": "https://besonappcleanarch-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "besonappcleanarch",
     "storage_bucket": "besonappcleanarch.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "379882483787-i7s5r9jrkhvck5a08if5795ca5492j9v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.commandiron.besonapp_clean_arch",
+            "certificate_hash": "9a5c1879c6bcac0c178a704ebad7529a7ff43b07"
+          }
+        },
         {
           "client_id": "379882483787-0m37c63q7q03t7n5b2epkmmvggrnilf8.apps.googleusercontent.com",
           "client_type": 3

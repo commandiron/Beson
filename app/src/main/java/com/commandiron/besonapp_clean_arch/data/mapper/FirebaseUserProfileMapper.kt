@@ -10,7 +10,7 @@ fun UserProfile.toFirebaseUserProfile(): FirebaseUserProfile {
         name = name,
         phoneNumber = phoneNumber,
         imageUrl = imageUrl,
-        userType = userType.toString(),
+        userType = userType?.toString(),
         selectedMainConstructionItemId = selectedMainConstructionItem?.id,
         selectedSubConstructionItemIds = selectedSubConstructionItems?.map { it.id }
     )
@@ -18,10 +18,10 @@ fun UserProfile.toFirebaseUserProfile(): FirebaseUserProfile {
 
 fun FirebaseUserProfile.toUserProfile(): UserProfile {
     return UserProfile(
-        name = name,
-        phoneNumber = phoneNumber,
-        imageUrl = imageUrl,
-        userType = UserType.valueOf(userType),
+        name = name ?: "",
+        phoneNumber = phoneNumber ?: "",
+        imageUrl = imageUrl ?: "",
+        userType = UserType.valueOf(userType ?: "CUSTOMER"),
         selectedMainConstructionItem = defaultConstructionItems[selectedMainConstructionItemId ?: 0],
         selectedSubConstructionItems =
         defaultConstructionItems[selectedMainConstructionItemId ?: 0]

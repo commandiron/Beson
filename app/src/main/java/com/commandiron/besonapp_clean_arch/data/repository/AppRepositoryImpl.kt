@@ -8,6 +8,7 @@ import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -37,11 +38,25 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signIn(
-        email: String, password: String
-    ): Flow<Result<Unit>> = callbackFlow{
+    override suspend fun signIn(email: String, password: String): Flow<Result<Unit>> = callbackFlow{
         send(Result.Loading())
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+            if(it.user != null){
+                trySend(Result.Success(Unit))
+            }
+        }.addOnFailureListener {
+            trySend(Result.Error(it))
+        }
+        awaitClose {
+            channel.close()
+            cancel()
+        }
+    }
+
+    override suspend fun signInWithCredential(idToken: String): Flow<Result<Unit>> = callbackFlow {
+        send(Result.Loading())
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(firebaseCredential).addOnSuccessListener {
             if(it.user != null){
                 trySend(Result.Success(Unit))
             }

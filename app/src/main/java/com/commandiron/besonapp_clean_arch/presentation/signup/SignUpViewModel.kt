@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING_MESSAGE_REGISTERING
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_UNSUCCESSFUL
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
@@ -38,10 +40,22 @@ class SignUpViewModel @Inject constructor(
             useCases.getUserState().collect{ result ->
                 when(result){
                     is Result.Loading -> {
+                        state = state.copy(
+                            isLoading = true,
+                            loadingMessage = LOADING
+                        )
                     }
                     is Result.Error-> {
+                        state = state.copy(
+                            isLoading = false
+                        )
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
                     }
                     is Result.Success -> {
+                        delay(2000) //Fake delay for user.
+                        state = state.copy(
+                            isLoading = false
+                        )
                         val userState = result.data
                         when(userState){
                             UserState.SIGNED_IN -> {
@@ -53,6 +67,9 @@ class SignUpViewModel @Inject constructor(
                             }
                             UserState.SIGNED_IN_UNFINISHED_PROFILE_COMPANY -> {
                                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+                            }
+                            UserState.SIGNED_IN_NO_SELECTION_CUSTOMER_OR_COMPANY -> {
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.CustomerOrCompany.route))
                             }
                             else -> {}
                         }

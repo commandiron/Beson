@@ -8,6 +8,7 @@ import com.commandiron.besonapp_clean_arch.data.repository.AppRepositoryImpl
 import com.commandiron.besonapp_clean_arch.domain.preferences.Preferences
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.domain.use_case.*
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
@@ -72,6 +73,7 @@ object AppModule {
             validatePhoneNumber = ValidatePhoneNumber(),
             signUp = SignUp(repository),
             signIn = SignIn(repository),
+            signInWithCredential =  SignInWithCredential(repository),
             signOut = SignOut(repository),
             getUserState = GetUserState(repository),
             updateUserProfile = UpdateUserProfile(repository),

@@ -49,9 +49,9 @@ class EditProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         val userProfile = result.data ?: UserProfile()
                         state = state.copy(
-                            name = userProfile.name,
-                            phoneNumber = userProfile.phoneNumber,
-                            imageUrl = userProfile.imageUrl,
+                            name = userProfile.name ?: "",
+                            phoneNumber = userProfile.phoneNumber ?: "",
+                            imageUrl = userProfile.imageUrl ?: "",
                             userType = userProfile.userType,
                             selectedMainConstructionItem = userProfile.selectedMainConstructionItem,
                             selectedSubConstructionItems = userProfile.selectedSubConstructionItems

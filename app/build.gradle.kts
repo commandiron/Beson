@@ -99,8 +99,7 @@ dependencies {
 
     implementation(Firebase.auth)
     implementation(Firebase.database)
-
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.12.49")
+    implementation(Firebase.playServicesAuth)
 
     debugImplementation(Compose.uiTooling)
 

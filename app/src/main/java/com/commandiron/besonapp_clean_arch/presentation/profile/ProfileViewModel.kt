@@ -42,7 +42,7 @@ class ProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         val userProfile = result.data ?: UserProfile()
                         state = state.copy(
-                            name = userProfile.name,
+                            name = userProfile.name ?: "",
                             imageUrl = userProfile.imageUrl,
                             isLoading = false
                         )

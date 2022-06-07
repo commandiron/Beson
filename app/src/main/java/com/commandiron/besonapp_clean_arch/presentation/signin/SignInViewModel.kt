@@ -5,8 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings.NOT_LOGGED_WITH_GOOGLE_ACCOUNT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_UNSUCCESSFUL
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
@@ -46,6 +49,48 @@ class SignInViewModel @Inject constructor(
             is SignInUserEvent.OnSignUpClick -> {
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
             }
+            SignInUserEvent.GoogleSignInButtonClick -> {
+                state = state.copy(
+                    isGoogleLoading = true,
+                    launchGoogleSignIn = true
+                )
+            }
+            is SignInUserEvent.GoogleSignInFailed -> {
+                state = state.copy(
+                    isGoogleLoading = false,
+                    launchGoogleSignIn = false
+                )
+                sendUiEvent(UiEvent.ShowSnackbar(userEvent.message))
+            }
+            is SignInUserEvent.GoogleSignInSuccessful -> {
+                val idToken = userEvent.idToken
+                if(idToken != null){
+                    viewModelScope.launch {
+                        useCases.signInWithCredential(idToken).collect{
+                            when(it){
+                                is Result.Error -> {
+                                    sendUiEvent(UiEvent.ShowSnackbar(NOT_LOGGED_WITH_GOOGLE_ACCOUNT))
+                                }
+                                is Result.Loading -> {
+                                    state = state.copy(
+                                        isGoogleLoading = false,
+                                        launchGoogleSignIn = false
+                                    )
+                                }
+                                is Result.Success -> {
+                                    state = state.copy(
+                                        isGoogleLoading = false,
+                                        launchGoogleSignIn = false
+                                    )
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                }
+            }
         }
     }
 
@@ -73,13 +118,13 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.signIn(state.email, state.password).collectLatest{ response ->
                 when(response){
-                    is com.commandiron.besonapp_clean_arch.core.Result.Loading ->{
+                    is Result.Loading ->{
                         sendUiEvent(UiEvent.HideKeyboard)
                     }
-                    is com.commandiron.besonapp_clean_arch.core.Result.Error ->{
+                    is Result.Error ->{
                         sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_UNSUCCESSFUL))
                     }
-                    is com.commandiron.besonapp_clean_arch.core.Result.Success ->{
+                    is Result.Success ->{
                         sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
                         sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
                     }
@@ -94,3 +139,4 @@ class SignInViewModel @Inject constructor(
         }
     }
 }
+

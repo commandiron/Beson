@@ -68,8 +68,8 @@ fun ProfileMenuItem(
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 Column {
-                    Text(text = userProfile.name)
-                    Text(text = userProfile.phoneNumber)
+                    Text(text = userProfile.name ?: "")
+                    Text(text = userProfile.phoneNumber ?: "")
                 }
             }
             Icon(
