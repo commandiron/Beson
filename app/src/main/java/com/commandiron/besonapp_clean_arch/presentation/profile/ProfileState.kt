@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.profile
 
+import android.location.Location
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.profile.model.MyUpdates
@@ -7,7 +8,8 @@ import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 
 data class ProfileState(
     val name: String = "",
-    val imageUrl: String? = null,
+    val phoneNumber: String = "",
+    val imageUrl: String = "",
     val profileHeaderHeight: Dp = 0.dp,
     val myUpdatesSurfaceExpanded: Boolean = false,
     val myFavoriteProfilesSurfaceExpanded: Boolean = false,
@@ -28,8 +30,8 @@ data class ProfileState(
     ),
     val showDeleteMyUpdateAlertDialog: Boolean = false,
     val showUnFavoriteAlertDialog: Boolean = false,
-    val isLoading: Boolean = false,
-    val loadingMessage: String = "",
     val showDoneDialog: Boolean = false,
     val doneDialogMessage: String = "",
+
+    val location: Location? = null
 )

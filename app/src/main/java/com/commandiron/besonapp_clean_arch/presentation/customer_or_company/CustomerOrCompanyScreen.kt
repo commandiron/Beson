@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings
+import com.commandiron.besonapp_clean_arch.core.Strings.COMPANY_STATEMENT_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.CONTINUE_AS_COMPANY
+import com.commandiron.besonapp_clean_arch.core.Strings.CONTINUE_AS_CUSTOMER
+import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_CUSTOMER_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_MAKE_YOUR_CHOICE
@@ -20,8 +24,12 @@ import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
+import com.commandiron.besonapp_clean_arch.presentation.signup.SignUpUserEvent
+import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
+import com.commandiron.besonapp_clean_arch.ui.theme.SignUpCompanyBackgroundColor
+import com.commandiron.besonapp_clean_arch.ui.theme.SignUpCustomerBackgroundColor
 
 @Composable
 fun CustomerOrCompanyScreen(
@@ -29,7 +37,6 @@ fun CustomerOrCompanyScreen(
     navigateTo:(String) -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
-    val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
@@ -42,51 +49,31 @@ fun CustomerOrCompanyScreen(
         }
     }
     systemUiController.setSystemBarsColor(
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.tertiary
     )
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceExtraLarge),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = PLEASE_MAKE_YOUR_CHOICE,
-            style = MaterialTheme.typography.bodyMedium
-                .copy(fontWeight = FontWeight.Normal)
-        )
-        Column(
+    Column() {
+        AnimatableSignUpWindow(
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = spacing.spaceMedium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Button(
-                modifier = Modifier.fillMaxWidth(0.75f),
-                onClick = { viewModel.onEvent(CustomerOrCompanyUserEvent.CustomerClick) }
-            ) {
-                Text(
-                    text = I_AM_CUSTOMER_TEXT,
-                    style = MaterialTheme.typography.titleMedium
-                        .copy(fontWeight = FontWeight.Normal)
-                )
-            }
-            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-            Divider(color = MaterialTheme.colorScheme.primary)
-            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-            Button(
-                modifier = Modifier.fillMaxWidth(0.75f),
-                onClick = { viewModel.onEvent(CustomerOrCompanyUserEvent.CompanyClick) }
-            ) {
-                Text(
-                    text = I_AM_COMPANY_TEXT,
-                    style = MaterialTheme.typography.titleMedium
-                        .copy(fontWeight = FontWeight.Normal)
-                )
-            }
-        }
-        LogoWithAppName()
+                .fillMaxWidth()
+                .weight(1f),
+            title =  I_AM_CUSTOMER_TEXT,
+            details = CUSTOMER_STATEMENT_TEXT,
+            buttonText = CONTINUE_AS_CUSTOMER,
+            backgroundImageUrl = state.customerWindowsBackgroundUrl,
+            surfaceColor = SignUpCustomerBackgroundColor,
+            onButtonClick = { viewModel.onEvent(CustomerOrCompanyUserEvent.CustomerClick) }
+        )
+        AnimatableSignUpWindow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            title =  I_AM_COMPANY_TEXT,
+            details = COMPANY_STATEMENT_TEXT,
+            buttonText = CONTINUE_AS_COMPANY,
+            backgroundImageUrl = state.companyWindowsBackgroundUrl,
+            surfaceColor = SignUpCompanyBackgroundColor,
+            onButtonClick = { viewModel.onEvent(CustomerOrCompanyUserEvent.CompanyClick) }
+        )
     }
     if(state.showAlertDialog){
         CustomAlertDialog(

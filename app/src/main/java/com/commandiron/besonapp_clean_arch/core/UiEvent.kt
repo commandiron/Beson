@@ -5,5 +5,6 @@ sealed class UiEvent {
     data class NavigateTo(val route: String): UiEvent()
     object NavigateUp: UiEvent()
     data class ShowSnackbar(val message: String): UiEvent()
-    data class ShowHideLoadingScreen(val message: String): UiEvent()
+    data class ShowLoadingScreen(val message: String): UiEvent()
+    object HideLoadingScreen: UiEvent()
 }

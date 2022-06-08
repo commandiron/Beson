@@ -10,9 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_YOUR_PHONE_NUMBER
 import com.commandiron.besonapp_clean_arch.core.Strings.NEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.PHONE_NUMBER_MASK
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PHONE_NUMBER
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
@@ -58,7 +60,7 @@ fun SignUpStepsAsCustomerScreen2(
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         RegistrationTextField(
             text = state.phoneNumber,
-            hint = YOUR_PHONE_NUMBER,
+            hint = PHONE_NUMBER_MASK,
             keyboardType = KeyboardType.Phone,
             onChange = {
                 viewModel.onEvent(SignUpStepsAsCustomerUserEvent.PhoneNumberChanged(it))

@@ -5,8 +5,6 @@ import android.net.Uri
 data class SignUpStepsAsCustomerState(
     val name: String = "",
     val phoneNumber: String = "",
-    val profilePictureUri: Uri? = null,
-    val profilePictureUrl: String? = null,
-    val isLoading: Boolean = false,
-    val loadingMessage: String = ""
+    val selectedPictureUri: Uri? = null,
+    val profilePictureUrl: String? = null
 )

@@ -8,12 +8,9 @@ import com.commandiron.besonapp_clean_arch.presentation.model.defaultConstructio
 data class SignUpStepsAsCompanyState(
     val name: String = "",
     val phoneNumber: String = "",
-    val profilePictureUri: Uri? = null,
+    val selectedPictureUri: Uri? = null,
     val profilePictureUrl: String? = null,
     val selectedMainConstructionItem: MainConstructionItem? = null,
     val selectedSubConstructionItems: List<SubConstructionItem>? = null,
     val mainConstructionItems: List<MainConstructionItem> = defaultConstructionItems,
-
-    val isLoading: Boolean = false,
-    val loadingMessage: String = ""
 )

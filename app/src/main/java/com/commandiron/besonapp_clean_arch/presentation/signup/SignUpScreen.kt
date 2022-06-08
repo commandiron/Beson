@@ -8,26 +8,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Constraints
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.R
-import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.COMPANY_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_SIGN_IN
+import com.commandiron.besonapp_clean_arch.core.Strings.GOOGLE_SIGN_IN
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.I_AM_CUSTOMER_TEXT
-import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.SIGNING_IN
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_UPPERCASE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.presentation.components.AnimatedAppExplainingStrip
 import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInButton
 import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInLauncher
-import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
-import com.commandiron.besonapp_clean_arch.presentation.signin.SignInUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.CustomLogInButton
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.SignUpForm
 import com.commandiron.besonapp_clean_arch.ui.theme.*
@@ -41,7 +39,8 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateTo:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
     val systemUiController = LocalSystemUiController.current
@@ -52,7 +51,8 @@ fun SignUpScreen(
                 UiEvent.HideKeyboard -> hideKeyboard()
                 is UiEvent.NavigateTo -> navigateTo(event.route)
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
+                UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 else -> {}
             }
         }
@@ -61,7 +61,7 @@ fun SignUpScreen(
         color = MaterialTheme.colorScheme.tertiary
     )
     val placeholderModifier = Modifier.placeholder(
-        visible = state.isLoading,
+        visible = state.enablePlaceHolder,
         highlight = PlaceholderHighlight.shimmer()
     )
     BoxWithConstraints {
@@ -76,9 +76,6 @@ fun SignUpScreen(
             viewModel = viewModel,
             constraints = constraints
         )
-    }
-    if(state.isLoading){
-        LinearProgressLoadingDialog(title = state.loadingMessage)
     }
 }
 
@@ -108,7 +105,7 @@ fun SignUpScreenBackground(
                 viewModel.onEvent(SignUpUserEvent.RepeatedPasswordChanged(it))
             },
             onSignUpButtonClick = {
-                viewModel.onEvent(SignUpUserEvent.OnSignUpUserAsCustomerClick)
+                viewModel.onEvent(SignUpUserEvent.SignUpUserAsCustomerClick)
             }
         )
         SignUpForm(
@@ -125,7 +122,7 @@ fun SignUpScreenBackground(
                 viewModel.onEvent(SignUpUserEvent.RepeatedPasswordChanged(it))
             },
             onSignUpButtonClick = {
-                viewModel.onEvent(SignUpUserEvent.OnSignUpUserAsCompanyClick)
+                viewModel.onEvent(SignUpUserEvent.SignUpUserAsCompanyClick)
             }
         )
     }
@@ -154,7 +151,7 @@ fun SignUpScreenForeground(
             targetOffsetValue = -constraints.maxHeight/4.toFloat() + 130f,
             isUiWindowOpen = state.isCustomerUiWindowOpen,
             onButtonClick = {
-                viewModel.onEvent(SignUpUserEvent.OnCustomerWindowSignUpUserClick)
+                viewModel.onEvent(SignUpUserEvent.CustomerWindowSignUpButtonClick)
             }
         )
         AnimatableSignUpWindow(
@@ -170,44 +167,48 @@ fun SignUpScreenForeground(
             targetOffsetValue = constraints.maxHeight/4.toFloat() - 130f,
             isUiWindowOpen = state.isCompanyUiWindowOpen,
             onButtonClick = {
-                viewModel.onEvent(SignUpUserEvent.OnCompanyWindowSignUpUserClick)
+                viewModel.onEvent(SignUpUserEvent.CompanyWindowSignUpButtonClick)
             }
         )
     }
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box{
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.Center),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            GoogleSignInButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = spacing.spaceMedium),
+                text = GOOGLE_SIGN_IN,
+                loadingText = SIGNING_IN,
+                isLoading = state.isGoogleLoading,
+                textColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = MaterialTheme.colorScheme.tertiary,
+                borderColor = MaterialTheme.colorScheme.tertiary,
+                onClick = { viewModel.onEvent(SignUpUserEvent.GoogleSignInButtonClick) }
+            )
+            Spacer(modifier = Modifier.width(spacing.spaceXXLarge))
+            CustomLogInButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = spacing.spaceMedium),
+                placeholderModifier = placeholderModifier,
+                text = EMAIL_SIGN_IN,
+                onClick = {
+                    viewModel.onEvent(SignUpUserEvent.SignInClick)
+                }
+            )
+        }
         SignUpScreenLogoAnimation(
             modifier = Modifier.align(Alignment.Center),
             placeholderModifier = placeholderModifier,
             onSignUpScreenLogoClick = {
-                viewModel.onEvent(SignUpUserEvent.OnLogoClick)
+                viewModel.onEvent(SignUpUserEvent.LogoClick)
             }
-        )
-        CustomLogInButton(
-            placeholderModifier = placeholderModifier,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = spacing.spaceMedium),
-            text = "Mail Girişi",
-            onClick = {
-                viewModel.onEvent(SignUpUserEvent.OnSignInClick)
-            }
-        )
-        GoogleSignInButton(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = spacing.spaceMedium),
-            text = "Google Girişi",
-            loadingText = Strings.SIGNING_IN,
-            isLoading = false, //
-            textColor = MaterialTheme.colorScheme.primary,
-            backgroundColor = MaterialTheme.colorScheme.tertiary,
-            borderColor = MaterialTheme.colorScheme.tertiary,
-            onClick = {
-                //
-            },
-            icon = painterResource(id = R.drawable.ic_google_logo)
         )
         AnimatedAppExplainingStrip(
             placeholderModifier = placeholderModifier,
@@ -223,11 +224,9 @@ fun SignUpScreenForeground(
     }
     GoogleSignInLauncher(
         signInRequestCode = 1,
-        enabled = false, //
-        onFailed = { SignInUserEvent.GoogleSignInFailed(Strings.SORRY_SOMETHING_BAD_HAPPENED) },
-        onSuccessful = {
-            //
-        }
+        enabled = state.launchGoogleSignIn,
+        onFailed = { viewModel.onEvent(SignUpUserEvent.GoogleSignInFailed(SORRY_SOMETHING_BAD_HAPPENED)) },
+        onSuccessful = { viewModel.onEvent(SignUpUserEvent.GoogleSignInSuccessful(it.idToken)) }
     )
 }
 

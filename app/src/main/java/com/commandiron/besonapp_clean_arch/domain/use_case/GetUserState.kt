@@ -25,9 +25,7 @@ class GetUserState(
                             emit(Result.Error(result.exception))
                         }
                         is Result.Success -> {
-                            val userProfile = result.data
-
-                            when(userProfile?.userType){
+                            when(result.data?.userType){
                                 UserType.CUSTOMER -> {
                                     if(result.data.name.isNullOrBlank()){
                                         emit(Result.Success(UserState.SIGNED_IN_UNFINISHED_PROFILE_CUSTOMER))
@@ -36,7 +34,6 @@ class GetUserState(
                                     }
                                 }
                                 UserType.COMPANY -> {
-                                    println(result.data)
                                     if(result.data.name.isNullOrBlank()){
                                         emit(Result.Success(UserState.SIGNED_IN_UNFINISHED_PROFILE_COMPANY))
                                     }else{

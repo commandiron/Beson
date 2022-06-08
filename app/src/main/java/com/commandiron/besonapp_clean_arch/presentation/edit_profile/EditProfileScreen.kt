@@ -20,21 +20,20 @@ import com.commandiron.besonapp_clean_arch.core.Strings.MAIN_CONSTRUCTION_CATEGO
 import com.commandiron.besonapp_clean_arch.core.Strings.NAME
 import com.commandiron.besonapp_clean_arch.core.Strings.PHONE_NUMBER
 import com.commandiron.besonapp_clean_arch.core.Strings.SAVE
-import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SUB_CONSTRUCTION_CATEGORIES
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.CategoryItem
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
 import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
 import com.commandiron.besonapp_clean_arch.ui.theme.*
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateTo:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
@@ -45,7 +44,8 @@ fun EditProfileScreen(
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
                 is UiEvent.NavigateTo -> navigateTo(event.route)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
+                is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
@@ -55,7 +55,7 @@ fun EditProfileScreen(
         color = MaterialTheme.colorScheme.primary
     )
     systemUiController.setNavigationBarColor(
-        color = MaterialTheme.colorScheme.tertiary
+        color = MaterialTheme.colorScheme.primary
     )
     Column(
         modifier = Modifier

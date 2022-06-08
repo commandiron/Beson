@@ -31,7 +31,8 @@ fun PostPriceScreen(
     viewModel: PostPriceViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateTo:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit
 ) {
     val spacing = LocalSpacing.current
@@ -41,7 +42,8 @@ fun PostPriceScreen(
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
                 is UiEvent.NavigateTo -> navigateTo(event.route)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
+                is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
@@ -149,6 +151,7 @@ fun PostPriceScreen(
             ) {
                 Text(text = SEND)
             }
+            Spacer(modifier = Modifier.height(spacing.spaceMediumLarge))
         }
     }
     if(state.showAlertDialog){

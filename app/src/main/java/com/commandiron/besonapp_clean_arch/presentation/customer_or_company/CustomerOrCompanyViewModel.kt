@@ -47,7 +47,16 @@ class CustomerOrCompanyViewModel @Inject constructor(
                             }
                             is Result.Loading -> {}
                             is Result.Success -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                                when(state.userType){
+                                    UserType.CUSTOMER -> {
+                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
+                                    }
+                                    UserType.COMPANY -> {
+                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+                                    }
+                                    null -> TODO()
+                                }
+
                             }
                         }
                     }

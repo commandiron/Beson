@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING_MESSAGE_REGISTERING
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_SUCCESSFUL
@@ -19,7 +20,6 @@ import com.commandiron.besonapp_clean_arch.presentation.model.UserState
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,76 +36,32 @@ class SignUpViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
-            useCases.getUserState().collect{ result ->
-                when(result){
-                    is Result.Loading -> {
-                        state = state.copy(
-                            isLoading = true,
-                            loadingMessage = LOADING
-                        )
-                    }
-                    is Result.Error-> {
-                        state = state.copy(
-                            isLoading = false
-                        )
-                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                    }
-                    is Result.Success -> {
-                        delay(2000) //Fake delay for user.
-                        state = state.copy(
-                            isLoading = false
-                        )
-                        val userState = result.data
-                        when(userState){
-                            UserState.SIGNED_IN -> {
-                                sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
-                            }
-                            UserState.SIGNED_IN_UNFINISHED_PROFILE_CUSTOMER -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
-                            }
-                            UserState.SIGNED_IN_UNFINISHED_PROFILE_COMPANY -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
-                            }
-                            UserState.SIGNED_IN_NO_SELECTION_CUSTOMER_OR_COMPANY -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.CustomerOrCompany.route))
-                            }
-                            else -> {}
-                        }
-                    }
-                }
-            }
-        }
+        getUserState()
     }
 
     fun onEvent(userEvent: SignUpUserEvent) {
         when(userEvent){
-            is SignUpUserEvent.OnLogoClick -> {
+            is SignUpUserEvent.LogoClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = false,
                     isCompanyUiWindowOpen = false
                 )
             }
-            is SignUpUserEvent.OnCustomerWindowSignUpUserClick -> {
+            is SignUpUserEvent.CustomerWindowSignUpButtonClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = true,
                     isCompanyUiWindowOpen = false,
                     userType = UserType.CUSTOMER
                 )
             }
-            is SignUpUserEvent.OnCompanyWindowSignUpUserClick -> {
+            is SignUpUserEvent.CompanyWindowSignUpButtonClick -> {
                 state = state.copy(
                     isCustomerUiWindowOpen = false,
                     isCompanyUiWindowOpen = true,
                     userType = UserType.COMPANY
                 )
             }
-            is SignUpUserEvent.OnSignInClick -> {
-                state = state.copy(
-                    isCustomerUiWindowOpen = true,
-                    isCompanyUiWindowOpen = true
-                )
+            is SignUpUserEvent.SignInClick -> {
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignIn.route))
             }
             is SignUpUserEvent.EmailChanged -> {
@@ -129,16 +85,83 @@ class SignUpViewModel @Inject constructor(
                     )
                 )
             }
-            is SignUpUserEvent.OnSignUpUserAsCustomerClick -> {
-                submitSignUpData()
+            is SignUpUserEvent.SignUpUserAsCustomerClick -> {
+                validateSignUpData()
+                if(!state.signUpFormHasError) signUp()
             }
-            is SignUpUserEvent.OnSignUpUserAsCompanyClick -> {
-                submitSignUpData()
+            is SignUpUserEvent.SignUpUserAsCompanyClick -> {
+                validateSignUpData()
+                if(!state.signUpFormHasError) signUp()
+            }
+            SignUpUserEvent.GoogleSignInButtonClick -> {
+                state = state.copy(
+                    isGoogleLoading = true,
+                    launchGoogleSignIn = true
+                )
+            }
+            is SignUpUserEvent.GoogleSignInFailed -> {
+                state = state.copy(
+                    isGoogleLoading = false,
+                    launchGoogleSignIn = false
+                )
+                sendUiEvent(UiEvent.ShowSnackbar(userEvent.message))
+            }
+            is SignUpUserEvent.GoogleSignInSuccessful -> {
+                userEvent.idToken?.let {
+                    signInWithGoogleIdToken(it)
+                } ?: sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
             }
         }
     }
 
-    private fun submitSignUpData() {
+    private fun getUserState(){
+        viewModelScope.launch {
+            useCases.getUserState().collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        state = state.copy(
+                            enablePlaceHolder = true
+                        )
+                        sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
+                    }
+                    is Result.Error-> {
+                        state = state.copy(
+                            enablePlaceHolder = false
+                        )
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                        state = state.copy(
+                            enablePlaceHolder = false
+                        )
+                        if(state.userStateRecognizing){
+                            when(result.data){
+                                UserState.SIGNED_IN -> {
+                                    sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                                }
+                                UserState.SIGNED_IN_UNFINISHED_PROFILE_CUSTOMER -> {
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
+                                }
+                                UserState.SIGNED_IN_UNFINISHED_PROFILE_COMPANY -> {
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+                                }
+                                UserState.SIGNED_IN_NO_SELECTION_CUSTOMER_OR_COMPANY -> {
+                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.CustomerOrCompany.route))
+                                }
+                                UserState.SIGNED_OUT -> {}
+                                null -> {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun validateSignUpData() {
         val emailResult = useCases.validateEmail.execute(state.registrationFormState.email)
         val passwordResult = useCases.validatePassword.execute(state.registrationFormState.password)
         val repeatedPasswordResult = useCases
@@ -156,6 +179,7 @@ class SignUpViewModel @Inject constructor(
 
         if(hasError){
             state = state.copy(
+                signUpFormHasError = true,
                 registrationFormState = state.registrationFormState.copy(
                     emailError = emailResult.errorMessage,
                     passwordError = passwordResult.errorMessage,
@@ -166,14 +190,13 @@ class SignUpViewModel @Inject constructor(
         }
 
         state = state.copy(
+            signUpFormHasError = false,
             registrationFormState = state.registrationFormState.copy(
                 emailError = null,
                 passwordError = null,
                 repeatedPasswordError = null
             )
         )
-
-        signUp()
     }
 
     private fun signUp(){
@@ -184,17 +207,23 @@ class SignUpViewModel @Inject constructor(
                     when(response){
                         is Result.Loading ->{
                             sendUiEvent(UiEvent.HideKeyboard)
+                            sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
                             state = state.copy(
-                                isLoading = true,
+                                enablePlaceHolder = true,
                                 loadingMessage = LOADING_MESSAGE_REGISTERING
                             )
                         }
                         is Result.Error ->{
-                            state = state.copy(isLoading = false)
+                            state = state.copy(enablePlaceHolder = false)
+                            sendUiEvent(UiEvent.HideLoadingScreen)
                             sendUiEvent(UiEvent.ShowSnackbar(SIGN_UP_UNSUCCESSFUL))
                         }
                         is Result.Success ->{
-                            state = state.copy(isLoading = false)
+                            state = state.copy(
+                                userStateRecognizing = false,
+                                enablePlaceHolder = false
+                            )
+                            sendUiEvent(UiEvent.HideLoadingScreen)
                             sendUiEvent(UiEvent.ShowSnackbar(SIGN_UP_SUCCESSFUL))
                             when(state.userType){
                                 UserType.CUSTOMER ->
@@ -209,6 +238,30 @@ class SignUpViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private fun signInWithGoogleIdToken(idToken: String){
+        viewModelScope.launch {
+            useCases.signInWithGoogleIdToken(idToken).collect{
+                when(it){
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(Strings.NOT_LOGGED_WITH_GOOGLE_ACCOUNT))
+                    }
+                    is Result.Loading -> {
+                        state = state.copy(
+                            isGoogleLoading = false,
+                            launchGoogleSignIn = false
+                        )
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            isGoogleLoading = false,
+                            launchGoogleSignIn = false
+                        )
+                    }
+                }
+            }
         }
     }
 

@@ -1,8 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.*
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
@@ -23,8 +21,8 @@ fun AppTopBar(){
     val topBarIsVisible = topBarVisibleNavigationItemsList.map { it.route }.contains(currentRoute)
     AnimatedVisibility(
         visible = topBarIsVisible,
-        enter = fadeIn(),
-        exit = fadeOut()
+        enter = expandVertically(),
+        exit = shrinkVertically()
     ) {
         CenterAlignedTopAppBar(
             modifier = Modifier.height(spacing.topBarHeight),

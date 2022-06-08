@@ -14,22 +14,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.commandiron.besonapp_clean_arch.R
+import com.commandiron.besonapp_clean_arch.core.Strings.SIGNING_IN
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun GoogleSignInButton(
     modifier: Modifier = Modifier,
     text: String,
-    loadingText: String = "Giriş Yapılıyor...",
-    icon: Painter,
+    loadingText: String = SIGNING_IN,
+    icon: Painter = painterResource(id = R.drawable.ic_google_logo),
     isLoading: Boolean = false,
     shape: Shape = Shapes.Full,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
     borderColor: Color = Color.LightGray,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     progressIndicatorColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit
 ) {
+    val spacing = LocalSpacing.current
     Surface(
         modifier = modifier.clickable(
             enabled = !isLoading,
@@ -61,14 +66,14 @@ fun GoogleSignInButton(
                 contentDescription = null,
                 tint = Color.Unspecified
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(spacing.spaceSmall))
             Text(
                 text = if (isLoading) loadingText else text,
                 style = MaterialTheme.typography.labelSmall,
                 color = textColor
             )
             if (isLoading) {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 CircularProgressIndicator(
                     modifier = Modifier
                         .height(16.dp)

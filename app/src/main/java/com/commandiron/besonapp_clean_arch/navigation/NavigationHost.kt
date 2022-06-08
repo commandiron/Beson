@@ -1,8 +1,7 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.commandiron.besonapp_clean_arch.presentation.customer_or_company.CustomerOrCompanyScreen
@@ -20,6 +19,7 @@ import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer.SignUpStepsAsCustomerScreen3
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.google.accompanist.navigation.material.bottomSheet
+import kotlinx.coroutines.delay
 
 @Composable
 fun NavigationHost(
@@ -28,7 +28,8 @@ fun NavigationHost(
     navigateUp:() -> Unit,
     navigateTo:(String) -> Unit,
     showSnackbar:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit
 ) {
     val navController = LocalNavController.current
     NavHost(
@@ -53,7 +54,8 @@ fun NavigationHost(
             SignUpScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -61,7 +63,8 @@ fun NavigationHost(
             SignInScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -80,7 +83,8 @@ fun NavigationHost(
         composable(NavigationItem.SignUpStepsAsCustomer3.route){
             SignUpStepsAsCustomerScreen3(
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -102,7 +106,8 @@ fun NavigationHost(
         composable(NavigationItem.SignUpStepsAsCompany5.route){
             SignUpStepsAsCompanyScreen5(
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -110,7 +115,8 @@ fun NavigationHost(
             ProfileScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -118,7 +124,8 @@ fun NavigationHost(
             EditProfileScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }
@@ -129,7 +136,8 @@ fun NavigationHost(
             PostPriceScreen(
                 hideKeyboard = hideKeyboard,
                 navigateTo = navigateTo,
-                showHideLoadingScreen = showHideLoadingScreen,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
                 showSnackbar = showSnackbar
             )
         }

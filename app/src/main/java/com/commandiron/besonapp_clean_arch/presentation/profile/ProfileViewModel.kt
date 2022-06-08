@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings.DONE_DIALOG_MESSAGE_REMOVED_FROM_FAVORITE
+import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING_MESSAGE_PRICE_IS_CLEARED
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
@@ -15,6 +16,7 @@ import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,17 +36,15 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.getUserProfile().collect{ result ->
                 when(result){
-                    is Result.Loading -> {
-                    }
+                    is Result.Loading -> {}
                     is Result.Error -> {
                         sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
                     }
                     is Result.Success -> {
-                        val userProfile = result.data ?: UserProfile()
                         state = state.copy(
-                            name = userProfile.name ?: "",
-                            imageUrl = userProfile.imageUrl,
-                            isLoading = false
+                            name = result.data?.name ?: "",
+                            phoneNumber = result.data?.phoneNumber ?: "",
+                            imageUrl = result.data?.imageUrl ?: ""
                         )
                     }
                 }
@@ -85,8 +85,6 @@ class ProfileViewModel @Inject constructor(
             is ProfileUserEvent.DeleteMyUpdateAlertDialogConfirm -> {
                 state = state.copy(
                     showDeleteMyUpdateAlertDialog = false,
-                    isLoading = true,
-                    loadingMessage = LOADING_MESSAGE_PRICE_IS_CLEARED
                 )
                 //Sil
             }
@@ -112,6 +110,21 @@ class ProfileViewModel @Inject constructor(
                 state = state.copy(
                     showDoneDialog = false
                 )
+            }
+            ProfileUserEvent.GetLocation -> {
+                viewModelScope.launch {
+                    useCases.getUserLastKnownPosition().collect{ result ->
+                        when(result){
+                            is Result.Loading -> {}
+                            is Result.Error -> {}
+                            is Result.Success -> {
+                                state = state.copy(
+                                    location = result.data
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

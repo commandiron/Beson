@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.post_price
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,6 +12,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -102,7 +104,7 @@ class PostPriceViewModel @Inject constructor(
                     showAlertDialog = false,
                     placeholderIsVisible = true,
                 )
-                sendUiEvent(UiEvent.ShowHideLoadingScreen(PRICE_SENDING))
+                sendUiEvent(UiEvent.ShowLoadingScreen(PRICE_SENDING))
                 //Fiyatı Gönder
             }
             PostPriceUserEvent.DoneDialogDismiss -> {

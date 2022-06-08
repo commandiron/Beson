@@ -10,4 +10,7 @@ object Build {
 
     private const val googleServicesVersion = "4.3.10"
     const val googleServices = "com.google.gms:google-services:$googleServicesVersion"
+
+    private const val secretsGradleVersion = "2.0.1"
+    const val secretsGradle= "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$secretsGradleVersion"
 }

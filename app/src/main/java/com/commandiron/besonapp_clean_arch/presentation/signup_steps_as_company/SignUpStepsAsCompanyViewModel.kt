@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings
+import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
@@ -61,7 +62,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.PictureChanged -> {
                 state = state.copy(
-                    profilePictureUri= userEvent.uri
+                    selectedPictureUri= userEvent.uri
                 )
             }
             is SignUpStepsAsCompanyUserEvent.MainCategorySelected -> {
@@ -84,7 +85,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.PictureScreenNext -> {
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany4.route))
-                state.profilePictureUri?.let { uri ->
+                state.selectedPictureUri?.let { uri ->
                     uploadProfilePicture(uri)
                 }
             }
@@ -138,21 +139,14 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             ).collect{ result ->
                 when(result){
                     is Result.Loading -> {
-                        state = state.copy(
-                            isLoading = true,
-                            loadingMessage = Strings.LOADING
-                        )
+                        sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
                     }
                     is Result.Error -> {
-                        state = state.copy(
-                            isLoading = false
-                        )
+                        sendUiEvent(UiEvent.HideLoadingScreen)
                         sendUiEvent(UiEvent.ShowSnackbar(Strings.SORRY_SOMETHING_BAD_HAPPENED))
                     }
                     is Result.Success -> {
-                        state = state.copy(
-                            isLoading = false
-                        )
+                        sendUiEvent(UiEvent.HideLoadingScreen)
                         sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
                     }
                 }

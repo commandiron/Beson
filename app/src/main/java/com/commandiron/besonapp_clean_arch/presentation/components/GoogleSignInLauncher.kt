@@ -2,7 +2,6 @@ package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.Composable
-import com.commandiron.besonapp_clean_arch.data.remote.AuthResultContract
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 

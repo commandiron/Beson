@@ -4,6 +4,7 @@ object Compose {
     const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:$composeVersion"
     const val uiTooling = "androidx.compose.ui:ui-tooling:$composeVersion"
     const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
+    const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
 
     const val composeCompilerVersion = "1.1.0-rc02"
     const val compiler = "androidx.compose.compiler:compiler:$composeCompilerVersion"
@@ -22,5 +23,4 @@ object Compose {
 
     private const val hiltNavigationComposeVersion = "1.0.0-beta01"
     const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
-
 }

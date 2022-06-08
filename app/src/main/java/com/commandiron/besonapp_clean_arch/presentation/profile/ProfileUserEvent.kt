@@ -14,4 +14,5 @@ sealed  class ProfileUserEvent {
     object UnFavoriteAlertDialogConfirm : ProfileUserEvent()
     data class UnFavoriteProfile(val profileId: Int): ProfileUserEvent()
     object DoneDialogDismiss : ProfileUserEvent()
+    object GetLocation: ProfileUserEvent()
 }

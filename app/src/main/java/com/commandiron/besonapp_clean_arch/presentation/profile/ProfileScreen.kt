@@ -1,35 +1,53 @@
 package com.commandiron.besonapp_clean_arch.presentation.profile
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.core.Strings
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_FAVORITE_PROFILES
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PRICE_UPDATES
 import com.commandiron.besonapp_clean_arch.core.Strings.PROFILE_WILL_BE_REMOVED_FROM_FAVORITES_ARE_YOU_SURE
-import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PRICE_WILL_GONE_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
+import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.CustomExpandableMenu
-import com.commandiron.besonapp_clean_arch.presentation.profile.components.DraggableProfileHeader
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.MyUpdatesExpandedMenuWithCarousel
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.FavoriteProfilesExpandedMenuWithCarousel
 import com.commandiron.besonapp_clean_arch.ui.theme.*
-import kotlinx.coroutines.launch
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateTo:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
@@ -40,7 +58,8 @@ fun ProfileScreen(
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
                 is UiEvent.NavigateTo -> navigateTo(event.route)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
+                is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 else -> {}
             }
@@ -52,20 +71,65 @@ fun ProfileScreen(
     systemUiController.setNavigationBarColor(
         color = MaterialTheme.colorScheme.primary
     )
-    DraggableProfileHeader(
-        title = state.name,
-        imageUrl = state.imageUrl,
-        onEditButtonClick = {
-            viewModel.onEvent(ProfileUserEvent.OnEditClick)
-        },
-        onVerticalDrag = {
-            viewModel.onEvent(ProfileUserEvent.OnProfileHeaderVerticalDrag(it))
-        }
-    )
     Column(
-        modifier = Modifier.offset(y = state.profileHeaderHeight),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.spaceLarge),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(data = state.imageUrl)
+                            .apply(
+                                block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    error(R.drawable.ic_blank_profile_picture)
+                                    fallback(R.drawable.ic_blank_profile_picture)
+                                }
+                            )
+                            .build()
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                Column() {
+                    Text(
+                        text = state.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "Tel no: +90" + state.phoneNumber,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                    )
+                }
+            }
+            IconButton(
+                modifier = Modifier.size(spacing.spaceMedium),
+                onClick = { viewModel.onEvent(ProfileUserEvent.OnEditClick) }
+            ){
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
         Divider(Modifier.padding(horizontal = spacing.spaceMedium))
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         CustomExpandableMenu(
@@ -93,6 +157,29 @@ fun ProfileScreen(
                 }
             )
         }
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+
+        ///BURDA KALDIM ŞU AN KAMERAYI OYNATAMIYORUM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //KONUMU STATE OLARAK ALDIM AMA KAMERAYI HAREKET ETTİREMİYORUM.
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(LatLng(state.location?.latitude ?:1.35, state.location?.longitude ?:103.87), 10f)
+        }
+        GoogleMap(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+            cameraPositionState = cameraPositionState
+        )
+        Button(
+            onClick = { viewModel.onEvent(ProfileUserEvent.GetLocation) },
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = spacing.defaultElevation),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Orange
+            )
+        ) {
+            Text(text = "KONUM AL")
+        }
     }
     if(state.showDeleteMyUpdateAlertDialog){
         CustomAlertDialog(
@@ -101,9 +188,6 @@ fun ProfileScreen(
             onConfirm = { viewModel.onEvent(ProfileUserEvent.DeleteMyUpdateAlertDialogConfirm) },
             onDismiss = { viewModel.onEvent(ProfileUserEvent.DeleteMyUpdateAlertDialogDismiss) }
         )
-    }
-    if(state.isLoading){
-        LinearProgressLoadingDialog(title = state.loadingMessage)
     }
     if(state.showUnFavoriteAlertDialog){
         CustomAlertDialog(

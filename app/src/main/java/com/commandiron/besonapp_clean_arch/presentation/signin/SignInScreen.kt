@@ -7,10 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_BESON_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_TEXT_2
@@ -32,7 +30,8 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateTo:(String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
@@ -42,8 +41,9 @@ fun SignInScreen(
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
                 is UiEvent.NavigateTo -> navigateTo(event.route)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
+                UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 else -> {}
             }
         }
@@ -78,38 +78,40 @@ fun SignInScreen(
             }
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        Button(
-            modifier = Modifier.width(spacing.defaultButtonWidth),
-            onClick = { viewModel.onEvent(SignInUserEvent.OnSignInClick) }
-        ) {
-            Text(
-                text = SIGN_IN_TEXT_2,
-            )
+        Row() {
+            Button(
+                modifier = Modifier.width(spacing.defaultButtonWidth),
+                onClick = { viewModel.onEvent(SignInUserEvent.OnSignUpClick) }
+            ) {
+                Text(
+                    text = SIGNUP_TEXT,
+                )
+            }
+            Spacer(modifier = Modifier.width(spacing.spaceMedium))
+            Button(
+                modifier = Modifier.width(spacing.defaultButtonWidth),
+                onClick = { viewModel.onEvent(SignInUserEvent.OnSignInClick) }
+            ) {
+                Text(
+                    text = SIGN_IN_TEXT_2,
+                )
+            }
         }
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Text(
             text = OR_TEXT,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.labelSmall
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        Button(
-            modifier = Modifier.width(spacing.defaultButtonWidth),
-            onClick = { viewModel.onEvent(SignInUserEvent.OnSignUpClick) }
-        ) {
-            Text(
-                text = SIGNUP_TEXT,
-            )
-        }
-        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
         GoogleSignInButton(
             text = SIGN_IN_WITH_GOOGLE,
             loadingText = SIGNING_IN,
             isLoading = state.isGoogleLoading,
             onClick = {
                 viewModel.onEvent(SignInUserEvent.GoogleSignInButtonClick)
-            },
-            icon = painterResource(id = R.drawable.ic_google_logo)
+            }
         )
+        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
     }
     Box(
         modifier = Modifier

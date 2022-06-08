@@ -1,6 +1,5 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -58,7 +57,7 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
             }
             is SignUpStepsAsCustomerUserEvent.PictureChanged -> {
                 state = state.copy(
-                    profilePictureUri= userEvent.uri
+                    selectedPictureUri= userEvent.uri
                 )
             }
             is SignUpStepsAsCustomerUserEvent.NameScreenNext -> {
@@ -70,33 +69,28 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer3.route))
             }
             is SignUpStepsAsCustomerUserEvent.PictureScreenNext -> {
-                state.profilePictureUri?.let { uri ->
-                    uploadProfilePicture(uri)
+                state.selectedPictureUri?.let { uri ->
+                    viewModelScope.launch {
+                        useCases.uploadProfilePicture(uri).collect{ result ->
+                            when(result){
+                                is Result.Error -> {
+                                    sendUiEvent(UiEvent.HideLoadingScreen)
+                                    sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                                }
+                                is Result.Loading -> {
+                                    sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
+                                }
+                                is Result.Success -> {
+                                    sendUiEvent(UiEvent.HideLoadingScreen)
+                                    state = state.copy(
+                                        profilePictureUrl = result.data
+                                    )
+                                    updateUserProfile()
+                                }
+                            }
+                        }
+                    }
                 } ?: updateUserProfile()
-            }
-        }
-    }
-
-    private fun uploadProfilePicture(uri: Uri){
-        viewModelScope.launch {
-            useCases.uploadProfilePicture(uri).collect{ result ->
-                when(result){
-                    is Result.Error -> {
-                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                    }
-                    is Result.Loading -> {
-                        state = state.copy(
-                            isLoading = true,
-                            loadingMessage = LOADING
-                        )
-                    }
-                    is Result.Success -> {
-                        state = state.copy(
-                            profilePictureUrl = result.data
-                        )
-                        updateUserProfile()
-                    }
-                }
             }
         }
     }
@@ -113,21 +107,14 @@ class SignUpStepsAsCustomerViewModel @Inject constructor(
             ).collect{ result ->
                 when(result){
                     is Result.Loading -> {
-                        state = state.copy(
-                            isLoading = true,
-                            loadingMessage = LOADING
-                        )
+                        sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
                     }
                     is Result.Error -> {
-                        state = state.copy(
-                            isLoading = false
-                        )
+                        sendUiEvent(UiEvent.HideLoadingScreen)
                         sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
                     }
                     is Result.Success -> {
-                        state = state.copy(
-                            isLoading = false
-                        )
+                        sendUiEvent(UiEvent.HideLoadingScreen)
                         sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
                     }
                 }

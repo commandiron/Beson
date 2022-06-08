@@ -8,6 +8,7 @@ buildscript {
         classpath(Build.kotlinGradlePlugin)
         classpath(Build.hiltAndroidGradlePlugin)
         classpath(Build.googleServices)
+//        classpath(Build.secretsGradle)
     }
 }
 

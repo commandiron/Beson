@@ -30,13 +30,13 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 fun AnimatableSignUpWindow(
     modifier: Modifier = Modifier,
     placeholderModifier: Modifier = Modifier,
-    title: String,
-    details: String,
-    buttonText: String,
+    title: String = "",
+    details: String = "",
+    buttonText: String = "",
     backgroundImageUrl: String,
     surfaceColor: Color,
-    targetOffsetValue: Float,
-    isUiWindowOpen: Boolean,
+    targetOffsetValue: Float = 0f,
+    isUiWindowOpen: Boolean = false,
     onButtonClick: () -> Unit,
 ) {
     val spacing = LocalSpacing.current

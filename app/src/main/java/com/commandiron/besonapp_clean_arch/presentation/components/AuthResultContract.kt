@@ -1,9 +1,10 @@
-package com.commandiron.besonapp_clean_arch.data.remote
+package com.commandiron.besonapp_clean_arch.presentation.components
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
+import com.commandiron.besonapp_clean_arch.data.remote.getGoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task

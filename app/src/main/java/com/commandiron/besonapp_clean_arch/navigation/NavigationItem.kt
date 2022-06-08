@@ -73,13 +73,14 @@ sealed class NavigationItem(
     object Prices : NavigationItem(
         title = PRICES,
         isBottomNavigationVisible = true,
+        isTopBarVisible = true,
         iconResource = R.drawable.ic_prices_icon,
         route = "prices"
     )
     object PostPrice: NavigationItem(
         title = POST_PRICES,
         route = "postPrice",
-        isTopBarVisible = true
+        isTopBarVisible = true,
     )
     companion object {
         val navigationItems = listOf(

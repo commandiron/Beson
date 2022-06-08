@@ -4,6 +4,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
+//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -68,6 +69,7 @@ dependencies {
     implementation(Compose.ui)
     implementation(Compose.uiToolingPreview)
     implementation(Compose.runtime)
+    implementation(Compose.foundation)
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
@@ -85,6 +87,9 @@ dependencies {
     implementation(Google.material3)
     implementation(Google.materialIconsCore)
     implementation(Google.materialIconsExtended)
+    implementation(Google.mapsCompose)
+    implementation(Google.playServicesMaps)
+    implementation(Google.playServicesLocation)
 
     implementation(Accompanist.systemUi)
     implementation(Accompanist.pager)

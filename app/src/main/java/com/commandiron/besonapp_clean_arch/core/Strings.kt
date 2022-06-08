@@ -50,7 +50,7 @@ object Strings {
     const val SELECT_MAIN_CONSTRUCTION_CATEGORY = "Ana İnşaat Kategorinizi Seçiniz"
     const val NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY = "Ana İnşaat Kategorinizi Seçmediniz."
     const val SELECT_SUB_CONSTRUCTION_CATEGORY = "Alt Kategorinizi Seçiniz"
-    const val NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY = "Ana İnşaat Kategorinizi Seçmediniz."
+    const val NOT_SELECTED_SUB_CONSTRUCTION_CATEGORY = "Alt Kategorinizi Seçmediniz."
     const val CANCEL = "İptal"
     const val SAVE = "Kaydet"
     const val NAME = "İsim"
@@ -80,10 +80,13 @@ object Strings {
     const val PRICE_POSTED = "Fiyat Gönderildi."
     const val NOT_LOGGED_WITH_GOOGLE_ACCOUNT = "Google Hesabı İle Giriş Yapılmadı."
     const val SIGN_IN_WITH_GOOGLE = "Google İle Giriş Yap"
+    const val GOOGLE_SIGN_IN = "Google Girişi"
+    const val EMAIL_SIGN_IN = "Eposta Girişi"
     const val SIGNING_IN = "Giriş Yapılıyor..."
     const val PLEASE_MAKE_YOUR_CHOICE = "Lütfen seçiminizi yapınız."
     const val REGISTER_AS_CUSTOMER_ARE_YOU_SURE = "Müşteri olarak kayıt olacaksınız. Devam etmek istiyor musunuz?"
     const val REGISTER_AS_COMPANY_ARE_YOU_SURE = "Firma olarak kayıt olacaksınız. Devam etmek istiyor musunuz?"
     const val LOADING = "Yükleniyor..."
-
+    const val CONTINUE_AS_CUSTOMER = "Müşteri Olarak Devam Et"
+    const val CONTINUE_AS_COMPANY = "Firma Olarak Devam Et"
 }

@@ -18,10 +18,11 @@ class UseCases(
     val validatePhoneNumber: ValidatePhoneNumber,
     val signUp: SignUp,
     val signIn: SignIn,
-    val signInWithCredential: SignInWithCredential,
+    val signInWithGoogleIdToken: SignInWithGoogleIdToken,
     val signOut: SignOut,
     val getUserState: GetUserState,
     val updateUserProfile: UpdateUserProfile,
     val getUserProfile: GetUserProfile,
-    val uploadProfilePicture: UploadProfilePicture
+    val uploadProfilePicture: UploadProfilePicture,
+    val getUserLastKnownPosition: GetUserLastKnownPosition
 )

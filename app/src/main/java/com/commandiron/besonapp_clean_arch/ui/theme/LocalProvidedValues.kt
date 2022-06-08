@@ -1,20 +1,13 @@
 package com.commandiron.besonapp_clean_arch.ui.theme
 
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.ProvidedValue
-import androidx.compose.runtime.State
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.commandiron.besonapp_clean_arch.AppState
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.systemuicontroller.SystemUiController
-import kotlinx.coroutines.CoroutineScope
-
-//Local Provide test için sıkıntı çıkarıyor, fakat dışarı çıkarırsam complexity artıyor.
 
 val LocalSpacing = compositionLocalOf { Dimensions() }
 data class Dimensions(
@@ -44,14 +37,14 @@ val LocalSystemUiController = compositionLocalOf<SystemUiController> {
     error("No System Ui Controller")
 }
 fun getProvidedValues(
-    multiplePermissionsState: MultiplePermissionsState,
+    permissionsState: MultiplePermissionsState,
     navController: NavHostController,
     systemUiController: SystemUiController
 ): Array<ProvidedValue<*>> {
     return arrayOf(
         LocalRippleTheme provides NoRippleTheme,
         LocalSpacing provides Dimensions(),
-        LocalPermissionsState provides multiplePermissionsState,
+        LocalPermissionsState provides permissionsState,
         LocalNavController provides navController,
         LocalSystemUiController provides systemUiController,
     )

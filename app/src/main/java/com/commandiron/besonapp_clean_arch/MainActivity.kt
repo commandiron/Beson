@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,11 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
-import androidx.compose.material.FabPosition
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.SnackbarHost
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -23,13 +21,13 @@ import com.commandiron.besonapp_clean_arch.navigation.*
 import com.commandiron.besonapp_clean_arch.presentation.components.AddPriceButton
 import com.commandiron.besonapp_clean_arch.presentation.components.AppTopBar
 import com.commandiron.besonapp_clean_arch.presentation.components.CustomSnackBar
-import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
-import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,9 +46,10 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             BesonApp_Clean_ArchTheme {
-                val multiplePermissionsState = rememberMultiplePermissionsState(
+                val permissionsState = rememberMultiplePermissionsState(
                     permissions = listOf(
-                        //if permission is required.
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     )
                 )
                 val bottomSheetNavigator = rememberBottomSheetNavigator()
@@ -64,7 +63,7 @@ class MainActivity : ComponentActivity() {
                 var loadingMessage by remember { mutableStateOf("")}
                 CompositionLocalProvider(
                     values = getProvidedValues(
-                        multiplePermissionsState = multiplePermissionsState,
+                        permissionsState = permissionsState,
                         navController = navController,
                         systemUiController = systemUiController
                     )
@@ -76,7 +75,10 @@ class MainActivity : ComponentActivity() {
                         topBar = { AppTopBar() },
                         floatingActionButton = {
                             AddPriceButton(
-                                onClick = {navController.navigate(NavigationItem.PostPrice.route)}
+                                onClick = {
+                                    navController.navigate(NavigationItem.PostPrice.route)
+                                    permissionsState.launchMultiplePermissionRequest()
+                                }
                             )
                         },
                         floatingActionButtonPosition = FabPosition.Center,
@@ -105,13 +107,47 @@ class MainActivity : ComponentActivity() {
                                         snackbarHostState.showSnackbar(it, SNACKBAR_HIDE_ACTION_TEXT)
                                     }
                                 },
-                                showHideLoadingScreen = {
-                                    isLoading = !isLoading
+                                showLoadingScreen = {
+                                    isLoading = true
                                     loadingMessage = it
-                                }
+                                },
+                                hideLoadingScreen = { isLoading = false }
                             )
                             if(isLoading){
                                 LinearProgressLoadingDialog(loadingMessage)
+                            }
+                            permissionsState.permissions.forEach { perm ->
+                                when(perm.permission){
+                                    Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                        when(perm.status){
+                                            PermissionStatus.Granted -> {
+                                            }
+                                            is PermissionStatus.Denied -> {
+                                                if(perm.status.shouldShowRationale){
+                                                    //Kullanıcı kalıcı olarak kabul etmedi,
+                                                    //gerekçesini sun ve ayarlardan açmasını iste.
+                                                }else{
+                                                    //Kullanıcı henüz cevap vermedi.
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Manifest.permission.ACCESS_COARSE_LOCATION -> {
+                                        when(perm.status){
+                                            PermissionStatus.Granted -> {
+                                            }
+                                            is PermissionStatus.Denied -> {
+
+                                                if(perm.status.shouldShowRationale){
+                                                    //Kullanıcı kalıcı olarak kabul etmedi,
+                                                    //gerekçesini sun ve ayarlardan açmasını iste.
+                                                }else{
+                                                    //Kullanıcı henüz cevap vermedi.
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

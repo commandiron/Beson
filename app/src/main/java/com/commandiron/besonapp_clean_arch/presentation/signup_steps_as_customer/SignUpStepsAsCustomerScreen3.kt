@@ -22,7 +22,8 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 fun SignUpStepsAsCustomerScreen3(
     viewModel: SignUpStepsAsCustomerViewModel = hiltViewModel(),
     navigateTo: (String) -> Unit,
-    showHideLoadingScreen:(String) -> Unit,
+    showLoadingScreen:(String) -> Unit,
+    hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
@@ -32,8 +33,9 @@ fun SignUpStepsAsCustomerScreen3(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 is UiEvent.NavigateTo -> navigateTo(event.route)
-                is UiEvent.ShowHideLoadingScreen -> showHideLoadingScreen(event.message)
+                is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
+                is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 else -> {}
             }
         }

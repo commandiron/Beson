@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.edit_profile
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings
+import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_OUT_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PROFILE_UPDATED
@@ -40,23 +43,21 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.getUserProfile().collect{ result ->
                 when(result){
-                    is Result.Loading -> {
-
-                    }
+                    is Result.Loading -> {}
                     is Result.Error -> {
-
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
                     }
                     is Result.Success -> {
-                        val userProfile = result.data ?: UserProfile()
                         state = state.copy(
-                            name = userProfile.name ?: "",
-                            phoneNumber = userProfile.phoneNumber ?: "",
-                            imageUrl = userProfile.imageUrl ?: "",
-                            userType = userProfile.userType,
-                            selectedMainConstructionItem = userProfile.selectedMainConstructionItem,
-                            selectedSubConstructionItems = userProfile.selectedSubConstructionItems
+                            name = result.data?.name ?: "",
+                            phoneNumber = result.data?.phoneNumber ?: "",
+                            imageUrl = result.data?.imageUrl ?: "",
+                            userType = result.data?.userType,
+                            selectedMainConstructionItem = result.data?.selectedMainConstructionItem,
+                            selectedSubConstructionItems = result.data?.selectedSubConstructionItems
                         )
                     }
+
                 }
             }
         }
@@ -84,69 +85,55 @@ class EditProfileViewModel @Inject constructor(
                 )
             }
             is EditProfileUserEvent.Save -> {
-                viewModelScope.launch {
-                    useCases.updateUserProfile(
-                        UserProfile(
-                            name = state.name,
-                            phoneNumber = state.phoneNumber,
-                            imageUrl = state.imageUrl,
-                            selectedMainConstructionItem = state.selectedMainConstructionItem,
-                            selectedSubConstructionItems = state.selectedSubConstructionItems
-                        )
-                    ).collect{ result ->
-                        when(result){
-                            is Result.Loading -> {
-                                state = state.copy(
-                                    isLoading = true
-                                )
-                            }
-                            is Result.Error -> {
-                                state = state.copy(
-                                    isLoading = false
-                                )
-                                sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                            }
-                            is Result.Success -> {
-                                state = state.copy(
-                                    isLoading = true
-                                )
-                                sendUiEvent(UiEvent.ShowSnackbar(YOUR_PROFILE_UPDATED))
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
-                            }
-                        }
-                    }
-                }
-
-            }
-            EditProfileUserEvent.LogOut -> {
-                useCases.signOut()
-                viewModelScope.launch {
-                    useCases.getUserState().collect{ result ->
-                        when(result){
-                            is Result.Loading -> {
-                                state = state.copy(
-                                    isLoading = true
-                                )
-                            }
-                            is Result.Error-> {
-                                state = state.copy(
-                                    isLoading = false
-                                )
-                                sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                            }
-                            is Result.Success -> {
-                                state = state.copy(
-                                    isLoading = false
-                                )
-                                when(result.data){
-                                    UserState.SIGNED_OUT -> {
-                                        sendUiEvent(UiEvent.ShowSnackbar(SIGN_OUT_SUCCESSFUL))
-                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
-                                    }
-                                    else -> {}
+                state.newPictureUri?.let { uri ->
+                    viewModelScope.launch {
+                        useCases.uploadProfilePicture(uri).collect{ result ->
+                            when(result){
+                                is Result.Loading -> {
+                                    sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
+                                }
+                                is Result.Error -> {
+                                    sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                                }
+                                is Result.Success -> {
+                                    state = state.copy(
+                                        imageUrl = result.data
+                                    )
+                                    updateUserProfile()
                                 }
                             }
                         }
+                    }
+                } ?: updateUserProfile()
+            }
+            EditProfileUserEvent.LogOut -> {
+                useCases.signOut()
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+            }
+        }
+    }
+
+    private fun updateUserProfile(){
+        viewModelScope.launch {
+            useCases.updateUserProfile(
+                UserProfile(
+                    name = state.name,
+                    phoneNumber = state.phoneNumber,
+                    imageUrl = state.imageUrl,
+                    selectedMainConstructionItem = state.selectedMainConstructionItem,
+                    selectedSubConstructionItems = state.selectedSubConstructionItems
+                )
+            ).collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                        sendUiEvent(UiEvent.ShowSnackbar(YOUR_PROFILE_UPDATED))
+                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
                     }
                 }
             }

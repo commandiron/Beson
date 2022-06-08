@@ -5,7 +5,6 @@ data class SignInState(
     val emailError: String? = null,
     val password: String = "",
     val passwordError: String? = null,
-
     val isGoogleLoading: Boolean = false,
     val launchGoogleSignIn: Boolean = false,
 )
