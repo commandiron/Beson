@@ -1,7 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -16,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,13 +27,14 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun AddPriceButton(
+    visible: Boolean,
     onClick: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     val navController = LocalNavController.current
     val currentRoute = navController.currentRoute()
     val buttonVisibleState = remember {
-        MutableTransitionState(false)
+        mutableStateOf(false)
     }
     val navigationItems = listOf(
         NavigationItem.Profile,
@@ -41,10 +42,10 @@ fun AddPriceButton(
     )
     val buttonVisibleRouteList = navigationItems.map { it.route }
     LaunchedEffect(key1 = currentRoute){
-        buttonVisibleState.targetState = buttonVisibleRouteList.contains(currentRoute)
+        buttonVisibleState.value = buttonVisibleRouteList.contains(currentRoute)
     }
     AnimatedVisibility(
-        visibleState = buttonVisibleState,
+        visible = if(visible) buttonVisibleState.value else false,
         enter = scaleIn(tween(durationMillis = 250)),
         exit = scaleOut(tween(durationMillis = 250))
     ) {

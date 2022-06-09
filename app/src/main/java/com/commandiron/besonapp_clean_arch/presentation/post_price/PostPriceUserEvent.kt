@@ -16,4 +16,6 @@ sealed class PostPriceUserEvent {
     object AlertDialogDismiss: PostPriceUserEvent()
     object AlertDialogConfirm: PostPriceUserEvent()
     object DoneDialogDismiss: PostPriceUserEvent()
+    object FineLocationPermissionGranted: PostPriceUserEvent()
+    object FineLocationPermissionDenied: PostPriceUserEvent()
 }

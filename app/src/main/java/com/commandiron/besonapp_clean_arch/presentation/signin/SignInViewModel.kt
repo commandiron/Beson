@@ -15,6 +15,7 @@ import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -91,7 +92,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun signIn(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.signIn(state.email, state.password).collectLatest{ response ->
                 when(response){
                     is Result.Loading ->{
@@ -110,7 +111,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun signInWithGoogleIdToken(idToken: String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.signInWithGoogleIdToken(idToken).collect{
                 when(it){
                     is Result.Error -> {
@@ -138,7 +139,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(uiEvent: UiEvent){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(uiEvent)
         }
     }

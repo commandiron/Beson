@@ -21,7 +21,9 @@ fun CustomAlertDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = spacing.defaultElevation)
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = spacing.defaultElevation
+                )
             ) {
                 Text(text = YES)
             }
@@ -38,5 +40,6 @@ fun CustomAlertDialog(
             )
         },
         shape = RoundedCornerShape(30.dp),
+        containerColor = MaterialTheme.colorScheme.background
     )
 }

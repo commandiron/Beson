@@ -59,7 +59,7 @@ fun SignUpStepsAsCompanyScreen1(
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         RegistrationTextField(
-            text = state.name,
+            text = state.name ?: "",
             hint = YOUR_NAME,
             onChange = { viewModel.onEvent(SignUpStepsAsCompanyUserEvent.NameChanged(it)) }
         )

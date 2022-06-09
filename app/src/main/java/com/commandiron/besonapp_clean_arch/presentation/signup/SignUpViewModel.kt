@@ -9,6 +9,7 @@ import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING
 import com.commandiron.besonapp_clean_arch.core.Strings.LOADING_MESSAGE_REGISTERING
+import com.commandiron.besonapp_clean_arch.core.Strings.REGISTERING
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_SUCCESSFUL
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_UNSUCCESSFUL
@@ -16,9 +17,10 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPP
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
-import com.commandiron.besonapp_clean_arch.presentation.model.UserState
+import com.commandiron.besonapp_clean_arch.presentation.model.UserStatus
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -36,7 +38,7 @@ class SignUpViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        getUserState()
+        getUserStatus()
     }
 
     fun onEvent(userEvent: SignUpUserEvent) {
@@ -87,11 +89,15 @@ class SignUpViewModel @Inject constructor(
             }
             is SignUpUserEvent.SignUpUserAsCustomerClick -> {
                 validateSignUpData()
-                if(!state.signUpFormHasError) signUp()
+                if(!state.signUpFormHasError) {
+                    signUp()
+                }
             }
             is SignUpUserEvent.SignUpUserAsCompanyClick -> {
                 validateSignUpData()
-                if(!state.signUpFormHasError) signUp()
+                if(!state.signUpFormHasError) {
+                    signUp()
+                }
             }
             SignUpUserEvent.GoogleSignInButtonClick -> {
                 state = state.copy(
@@ -114,9 +120,9 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun getUserState(){
-        viewModelScope.launch {
-            useCases.getUserState().collect{ result ->
+    private fun getUserStatus(){
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.getUserStatus().collect{ result ->
                 when(result){
                     is Result.Loading -> {
                         state = state.copy(
@@ -134,30 +140,35 @@ class SignUpViewModel @Inject constructor(
                     is Result.Success -> {
                         sendUiEvent(UiEvent.HideLoadingScreen)
                         state = state.copy(
-                            enablePlaceHolder = false
+                            enablePlaceHolder = false,
+                            userStatus = result.data
                         )
-                        if(state.userStateRecognizing){
-                            when(result.data){
-                                UserState.SIGNED_IN -> {
-                                    sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
-                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
-                                }
-                                UserState.SIGNED_IN_UNFINISHED_PROFILE_CUSTOMER -> {
-                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
-                                }
-                                UserState.SIGNED_IN_UNFINISHED_PROFILE_COMPANY -> {
-                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
-                                }
-                                UserState.SIGNED_IN_NO_SELECTION_CUSTOMER_OR_COMPANY -> {
-                                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.CustomerOrCompany.route))
-                                }
-                                UserState.SIGNED_OUT -> {}
-                                null -> {}
-                            }
+                        if(state.autoSignInNavigatorEnabled){
+                            navigateOnUserStatus(state.userStatus)
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun navigateOnUserStatus(userStatus: UserStatus?){
+        when(userStatus){
+            UserStatus.SIGNED_IN -> {
+                sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+            }
+            UserStatus.SIGNED_IN_UNFINISHED_PROFILE_CUSTOMER -> {
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
+            }
+            UserStatus.SIGNED_IN_UNFINISHED_PROFILE_COMPANY -> {
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+            }
+            UserStatus.SIGNED_IN_NO_SELECTION_CUSTOMER_OR_COMPANY -> {
+                sendUiEvent(UiEvent.NavigateTo(NavigationItem.CustomerOrCompany.route))
+            }
+            UserStatus.SIGNED_OUT -> {}
+            null -> {}
         }
     }
 
@@ -200,14 +211,14 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun signUp(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases
                 .signUp(state.registrationFormState.email, state.registrationFormState.password)
                 .collect{ response ->
                     when(response){
                         is Result.Loading ->{
                             sendUiEvent(UiEvent.HideKeyboard)
-                            sendUiEvent(UiEvent.ShowLoadingScreen(LOADING))
+                            sendUiEvent(UiEvent.ShowLoadingScreen(REGISTERING))
                             state = state.copy(
                                 enablePlaceHolder = true,
                                 loadingMessage = LOADING_MESSAGE_REGISTERING
@@ -220,29 +231,33 @@ class SignUpViewModel @Inject constructor(
                         }
                         is Result.Success ->{
                             state = state.copy(
-                                userStateRecognizing = false,
+                                autoSignInNavigatorEnabled = false,
                                 enablePlaceHolder = false
                             )
                             sendUiEvent(UiEvent.HideLoadingScreen)
                             sendUiEvent(UiEvent.ShowSnackbar(SIGN_UP_SUCCESSFUL))
-                            when(state.userType){
-                                UserType.CUSTOMER ->
-                                    sendUiEvent(
-                                        UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route)
-                                    )
-                                UserType.COMPANY ->
-                                    sendUiEvent(
-                                        UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route)
-                                    )
-                            }
+                            navigateOnUserType(state.userType)
                         }
                     }
                 }
         }
     }
 
+    private fun navigateOnUserType(userType: UserType){
+        when(userType){
+            UserType.CUSTOMER ->
+                sendUiEvent(
+                    UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route)
+                )
+            UserType.COMPANY ->
+                sendUiEvent(
+                    UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route)
+                )
+        }
+    }
+
     private fun signInWithGoogleIdToken(idToken: String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.signInWithGoogleIdToken(idToken).collect{
                 when(it){
                     is Result.Error -> {
@@ -266,7 +281,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(uiEvent: UiEvent){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(uiEvent)
         }
     }

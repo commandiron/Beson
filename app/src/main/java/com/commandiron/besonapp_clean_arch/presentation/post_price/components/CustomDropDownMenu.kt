@@ -15,12 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.NoErrorGreen
 import com.commandiron.besonapp_clean_arch.ui.theme.SignUpCompanyBackgroundColor
 import com.commandiron.besonapp_clean_arch.ui.theme.SignUpCustomerBackgroundColor
 
 @Composable
 fun CustomDropDownMenu(
     modifier: Modifier = Modifier,
+    borderColor: Color,
     isExpanded: Boolean,
     offset: DpOffset,
     dropDownItems: List<String>?,
@@ -30,7 +32,7 @@ fun CustomDropDownMenu(
     val spacing = LocalSpacing.current
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
     DropdownMenu(
-        modifier = modifier.background(MaterialTheme.colorScheme.tertiary),
+        modifier = modifier.background(Color.White),
         expanded = isExpanded,
         offset = offset,
         onDismissRequest = {
@@ -59,8 +61,8 @@ fun CustomDropDownMenu(
                             contentDescription = null,
                             modifier = Modifier.size(spacing.spaceSmall),
                             tint = if(selectedIndex == index){
-                                MaterialTheme.colorScheme.primary
-                            }else MaterialTheme.colorScheme.primaryContainer
+                                borderColor
+                            }else MaterialTheme.colorScheme.tertiary
                         )
                         Spacer(modifier = Modifier.width(spacing.spaceMedium))
                         Text(text = title)
@@ -73,15 +75,16 @@ fun CustomDropDownMenu(
                     onSelect(selectedIndex)
                 },
                 modifier = Modifier
-                    .background(
-                        if(selectedIndex == index){
-                            SignUpCustomerBackgroundColor
-                        }else SignUpCompanyBackgroundColor
+                    .border(
+                        width = 1.dp,
+                        color = if(selectedIndex == index) {
+                            borderColor
+                        }else Color.White
                     ),
                 enabled = enabled,
                 colors = MenuDefaults.itemColors(
-                    textColor = MaterialTheme.colorScheme.primary,
-                    disabledTextColor = MaterialTheme.colorScheme.primaryContainer
+                    textColor = borderColor,
+                    disabledTextColor = MaterialTheme.colorScheme.tertiary
                 )
             )
             Divider()

@@ -10,7 +10,7 @@ fun UserProfile.toFirebaseUserProfile(): FirebaseUserProfile {
         name = name,
         phoneNumber = phoneNumber,
         imageUrl = imageUrl,
-        userType = userType?.toString(),
+        userType = userType.toString(),
         selectedMainConstructionItemId = selectedMainConstructionItem?.id,
         selectedSubConstructionItemIds = selectedSubConstructionItems?.map { it.id }
     )
@@ -21,13 +21,14 @@ fun FirebaseUserProfile.toUserProfile(): UserProfile {
         name = name ?: "",
         phoneNumber = phoneNumber ?: "",
         imageUrl = imageUrl ?: "",
-        userType = UserType.valueOf(userType ?: "CUSTOMER"),
+        userType = if(userType == null ) null else UserType.valueOf(userType),
         selectedMainConstructionItem = if(selectedMainConstructionItemId != null ) {
             defaultConstructionItems[selectedMainConstructionItemId]
         } else null,
-        selectedSubConstructionItems =
-        defaultConstructionItems[selectedMainConstructionItemId ?: 0]
-            .subConstructionItems
-            .filter { selectedSubConstructionItemIds?.contains(it.id) ?: false }
+        selectedSubConstructionItems = if(selectedMainConstructionItemId != null){
+            defaultConstructionItems[selectedMainConstructionItemId]
+                .subConstructionItems
+                .filter { selectedSubConstructionItemIds?.contains(it.id) ?: false }
+        }else null
     )
 }

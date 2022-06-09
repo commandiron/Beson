@@ -43,6 +43,7 @@ android {
             "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xuse-experimental=androidx.compose.ExperimentalComposeApi",
             "-Xuse-experimental=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-Xuse-experimental=androidx.compose.material.ExperimentalMaterialApi",
             "-Xuse-experimental=androidx.compose.runtime.ExperimentalComposeApi",
             "-Xuse-experimental=androidx.compose.ui.ExperimentalComposeUiApi",
             "-Xuse-experimental=coil.annotation.ExperimentalCoilApi",

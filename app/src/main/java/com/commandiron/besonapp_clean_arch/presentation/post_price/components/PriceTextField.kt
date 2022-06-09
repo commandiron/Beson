@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PriceTextField(
     modifier: Modifier = Modifier,
+    borderColor: Color = Color.Unspecified,
     onClick:() -> Unit,
     value: String,
     onValueChange:(String) -> Unit,
@@ -44,9 +45,8 @@ fun PriceTextField(
     addedSymbol: String
 ) {
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.tertiary
+        modifier = modifier.border(1.dp, borderColor, RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Box(
             contentAlignment = Alignment.Center
@@ -65,10 +65,8 @@ fun PriceTextField(
                 keyboardActions = KeyboardActions(onDone = onDone),
                 singleLine = true,
                 textStyle = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Start
                 ),
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 visualTransformation = ThousandSeparatorVisualTransformationWithAddedSymbol(
                     maxFractionDigits = 2,
                     addedSymbol = addedSymbol
@@ -86,10 +84,9 @@ fun PriceTextField(
                         }
                         if(value.isEmpty()){
                             Icon(
-                                modifier = Modifier.height(IntrinsicSize.Min),
                                 imageVector = Icons.Default.Edit,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
+                                modifier = Modifier.height(IntrinsicSize.Min)
                             )
                         }
                     }

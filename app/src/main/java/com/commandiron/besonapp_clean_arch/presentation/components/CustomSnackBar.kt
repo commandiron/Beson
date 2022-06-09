@@ -16,9 +16,9 @@ fun CustomSnackBar(
     Snackbar(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier.padding(horizontal = 40.dp),
-        backgroundColor = MaterialTheme.colorScheme.tertiary,
-        contentColor = MaterialTheme.colorScheme.onTertiary,
-        actionColor = MaterialTheme.colorScheme.primary,
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.tertiary,
+        actionColor = MaterialTheme.colorScheme.tertiary,
         snackbarData = data
     )
 }

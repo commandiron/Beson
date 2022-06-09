@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.presentation.post_price.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,14 +17,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.NoErrorGreen
 
 @Composable
 fun CustomDropDown(
     modifier: Modifier = Modifier,
+    borderColor: Color = Color.Unspecified,
     onCategoryBoxClick:() -> Unit,
     title: String,
     isExpanded: Boolean,
@@ -34,9 +38,14 @@ fun CustomDropDown(
 ) {
     val spacing = LocalSpacing.current
     Surface(
-        modifier = modifier.clickable { onCategoryBoxClick() },
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.tertiary
+        modifier = modifier
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable { onCategoryBoxClick() },
+        shape = RoundedCornerShape(16.dp)
     ) {
         Row(
             modifier = Modifier.padding(spacing.spaceSmall),
@@ -45,7 +54,6 @@ fun CustomDropDown(
         ) {
             Text(
                 text = title,
-                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
@@ -53,8 +61,7 @@ fun CustomDropDown(
                 imageVector = if(isExpanded){
                     Icons.Default.KeyboardArrowDown
                 }else Icons.Default.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                contentDescription = null
             )
         }
         CustomDropDownMenu(
@@ -62,6 +69,7 @@ fun CustomDropDown(
                 maxHeight = spacing.dropDownMenuHeight,
                 maxWidth = spacing.spaceXXLarge
             ),
+            borderColor = borderColor,
             isExpanded = isExpanded,
             offset = offset,
             dropDownItems = dropDownItems,

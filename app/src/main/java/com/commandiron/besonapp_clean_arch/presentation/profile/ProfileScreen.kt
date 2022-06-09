@@ -18,28 +18,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.commandiron.besonapp_clean_arch.AppViewModel
 import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_FAVORITE_PROFILES
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PRICE_UPDATES
 import com.commandiron.besonapp_clean_arch.core.Strings.PROFILE_WILL_BE_REMOVED_FROM_FAVORITES_ARE_YOU_SURE
+import com.commandiron.besonapp_clean_arch.core.Strings.TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PRICE_WILL_GONE_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
-import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
-import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.CustomExpandableMenu
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.MyUpdatesExpandedMenuWithCarousel
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.FavoriteProfilesExpandedMenuWithCarousel
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import com.commandiron.besonapp_clean_arch.ui.theme.*
-import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ProfileScreen(
@@ -53,6 +46,13 @@ fun ProfileScreen(
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
+    val fabState = LocalFabState.current
+    LaunchedEffect(key1 = state.userType){
+        when(state.userType){
+            UserType.CUSTOMER -> fabState.targetState = false
+            UserType.COMPANY -> fabState.targetState = true
+        }
+    }
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
@@ -107,13 +107,13 @@ fun ProfileScreen(
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                Column() {
+                Column {
                     Text(
                         text = state.name,
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = "Tel no: +90" + state.phoneNumber,
+                        text = TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE + state.phoneNumber,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                     )
@@ -132,18 +132,20 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         Divider(Modifier.padding(horizontal = spacing.spaceMedium))
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
-        CustomExpandableMenu(
-            title = MY_PRICE_UPDATES,
-            isExpanded = state.myUpdatesSurfaceExpanded,
-            onDropDownIconClick = { viewModel.onEvent(ProfileUserEvent.MyUpdatesDropDownIconClick) }
-        ){
-            MyUpdatesExpandedMenuWithCarousel(
-                height = spacing.expandableMenuHeight,
-                myUpdates = state.myUpdates,
-                onDelete = { viewModel.onEvent(ProfileUserEvent.DeleteMyUpdate(it)) }
-            )
+        if(state.userType == UserType.COMPANY){
+            CustomExpandableMenu(
+                title = MY_PRICE_UPDATES,
+                isExpanded = state.myUpdatesSurfaceExpanded,
+                onDropDownIconClick = { viewModel.onEvent(ProfileUserEvent.MyUpdatesDropDownIconClick) }
+            ){
+                MyUpdatesExpandedMenuWithCarousel(
+                    height = spacing.expandableMenuHeight,
+                    myUpdates = state.myUpdates,
+                    onDelete = { viewModel.onEvent(ProfileUserEvent.DeleteMyUpdate(it)) }
+                )
+            }
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
         }
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
         CustomExpandableMenu(
             title = MY_FAVORITE_PROFILES,
             isExpanded = state.myFavoriteProfilesSurfaceExpanded,
@@ -156,29 +158,6 @@ fun ProfileScreen(
                     viewModel.onEvent(ProfileUserEvent.UnFavoriteProfile(it))
                 }
             )
-        }
-        Spacer(modifier = Modifier.height(spacing.spaceMedium))
-
-
-        ///BURDA KALDIM ŞU AN KAMERAYI OYNATAMIYORUM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //KONUMU STATE OLARAK ALDIM AMA KAMERAYI HAREKET ETTİREMİYORUM.
-        val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(LatLng(state.location?.latitude ?:1.35, state.location?.longitude ?:103.87), 10f)
-        }
-        GoogleMap(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            cameraPositionState = cameraPositionState
-        )
-        Button(
-            onClick = { viewModel.onEvent(ProfileUserEvent.GetLocation) },
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = spacing.defaultElevation),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Orange
-            )
-        ) {
-            Text(text = "KONUM AL")
         }
     }
     if(state.showDeleteMyUpdateAlertDialog){

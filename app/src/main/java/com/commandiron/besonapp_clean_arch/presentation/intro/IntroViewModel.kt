@@ -13,6 +13,7 @@ import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class IntroViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(uiEvent: UiEvent){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(uiEvent)
         }
     }

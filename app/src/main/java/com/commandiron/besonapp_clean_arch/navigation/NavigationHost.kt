@@ -1,6 +1,5 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +18,6 @@ import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_customer.SignUpStepsAsCustomerScreen3
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.google.accompanist.navigation.material.bottomSheet
-import kotlinx.coroutines.delay
 
 @Composable
 fun NavigationHost(

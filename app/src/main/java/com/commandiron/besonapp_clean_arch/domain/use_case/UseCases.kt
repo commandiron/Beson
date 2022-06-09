@@ -20,9 +20,11 @@ class UseCases(
     val signIn: SignIn,
     val signInWithGoogleIdToken: SignInWithGoogleIdToken,
     val signOut: SignOut,
-    val getUserState: GetUserState,
+    val getUserStatus: GetUserStatus,
     val updateUserProfile: UpdateUserProfile,
     val getUserProfile: GetUserProfile,
     val uploadProfilePicture: UploadProfilePicture,
-    val getUserLastKnownPosition: GetUserLastKnownPosition
+    val getUserLastKnownLocation: GetUserLastKnownLocation,
+    val getLatLngFromLocation: GetLatLngFromLocation,
+    val getCityFromLatLng: GetCityFromLatLng
 )

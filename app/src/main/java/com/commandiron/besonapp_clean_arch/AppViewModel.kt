@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
-import com.commandiron.besonapp_clean_arch.presentation.signup.SignUpUserEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -40,5 +39,6 @@ class AppViewModel@Inject constructor(
 data class AppState(
     val isColdSplashScreenVisible: Boolean = true,
     val coldSplashScreenDelay: Long = 1000L,
-    val shouldShowSplashAndIntro: Boolean = true
+    val shouldShowSplashAndIntro: Boolean = true,
+    val isFabVisible: Boolean = false
 )

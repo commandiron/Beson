@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,18 +17,16 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_HIDE_ACTION_TEXT
+import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_CLOSE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.navigation.*
 import com.commandiron.besonapp_clean_arch.presentation.components.AddPriceButton
 import com.commandiron.besonapp_clean_arch.presentation.components.AppTopBar
 import com.commandiron.besonapp_clean_arch.presentation.components.CustomSnackBar
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.LinearProgressLoadingDialog
 import com.commandiron.besonapp_clean_arch.ui.theme.*
+import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,7 +51,13 @@ class MainActivity : ComponentActivity() {
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     )
                 )
-                val bottomSheetNavigator = rememberBottomSheetNavigator()
+                val bottomSheetState = rememberModalBottomSheetState(
+                    initialValue = ModalBottomSheetValue.Hidden,
+                    skipHalfExpanded = true
+                )
+                val bottomSheetNavigator = remember {
+                    BottomSheetNavigator(sheetState = bottomSheetState)
+                }
                 val navController = rememberNavController(bottomSheetNavigator)
                 val systemUiController = rememberSystemUiController()
                 val scaffoldState = rememberScaffoldState()
@@ -61,11 +66,13 @@ class MainActivity : ComponentActivity() {
                 val keyboardController = LocalSoftwareKeyboardController.current
                 var isLoading by remember { mutableStateOf(false)}
                 var loadingMessage by remember { mutableStateOf("")}
+                val fabState = remember {MutableTransitionState(false)}
                 CompositionLocalProvider(
                     values = getProvidedValues(
                         permissionsState = permissionsState,
                         navController = navController,
-                        systemUiController = systemUiController
+                        systemUiController = systemUiController,
+                        fabState = fabState
                     )
                 ) {
                     Scaffold(
@@ -75,9 +82,9 @@ class MainActivity : ComponentActivity() {
                         topBar = { AppTopBar() },
                         floatingActionButton = {
                             AddPriceButton(
+                                visible = fabState.targetState,
                                 onClick = {
                                     navController.navigate(NavigationItem.PostPrice.route)
-                                    permissionsState.launchMultiplePermissionRequest()
                                 }
                             )
                         },
@@ -104,7 +111,7 @@ class MainActivity : ComponentActivity() {
                                 navigateTo = { navController.navigate(it) },
                                 showSnackbar = {
                                     coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(it, SNACKBAR_HIDE_ACTION_TEXT)
+                                        snackbarHostState.showSnackbar(it, SNACKBAR_CLOSE_ACTION_TEXT)
                                     }
                                 },
                                 showLoadingScreen = {
@@ -115,39 +122,6 @@ class MainActivity : ComponentActivity() {
                             )
                             if(isLoading){
                                 LinearProgressLoadingDialog(loadingMessage)
-                            }
-                            permissionsState.permissions.forEach { perm ->
-                                when(perm.permission){
-                                    Manifest.permission.ACCESS_FINE_LOCATION -> {
-                                        when(perm.status){
-                                            PermissionStatus.Granted -> {
-                                            }
-                                            is PermissionStatus.Denied -> {
-                                                if(perm.status.shouldShowRationale){
-                                                    //Kullanıcı kalıcı olarak kabul etmedi,
-                                                    //gerekçesini sun ve ayarlardan açmasını iste.
-                                                }else{
-                                                    //Kullanıcı henüz cevap vermedi.
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                                        when(perm.status){
-                                            PermissionStatus.Granted -> {
-                                            }
-                                            is PermissionStatus.Denied -> {
-
-                                                if(perm.status.shouldShowRationale){
-                                                    //Kullanıcı kalıcı olarak kabul etmedi,
-                                                    //gerekçesini sun ve ayarlardan açmasını iste.
-                                                }else{
-                                                    //Kullanıcı henüz cevap vermedi.
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             }
                         }
                     }

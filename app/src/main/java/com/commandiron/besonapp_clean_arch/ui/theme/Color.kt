@@ -13,6 +13,9 @@ val OnTertiaryContainerColor = Color.Black
 val BackgroundColor = Color(0xFFf5f5f5)
 val OnBackgroundColor = Color.Black
 
+val PleaseSelectBlue = Color(0xFF0F0FE7)
+val NoErrorGreen = Color(0xFF42B433)
+val ErrorRed = Color(0xFFf20000)
 val Orange = Color(0xFFFFAA00)
 val SignUpCustomerBackgroundColor = Color(0xff333333)
 val SignUpCompanyBackgroundColor = Color(0xFF555454)

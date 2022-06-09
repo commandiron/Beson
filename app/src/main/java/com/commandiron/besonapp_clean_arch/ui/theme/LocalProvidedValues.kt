@@ -1,5 +1,6 @@
 package com.commandiron.besonapp_clean_arch.ui.theme
 
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.compositionLocalOf
@@ -36,10 +37,14 @@ val LocalNavController = compositionLocalOf<NavHostController> {
 val LocalSystemUiController = compositionLocalOf<SystemUiController> {
     error("No System Ui Controller")
 }
+val LocalFabState = compositionLocalOf<MutableTransitionState<Boolean>> {
+    error("No Fab State")
+}
 fun getProvidedValues(
     permissionsState: MultiplePermissionsState,
     navController: NavHostController,
-    systemUiController: SystemUiController
+    systemUiController: SystemUiController,
+    fabState: MutableTransitionState<Boolean>
 ): Array<ProvidedValue<*>> {
     return arrayOf(
         LocalRippleTheme provides NoRippleTheme,
@@ -47,6 +52,7 @@ fun getProvidedValues(
         LocalPermissionsState provides permissionsState,
         LocalNavController provides navController,
         LocalSystemUiController provides systemUiController,
+        LocalFabState provides fabState
     )
 }
 

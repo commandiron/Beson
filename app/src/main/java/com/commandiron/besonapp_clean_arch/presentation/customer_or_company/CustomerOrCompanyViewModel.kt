@@ -16,6 +16,7 @@ import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -39,28 +40,7 @@ class CustomerOrCompanyViewModel @Inject constructor(
                 state = state.copy(
                     showAlertDialog = false
                 )
-                viewModelScope.launch {
-                    useCases.updateUserProfile.invoke(UserProfile(userType = state.userType)).collect{
-                        when(it){
-                            is Result.Error -> {
-                                sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                            }
-                            is Result.Loading -> {}
-                            is Result.Success -> {
-                                when(state.userType){
-                                    UserType.CUSTOMER -> {
-                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
-                                    }
-                                    UserType.COMPANY -> {
-                                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
-                                    }
-                                    null -> TODO()
-                                }
-
-                            }
-                        }
-                    }
-                }
+                updateUserProfile()
             }
             CustomerOrCompanyUserEvent.AlertDialogDismiss -> {
                 state = state.copy(
@@ -84,8 +64,33 @@ class CustomerOrCompanyViewModel @Inject constructor(
         }
     }
 
+    private fun updateUserProfile(){
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.updateUserProfile.invoke(UserProfile(userType = state.userType)).collect{
+                when(it){
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Loading -> {}
+                    is Result.Success -> {
+                        when(state.userType){
+                            UserType.CUSTOMER -> {
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
+                            }
+                            UserType.COMPANY -> {
+                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+                            }
+                            null -> {}
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
     private fun sendUiEvent(uiEvent: UiEvent){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(uiEvent)
         }
     }

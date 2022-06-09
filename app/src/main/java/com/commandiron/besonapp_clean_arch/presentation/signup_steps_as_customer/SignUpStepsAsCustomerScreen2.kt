@@ -59,7 +59,7 @@ fun SignUpStepsAsCustomerScreen2(
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
         RegistrationTextField(
-            text = state.phoneNumber,
+            text = state.phoneNumber ?: "",
             hint = PHONE_NUMBER_MASK,
             keyboardType = KeyboardType.Phone,
             onChange = {

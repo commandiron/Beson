@@ -17,6 +17,7 @@ import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,7 +29,6 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     private val useCases: UseCases
 ): ViewModel() {
 
-    //Bunları shared pref. kaydederek sağlıyorum, farklı bir yol bulabilirm.
     var state by mutableStateOf(
         SignUpStepsAsCompanyState(
             name = useCases.loadSignUpStepsName(),
@@ -43,7 +43,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.updateUserProfile(UserProfile(userType = UserType.COMPANY)).collect()
         }
     }
@@ -57,7 +57,10 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
             }
             is SignUpStepsAsCompanyUserEvent.PhoneNumberChanged -> {
                 state = state.copy(
-                    phoneNumber = useCases.validatePhoneNumber(state.phoneNumber, userEvent.phoneNumber)
+                    phoneNumber = useCases.validatePhoneNumber(
+                        oldValue = state.phoneNumber ?: "",
+                        newValue = userEvent.phoneNumber
+                    )
                 )
             }
             is SignUpStepsAsCompanyUserEvent.PictureChanged -> {
@@ -76,11 +79,15 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                 )
             }
             is SignUpStepsAsCompanyUserEvent.NameScreenNext -> {
-                useCases.saveSignUpStepsName(state.name)
+                state.name?.let {
+                    useCases.saveSignUpStepsName(it)
+                }
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany2.route))
             }
             is SignUpStepsAsCompanyUserEvent.PhoneNumberScreenNext -> {
-                useCases.saveSignUpStepsPhoneNumber(state.phoneNumber)
+                state.phoneNumber?.let {
+                    useCases.saveSignUpStepsPhoneNumber(it)
+                }
                 sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany3.route))
             }
             is SignUpStepsAsCompanyUserEvent.PictureScreenNext -> {
@@ -108,7 +115,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     }
 
     private fun uploadProfilePicture(uri: Uri){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.uploadProfilePicture(uri).collect{ result ->
                 when(result){
                     is Result.Error -> {
@@ -126,7 +133,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     }
 
     private fun updateUserProfile(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCases.updateUserProfile(
                 UserProfile(
                     name = state.name,
@@ -155,7 +162,7 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
     }
 
     private fun sendUiEvent(uiEvent: UiEvent){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             _uiEvent.send(uiEvent)
         }
     }

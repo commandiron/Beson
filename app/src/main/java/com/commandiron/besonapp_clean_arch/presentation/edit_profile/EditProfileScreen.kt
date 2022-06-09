@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.AppViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.CANCEL
 import com.commandiron.besonapp_clean_arch.core.Strings.LOG_OUT
 import com.commandiron.besonapp_clean_arch.core.Strings.MAIN_CONSTRUCTION_CATEGORY
@@ -104,14 +105,14 @@ fun EditProfileScreen(
             }
         )
         Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        Text(
-            text = MAIN_CONSTRUCTION_CATEGORY,
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        Divider()
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
         state.selectedMainConstructionItem?.let {
+            Text(
+                text = MAIN_CONSTRUCTION_CATEGORY,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Divider()
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
             CategoryItem(
                 modifier = Modifier
                     .heightIn(max = spacing.spaceExtraLarge)
@@ -120,17 +121,17 @@ fun EditProfileScreen(
                 itemMain = it,
                 iconPadding = spacing.spaceExtraSmall
             ){}
+            Spacer(modifier = Modifier.height(spacing.spaceLarge))
         }
-        Spacer(modifier = Modifier.height(spacing.spaceLarge))
-        Text(
-            text = SUB_CONSTRUCTION_CATEGORIES,
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        Divider()
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
         state.selectedSubConstructionItems?.let {
-            LazyRow() {
+            Text(
+                text = SUB_CONSTRUCTION_CATEGORIES,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Divider()
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            LazyRow {
                 items(it){ item ->
                     CategoryItem(
                         modifier = Modifier
@@ -145,28 +146,14 @@ fun EditProfileScreen(
             }
         }
         Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Divider(
-                modifier = Modifier.weight(1f).padding(horizontal = spacing.spaceMedium),
-                color = MaterialTheme.colorScheme.primary
-            )
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = { viewModel.onEvent(EditProfileUserEvent.LogOut) }
-            ) {
-                Text(
-                    text = LOG_OUT,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Normal)
-                )
-            }
-            Divider(
-                modifier = Modifier.weight(1f).padding(horizontal = spacing.spaceMedium),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+        Text(
+            modifier = Modifier.clickable { viewModel.onEvent(EditProfileUserEvent.LogOut) },
+            text = LOG_OUT,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Normal
+            ),
+            color = ErrorRed
+        )
     }
 }
 

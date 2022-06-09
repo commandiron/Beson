@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Constraints
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.commandiron.besonapp_clean_arch.AppViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.COMPANY_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.CUSTOMER_STATEMENT_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.EMAIL_SIGN_IN

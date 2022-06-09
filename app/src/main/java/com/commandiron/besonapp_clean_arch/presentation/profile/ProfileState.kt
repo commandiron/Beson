@@ -1,16 +1,14 @@
 package com.commandiron.besonapp_clean_arch.presentation.profile
 
-import android.location.Location
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.profile.model.MyUpdates
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
+import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 
 data class ProfileState(
     val name: String = "",
     val phoneNumber: String = "",
     val imageUrl: String = "",
-    val profileHeaderHeight: Dp = 0.dp,
+    val userType: UserType = UserType.CUSTOMER,
     val myUpdatesSurfaceExpanded: Boolean = false,
     val myFavoriteProfilesSurfaceExpanded: Boolean = false,
     val myUpdates: List<MyUpdates> = listOf(
@@ -32,6 +30,4 @@ data class ProfileState(
     val showUnFavoriteAlertDialog: Boolean = false,
     val showDoneDialog: Boolean = false,
     val doneDialogMessage: String = "",
-
-    val location: Location? = null
 )

@@ -17,7 +17,6 @@ import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -90,11 +89,13 @@ object AppModule {
             signIn = SignIn(repository),
             signInWithGoogleIdToken =  SignInWithGoogleIdToken(repository),
             signOut = SignOut(repository),
-            getUserState = GetUserState(repository),
+            getUserStatus = GetUserStatus(repository),
             updateUserProfile = UpdateUserProfile(repository),
             getUserProfile = GetUserProfile(repository),
             uploadProfilePicture = UploadProfilePicture(repository),
-            getUserLastKnownPosition = GetUserLastKnownPosition(fusedLocationClient)
+            getUserLastKnownLocation = GetUserLastKnownLocation(fusedLocationClient),
+            getLatLngFromLocation = GetLatLngFromLocation(),
+            getCityFromLatLng = GetCityFromLatLng(fusedLocationClient)
         )
     }
 }
