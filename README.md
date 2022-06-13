@@ -37,10 +37,10 @@ BESON is a native android construction market price tracking application written
         * database
         * storage
     * [Jetpack](https://developer.android.com/jetpack)
+        * [Compose](https://developer.android.com/jetpack/compose) - toolkit for building native UI
         * [Navigation](https://developer.android.com/topic/libraries/architecture/navigation/) - deal with whole in-app navigation      
         * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - store and manage UI-related data in a lifecycle conscious way
         * [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) - simple data storage
-        * [Compose](https://developer.android.com/jetpack/compose) - toolkit for building native UI
 * Architecture 🏗️
     * Model-View-ViewModel
     * [Android Architecture components](https://developer.android.com/topic/libraries/architecture) ([ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel), [Navigation](https://developer.android.com/jetpack/androidx/releases/navigation))
