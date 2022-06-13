@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.commandiron.besonapp_clean_arch.AppViewModel
 import com.commandiron.besonapp_clean_arch.R
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_FAVORITE_PROFILES
 import com.commandiron.besonapp_clean_arch.core.Strings.MY_PRICE_UPDATES
@@ -28,6 +27,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PRICE_WILL_GONE_ARE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
 import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
+import com.commandiron.besonapp_clean_arch.presentation.components.ProfileImage
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.CustomExpandableMenu
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.MyUpdatesExpandedMenuWithCarousel
 import com.commandiron.besonapp_clean_arch.presentation.profile.components.FavoriteProfilesExpandedMenuWithCarousel
@@ -85,27 +85,7 @@ fun ProfileScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(data = state.imageUrl)
-                            .apply(
-                                block = fun ImageRequest.Builder.() {
-                                    crossfade(true)
-                                    error(R.drawable.ic_blank_profile_picture)
-                                    fallback(R.drawable.ic_blank_profile_picture)
-                                }
-                            )
-                            .build()
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+                ProfileImage(state.imageUrl)
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 Column {
                     Text(
@@ -138,11 +118,15 @@ fun ProfileScreen(
                 isExpanded = state.myUpdatesSurfaceExpanded,
                 onDropDownIconClick = { viewModel.onEvent(ProfileUserEvent.MyUpdatesDropDownIconClick) }
             ){
-                MyUpdatesExpandedMenuWithCarousel(
-                    height = spacing.expandableMenuHeight,
-                    myUpdates = state.myUpdates,
-                    onDelete = { viewModel.onEvent(ProfileUserEvent.DeleteMyUpdate(it)) }
-                )
+                state.myPrices?.let {
+                    MyUpdatesExpandedMenuWithCarousel(
+                        height = spacing.expandableMenuHeight,
+                        myPrices = it,
+                        onDelete = { priceItem ->
+                            viewModel.onEvent(ProfileUserEvent.DeleteMyUpdate(priceItem))
+                        }
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
         }

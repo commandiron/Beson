@@ -26,7 +26,7 @@ fun CustomDropDownMenu(
     isExpanded: Boolean,
     offset: DpOffset,
     dropDownItems: List<String>?,
-    onSelect:(Int?) -> Unit,
+    onSelect:(Int) -> Unit,
     onDismissRequest:(Int?) -> Unit,
 ) {
     val spacing = LocalSpacing.current
@@ -51,7 +51,9 @@ fun CustomDropDownMenu(
                             .clickable {
                                 enabled = !enabled
                                 selectedIndex = index
-                                onSelect(selectedIndex)
+                                selectedIndex?.let {
+                                    onSelect(it)
+                                }
                             },
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
@@ -72,7 +74,9 @@ fun CustomDropDownMenu(
                 onClick = {
                     enabled = !enabled
                     selectedIndex = index
-                    onSelect(selectedIndex)
+                    selectedIndex?.let {
+                        onSelect(it)
+                    }
                 },
                 modifier = Modifier
                     .border(

@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.profile.model
+package com.commandiron.besonapp_clean_arch.presentation.model
 
 data class MyUpdates(
     val itemId: Int,

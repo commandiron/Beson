@@ -1,6 +1,5 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -10,14 +9,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.commandiron.besonapp_clean_arch.core.Strings.BACK_TO_SIGN_UP_SCREEN
 import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.NEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_MAIN_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
-import com.commandiron.besonapp_clean_arch.presentation.signup_steps.components.SingleCategorySelector
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
+import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company.components.SingleCategorySelector
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 

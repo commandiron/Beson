@@ -18,7 +18,7 @@ fun AppTopBar(){
     val navController = LocalNavController.current
     val currentRoute = navController.currentRoute()
     val topBarVisibleNavigationItemsList = navigationItems.filter { it.isTopBarVisible }
-    val topBarIsVisible = topBarVisibleNavigationItemsList.map { it.route }.contains(currentRoute)
+    val topBarIsVisible = topBarVisibleNavigationItemsList.map { it.withArgs }.contains(currentRoute)
     AnimatedVisibility(
         visible = topBarIsVisible,
         enter = expandVertically(),

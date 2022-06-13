@@ -33,7 +33,7 @@ fun CustomDropDown(
     isExpanded: Boolean,
     offset: DpOffset,
     dropDownItems: List<String>?,
-    onSelect:(Int?) -> Unit,
+    onSelect:(Int) -> Unit,
     onDismissRequest:(Int?) -> Unit
 ) {
     val spacing = LocalSpacing.current

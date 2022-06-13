@@ -9,18 +9,20 @@ import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings
 import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_ENTER_PRICE
+import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_SELECT_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.PLEASE_SELECT_PRICE_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.PriceItem
 import com.commandiron.besonapp_clean_arch.ui.theme.ErrorRed
 import com.commandiron.besonapp_clean_arch.ui.theme.NoErrorGreen
 import com.commandiron.besonapp_clean_arch.ui.theme.PleaseSelectBlue
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,6 +39,7 @@ class PostPriceViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        getUserProfile()
         if(state.fineLocationPermissionGranted){
             getUserLastKnownPosition()
         }
@@ -46,20 +49,22 @@ class PostPriceViewModel @Inject constructor(
         when (userEvent) {
             is PostPriceUserEvent.SubConsCategorySelectionBoxClick -> {
                 state = state.copy(
-                    subConsCategoryDropDownMenuIsExpanded = !state.subConsCategoryDropDownMenuIsExpanded
+                    subConsCategoryDropDownMenuIsExpanded = !state.subConsCategoryDropDownMenuIsExpanded,
+                    subConsCategoryBorderColor = PleaseSelectBlue
                 )
             }
             is PostPriceUserEvent.OnSubConstructionCategorySelect -> {
-                state = state.copy(
-                    subConsCategoryDropDownMenuIsExpanded = !state.subConsCategoryDropDownMenuIsExpanded,
-                    selectedSubConsItemTitle = state.subConsItems[userEvent.selectedIndex!!].title,
-                    priceItems = state.subConsItems[userEvent.selectedIndex].priceItems,
-                    selectedPriceItemTitle = null,
-                    priceTextFieldEnabled = false,
-                    price = "",
-                    subConsItemBorderColor = NoErrorGreen,
-                    priceItemBorderColor = PleaseSelectBlue
-                )
+                state.subConsItems?.let {
+                    state = state.copy(
+                        subConsCategoryDropDownMenuIsExpanded = !state.subConsCategoryDropDownMenuIsExpanded,
+                        selectedSubConsItem = it[userEvent.selectedIndex],
+                        selectedPriceTitle = null,
+                        priceItems = it[userEvent.selectedIndex].priceCategories,
+                        priceTextFieldEnabled = false,
+                        subConsCategoryBorderColor = NoErrorGreen,
+                        priceCategoryBorderColor = PleaseSelectBlue
+                    )
+                }
             }
             is PostPriceUserEvent.SubConsCategoryDismiss -> {
                 state = state.copy(
@@ -69,21 +74,26 @@ class PostPriceViewModel @Inject constructor(
             is PostPriceUserEvent.PriceCategorySelectionBoxClick -> {
                 state = state.copy(
                     priceCategoryDropDownMenuIsExpanded = !state.priceCategoryDropDownMenuIsExpanded,
-                    priceTextFieldEnabled = state.selectedPriceItemTitle != null
+                    priceTextFieldEnabled = state.selectedPriceCategoryId != null
                 )
             }
             is PostPriceUserEvent.OnPriceCategorySelect -> {
-                state = state.copy(
-                    priceCategoryDropDownMenuIsExpanded = !state.priceCategoryDropDownMenuIsExpanded,
-                    selectedPriceItemTitle = state.priceItems?.get(userEvent.selectedIndex!!)?.title,
-                    selectedPriceItemUnit = state.priceItems?.get(userEvent.selectedIndex!!)?.unit,
-                    priceTextFieldEnabled = true,
-                    priceItemBorderColor =  NoErrorGreen,
-                    priceBorderColor = PleaseSelectBlue
-                )
+                state.priceItems?.let {
+                    state = state.copy(
+                        priceCategoryDropDownMenuIsExpanded = !state.priceCategoryDropDownMenuIsExpanded,
+                        selectedPriceCategoryId = it[userEvent.selectedIndex].priceCategoryId,
+                        selectedPriceTitle = it[userEvent.selectedIndex].title,
+                        selectedPriceUnit = it[userEvent.selectedIndex].unit,
+                        priceTextFieldEnabled = true,
+                        priceCategoryBorderColor =  NoErrorGreen,
+                        priceTextFieldBorderColor = PleaseSelectBlue
+                    )
+                }
             }
             is PostPriceUserEvent.PriceTextFieldClick -> {
-                if(state.selectedPriceItemTitle == null){
+                if(state.selectedSubConsItem == null){
+                    sendUiEvent(UiEvent.ShowSnackbar(PLEASE_SELECT_CONSTRUCTION_CATEGORY))
+                }else if(state.selectedPriceCategoryId == null){
                     sendUiEvent(UiEvent.ShowSnackbar(PLEASE_SELECT_PRICE_CATEGORY))
                 }
             }
@@ -99,13 +109,14 @@ class PostPriceViewModel @Inject constructor(
                 )
                 state = state.copy(
                     price = validatedPrice,
-                    priceBorderColor = NoErrorGreen
+                    priceTextFieldBorderColor = NoErrorGreen
                 )
                 if(state.price == ""){
                     state = state.copy(
-                        priceBorderColor = PleaseSelectBlue
+                        priceTextFieldBorderColor = PleaseSelectBlue
                     )
                 }
+
             }
             is PostPriceUserEvent.KeyboardDone -> {
                 sendUiEvent(UiEvent.HideKeyboard)
@@ -117,19 +128,19 @@ class PostPriceViewModel @Inject constructor(
                     )
                 }else{
                     state = state.copy(
-                        priceBorderColor = ErrorRed
+                        priceTextFieldBorderColor = ErrorRed
                     )
                     sendUiEvent(UiEvent.ShowSnackbar(PLEASE_ENTER_PRICE))
-                }
-                if(state.selectedSubConsItemTitle == null){
-                    state = state.copy(
-                        subConsItemBorderColor = ErrorRed
-                    )
-                }
-                if(state.selectedPriceItemTitle == null){
-                    state = state.copy(
-                        priceItemBorderColor = ErrorRed
-                    )
+                    if(state.selectedPriceCategoryId == null){
+                        state = state.copy(
+                            priceCategoryBorderColor = ErrorRed
+                        )
+                    }
+                    if(state.selectedSubConsItem == null){
+                        state = state.copy(
+                            subConsCategoryBorderColor = ErrorRed
+                        )
+                    }
                 }
             }
             PostPriceUserEvent.AlertDialogDismiss -> {
@@ -142,8 +153,7 @@ class PostPriceViewModel @Inject constructor(
                     showAlertDialog = false,
                     placeholderIsVisible = true,
                 )
-                sendUiEvent(UiEvent.ShowLoadingScreen(PRICE_SENDING))
-                //Fiyatı Gönder
+                postPrice()
             }
             PostPriceUserEvent.DoneDialogDismiss -> {
                 state = state.copy(
@@ -164,6 +174,26 @@ class PostPriceViewModel @Inject constructor(
                     fineLocationPermissionRationale = "Konum izni verildi."
                 )
                 getUserLastKnownPosition()
+            }
+        }
+    }
+
+    private fun getUserProfile(){
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.getUserProfile().collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(Strings.SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            userUid = result.data?.userUid ?: "",
+                            userName = result.data?.name ?: "",
+                            subConsItems = result.data?.selectedSubConstructionItems
+                        )
+                    }
+                }
             }
         }
     }
@@ -201,8 +231,53 @@ class PostPriceViewModel @Inject constructor(
     private fun getCityFromLatLng(){
         val myLocationCity = useCases.getCityFromLatLng(state.myLatLng)
         state = state.copy(
-            myLocationCity = myLocationCity
+            location = myLocationCity
         )
+    }
+
+    private fun postPrice(){
+        val hasNullField = listOf(
+            state.selectedPriceCategoryId,
+            state.selectedPriceTitle,
+            state.selectedPriceUnit,
+            state.price
+        ).any { it == null }
+
+        if(hasNullField){
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.postPrice(
+                PriceItem(
+                    subConstructionCategoryId = state.selectedSubConsItem!!.id,
+                    priceCategoryId = state.selectedPriceCategoryId!!,
+                    title = state.selectedPriceTitle!!,
+                    unit = state.selectedPriceUnit!!,
+                    price = state.price,
+                    location = state.location,
+                    date = System.currentTimeMillis(),
+                    userByName = state.userName,
+                    userByUid = state.userUid
+                )
+            ).collect{ result ->
+                when(result){
+                    is Result.Loading -> {
+                        sendUiEvent(UiEvent.ShowLoadingScreen(PRICE_SENDING))
+                    }
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                    }
+                    is Result.Success -> {
+                        delay(2000) //Fake delay for user
+                        sendUiEvent(UiEvent.HideLoadingScreen)
+                        state = state.copy(
+                            priceIsSent = true
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun sendUiEvent(uiEvent: UiEvent){

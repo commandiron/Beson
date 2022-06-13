@@ -7,6 +7,7 @@ import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 
 fun UserProfile.toFirebaseUserProfile(): FirebaseUserProfile {
     return FirebaseUserProfile(
+        userUid = userUid,
         name = name,
         phoneNumber = phoneNumber,
         imageUrl = imageUrl,
@@ -18,6 +19,7 @@ fun UserProfile.toFirebaseUserProfile(): FirebaseUserProfile {
 
 fun FirebaseUserProfile.toUserProfile(): UserProfile {
     return UserProfile(
+        userUid = userUid,
         name = name ?: "",
         phoneNumber = phoneNumber ?: "",
         imageUrl = imageUrl ?: "",

@@ -5,10 +5,10 @@ import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
-class GetUserProfile(
+class GetUserProfileById(
     private val repository: AppRepository
 ) {
-    suspend operator fun invoke(): Flow<Result<UserProfile>> {
-        return repository.getUserProfileFromFirebaseDb()
+    suspend operator fun invoke(userUid: String): Flow<Result<UserProfile>> {
+        return repository.getUserProfileByIdFromFirebaseDb(userUid)
     }
 }

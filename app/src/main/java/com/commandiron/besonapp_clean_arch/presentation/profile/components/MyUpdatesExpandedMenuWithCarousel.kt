@@ -11,15 +11,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.commandiron.besonapp_clean_arch.presentation.components.carousel.Carousel
 import com.commandiron.besonapp_clean_arch.presentation.components.carousel.CarouselDefaults
-import com.commandiron.besonapp_clean_arch.presentation.profile.model.MyUpdates
+import com.commandiron.besonapp_clean_arch.presentation.model.PriceItem
 import com.commandiron.besonapp_clean_arch.ui.theme.CarouselColor
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 
 @Composable
 fun MyUpdatesExpandedMenuWithCarousel(
     height: Dp,
-    myUpdates: List<MyUpdates>,
-    onDelete:(Int) -> Unit
+    myPrices: List<PriceItem>,
+    onDelete:(PriceItem) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val lazyListState = rememberLazyListState()
@@ -32,8 +32,8 @@ fun MyUpdatesExpandedMenuWithCarousel(
                 .heightIn(max = height)
                 .padding(end = spacing.spaceMedium)
         ){
-            items(myUpdates){ item ->
-                MyUpdatesMenuItem(item = item, onDelete = onDelete)
+            items(myPrices){ item ->
+                MyPriceMenuItem(item = item, onDelete = onDelete)
                 Spacer(modifier = Modifier.height(spacing.spaceSmall))
             }
         }

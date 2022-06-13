@@ -14,6 +14,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPP
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.UserStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -103,7 +104,7 @@ class SignInViewModel @Inject constructor(
                     }
                     is Result.Success ->{
                         sendUiEvent(UiEvent.ShowSnackbar(SIGN_IN_SUCCESSFUL))
-                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
                     }
                 }
             }

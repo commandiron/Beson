@@ -95,7 +95,13 @@ object AppModule {
             uploadProfilePicture = UploadProfilePicture(repository),
             getUserLastKnownLocation = GetUserLastKnownLocation(fusedLocationClient),
             getLatLngFromLocation = GetLatLngFromLocation(),
-            getCityFromLatLng = GetCityFromLatLng(fusedLocationClient)
+            getCityFromLatLng = GetCityFromLatLng(fusedLocationClient),
+            postPrice = PostPrice(repository),
+            getMyPrices = GetMyPrices(repository),
+            getPrices = GetPrices(repository),
+            filterSearchResults = FilterSearchResults(),
+            getUserProfileById = GetUserProfileById(repository),
+            formatPhoneNumber = FormatPhoneNumber()
         )
     }
 }

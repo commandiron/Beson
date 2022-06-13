@@ -1,4 +1,4 @@
-package com.commandiron.besonapp_clean_arch.presentation.signup_steps.components
+package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

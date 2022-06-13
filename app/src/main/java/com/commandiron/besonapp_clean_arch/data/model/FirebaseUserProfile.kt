@@ -1,6 +1,7 @@
 package com.commandiron.besonapp_clean_arch.data.model
 
 data class FirebaseUserProfile(
+    val userUid: String? = null,
     val name: String? = null,
     val phoneNumber: String? =  null,
     val imageUrl: String? = null,

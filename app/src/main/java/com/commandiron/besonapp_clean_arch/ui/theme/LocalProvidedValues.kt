@@ -26,7 +26,9 @@ data class Dimensions(
     val navigationHeight: Dp = 56.dp,
     val expandableMenuHeight: Dp = 200.dp,
     val defaultElevation: Dp = 6.dp,
-    val defaultButtonWidth: Dp = 100.dp
+    val defaultButtonWidth: Dp = 100.dp,
+    val defaultFilterBoxHeight: Dp = 40.dp,
+    val defaultSearchTextFieldHeight: Dp = 50.dp
 )
 val LocalPermissionsState = compositionLocalOf<MultiplePermissionsState> {
     error("No Permission State")

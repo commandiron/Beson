@@ -2,9 +2,7 @@ package com.commandiron.besonapp_clean_arch.presentation.post_price
 
 import android.Manifest
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -22,7 +20,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.CHOOSE
 import com.commandiron.besonapp_clean_arch.core.Strings.CURRENCY_SYMBOL
 import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_PRICE
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_POSTED
-import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_WILL_BE_SENT_ARE_YOU_SURE
+import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_WILL_BE_LISTED_AS_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_PRICE_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.Strings.SEND
@@ -114,12 +112,12 @@ fun PostPriceScreen(
                         modifier = placeholderModifier
                             .fillMaxWidth()
                             .heightIn(min = 50.dp),
-                        borderColor = state.subConsItemBorderColor,
+                        borderColor = state.subConsCategoryBorderColor,
                         onCategoryBoxClick = { viewModel.onEvent(PostPriceUserEvent.SubConsCategorySelectionBoxClick) },
-                        title = state.selectedSubConsItemTitle ?: CHOOSE,
+                        title = state.selectedSubConsItem?.title ?: CHOOSE,
                         isExpanded = state.subConsCategoryDropDownMenuIsExpanded,
                         offset = DpOffset(x= spacing.spaceMedium, y= spacing.spaceExtraSmall),
-                        dropDownItems = state.subConsItems.map { it.title },
+                        dropDownItems = state.subConsItems?.map { it.title },
                         onSelect = { viewModel.onEvent(PostPriceUserEvent.OnSubConstructionCategorySelect(it)) },
                         onDismissRequest = { viewModel.onEvent(PostPriceUserEvent.SubConsCategoryDismiss) }
                     )
@@ -140,9 +138,9 @@ fun PostPriceScreen(
                         modifier = placeholderModifier
                             .fillMaxWidth()
                             .heightIn(min = 50.dp),
-                        borderColor = state.priceItemBorderColor,
+                        borderColor = state.priceCategoryBorderColor,
                         onCategoryBoxClick = { viewModel.onEvent(PostPriceUserEvent.PriceCategorySelectionBoxClick) },
-                        title = state.selectedPriceItemTitle ?: CHOOSE,
+                        title = state.selectedPriceTitle ?: CHOOSE,
                         isExpanded = state.priceCategoryDropDownMenuIsExpanded,
                         offset = DpOffset(x= spacing.spaceMedium, y= spacing.spaceExtraSmall),
                         dropDownItems = state.priceItems?.map { it.title },
@@ -162,7 +160,7 @@ fun PostPriceScreen(
                 modifier = placeholderModifier
                     .fillMaxWidth(0.65f)
                     .heightIn(min = 50.dp),
-                borderColor = state.priceBorderColor,
+                borderColor = state.priceTextFieldBorderColor,
                 onClick = {
                     viewModel.onEvent(PostPriceUserEvent.PriceTextFieldClick)
                 },
@@ -172,7 +170,7 @@ fun PostPriceScreen(
                 },
                 enabled = state.priceTextFieldEnabled,
                 onDone = {viewModel.onEvent(PostPriceUserEvent.KeyboardDone)},
-                addedSymbol = " $CURRENCY_SYMBOL/${state.selectedPriceItemUnit}"
+                addedSymbol = " $CURRENCY_SYMBOL/${state.selectedPriceUnit}"
             )
             Spacer(modifier = Modifier.height(spacing.spaceMediumLarge))
             Row(
@@ -182,7 +180,7 @@ fun PostPriceScreen(
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 Text(
                     modifier = placeholderModifier,
-                    text = "Konum: ${state.myLocationCity}",
+                    text = "Konum: ${state.location}",
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
@@ -208,7 +206,9 @@ fun PostPriceScreen(
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
             MyGoogleMap(
-                modifier = placeholderModifier.fillMaxWidth().height(100.dp),
+                modifier = placeholderModifier
+                    .fillMaxWidth()
+                    .height(100.dp),
                 latLng = state.myLatLng
             )
             Spacer(modifier = Modifier.height(spacing.spaceMediumLarge))
@@ -233,7 +233,8 @@ fun PostPriceScreen(
     }
     if(state.showAlertDialog){
         CustomAlertDialog(
-            title = PRICE_WILL_BE_SENT_ARE_YOU_SURE,
+            priceText = "${state.price} " + "$CURRENCY_SYMBOL/${state.selectedPriceUnit} ",
+            title = PRICE_WILL_BE_LISTED_AS_ARE_YOU_SURE,
             onDismissRequest = { viewModel.onEvent(PostPriceUserEvent.AlertDialogDismiss) },
             onConfirm = { viewModel.onEvent(PostPriceUserEvent.AlertDialogConfirm) },
             onDismiss = { viewModel.onEvent(PostPriceUserEvent.AlertDialogDismiss) }
@@ -241,7 +242,7 @@ fun PostPriceScreen(
     }
     if(state.priceIsSent){
         DoneDialog(PRICE_POSTED){
-            viewModel.onEvent(PostPriceUserEvent.AlertDialogDismiss)
+            viewModel.onEvent(PostPriceUserEvent.DoneDialogDismiss)
         }
     }
 }

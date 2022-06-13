@@ -12,4 +12,6 @@ object Accompanist {
         "com.google.accompanist:accompanist-navigation-material:$accompanistVersion"
     const val placeholderMaterial =
         "com.google.accompanist:accompanist-placeholder-material:$accompanistVersion"
+    const val swipeRefresh =
+        "com.google.accompanist:accompanist-swiperefresh:$accompanistVersion"
 }

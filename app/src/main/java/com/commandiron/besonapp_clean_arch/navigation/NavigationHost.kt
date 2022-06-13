@@ -1,9 +1,12 @@
 package com.commandiron.besonapp_clean_arch.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.commandiron.besonapp_clean_arch.presentation.customer_or_company.CustomerOrCompanyScreen
+import com.commandiron.besonapp_clean_arch.presentation.details.DetailsScreen
 import com.commandiron.besonapp_clean_arch.presentation.edit_profile.EditProfileScreen
 import com.commandiron.besonapp_clean_arch.presentation.intro.IntroScreen
 import com.commandiron.besonapp_clean_arch.presentation.signin.SignInScreen
@@ -128,8 +131,31 @@ fun NavigationHost(
             )
         }
         composable(NavigationItem.Prices.route){
-            PricesScreen()
+            PricesScreen(
+                showSnackbar = showSnackbar,
+                navigateTo = navigateTo,
+            )
         }
+        composable(
+            route = NavigationItem.Details.withArgs,
+            arguments = listOf(
+                navArgument("userUid"){
+                    type = NavType.StringType
+                    defaultValue = "defaultUidValue"
+                    nullable = true
+                }
+            )
+        ){
+            DetailsScreen(
+                hideKeyboard = hideKeyboard,
+                navigateUp = navigateUp,
+                navigateTo = navigateTo,
+                showLoadingScreen = showLoadingScreen,
+                hideLoadingScreen = hideLoadingScreen,
+                showSnackbar = showSnackbar
+            )
+        }
+
         bottomSheet(NavigationItem.PostPrice.route){
             PostPriceScreen(
                 hideKeyboard = hideKeyboard,

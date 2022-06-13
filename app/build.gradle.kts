@@ -98,6 +98,7 @@ dependencies {
     implementation(Accompanist.permissions)
     implementation(Accompanist.navigationMaterial)
     implementation(Accompanist.placeholderMaterial)
+    implementation(Accompanist.swipeRefresh)
 
     implementation(Coil.coil)
     implementation(Coil.compose)

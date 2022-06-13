@@ -26,5 +26,11 @@ class UseCases(
     val uploadProfilePicture: UploadProfilePicture,
     val getUserLastKnownLocation: GetUserLastKnownLocation,
     val getLatLngFromLocation: GetLatLngFromLocation,
-    val getCityFromLatLng: GetCityFromLatLng
+    val getCityFromLatLng: GetCityFromLatLng,
+    val postPrice: PostPrice,
+    val getMyPrices: GetMyPrices,
+    val getPrices: GetPrices,
+    val filterSearchResults: FilterSearchResults,
+    val getUserProfileById: GetUserProfileById,
+    val formatPhoneNumber: FormatPhoneNumber
 )

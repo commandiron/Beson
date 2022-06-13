@@ -1,6 +1,9 @@
 package com.commandiron.besonapp_clean_arch.presentation.signin
 
+import com.commandiron.besonapp_clean_arch.presentation.model.UserStatus
+
 data class SignInState(
+    val userStatus: UserStatus? = null,
     val email: String = "",
     val emailError: String? = null,
     val password: String = "",

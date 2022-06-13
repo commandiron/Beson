@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.NoErrorGreen
 
 @Composable
 fun DoneDialog(
@@ -30,7 +31,7 @@ fun DoneDialog(
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = NoErrorGreen
             )
         }
     }

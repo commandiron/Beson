@@ -15,6 +15,7 @@ import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +33,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getUserProfile()
+        getMyPrices()
     }
 
     fun onEvent(userEvent: ProfileUserEvent) {
@@ -105,6 +107,24 @@ class ProfileViewModel @Inject constructor(
                             phoneNumber = result.data?.phoneNumber ?: "",
                             imageUrl = result.data?.imageUrl ?: "",
                             userType = result.data?.userType ?: UserType.CUSTOMER
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getMyPrices(){
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.getMyPrices().collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            myPrices = result.data?.sortedByDescending { it.date }
                         )
                     }
                 }
