@@ -6,9 +6,11 @@ BESON is a native android construction market price tracking application written
 
 * Screenshots 🖼️
 
-<img src="https://user-images.githubusercontent.com/50905347/170562246-b6cf3f1c-273f-4487-82fa-86d5044abf57.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/170562252-7f4eb77d-411d-4adf-a857-9f38fefceafb.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/170562254-c5e346d3-ddaa-462b-ab41-c3d85de4ba2c.png" width="250" height="530">
+<img src="https://user-images.githubusercontent.com/50905347/173447657-b6168369-d195-48d8-8d92-b362292ad258.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/173447669-5288bd91-9c89-4f43-a110-2ed00b4982fa.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/173447683-c7472d7c-cc13-49ad-bd43-469b529af8c1.png" width="250" height="530">
 
-<img src="https://user-images.githubusercontent.com/50905347/170562256-d226e8e9-7fe0-4a0d-a408-b6cad088eac7.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/170562261-7135271a-37a1-4f57-a1f7-032d25492f23.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/170562265-5e63085d-fef3-435b-b61c-ea3c186afd99.png" width="250" height="530">
+<img src="https://user-images.githubusercontent.com/50905347/173447689-ff52fa2d-88e7-46dd-b6fc-3ce5c818d863.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/173447698-fd63eacb-c153-469e-959b-b64f37f12043.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/173447707-1808377c-ff37-40ea-96cc-f694b5f15d51.png" width="250" height="530">
+
+<img src="https://user-images.githubusercontent.com/50905347/173447716-7cfa83a5-99a3-4baf-aefc-89b2db0245a0.png" width="250" height="530">&nbsp;&nbsp;<img src="(https://user-images.githubusercontent.com/50905347/173447726-8487159d-79b0-4044-8437-3174b48030ed.png" width="250" height="530">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/173447731-c16fd672-946e-4a00-b5c1-1c70e1c010e6.png" width="250" height="530">
 
 * Application - Features ☕
    * Language - Turkish
