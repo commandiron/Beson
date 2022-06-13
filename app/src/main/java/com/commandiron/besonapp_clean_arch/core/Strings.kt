@@ -96,4 +96,7 @@ object Strings {
     const val TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE = "Tel no: +90"
     const val THE_LOCATION_REQUIRES_PERMISSION = "Konum için izin gerekiyor."
     const val BACK = "Geri"
+    const val ADD_TO_FAVORITES = "Favorilere Ekle"
+    const val REMOVE_FROM_FAVORITES = "Favorilerden Çıkar"
+    const val PRICE_DELETED = "Fiyat Silindi"
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.commandiron.besonapp_clean_arch.R
+import com.commandiron.besonapp_clean_arch.ui.theme.MyPurple
 
 @Composable
 fun ProfileImage(
@@ -39,7 +40,7 @@ fun ProfileImage(
         modifier = Modifier
             .size(size)
             .clip(CircleShape)
-            .border(2.dp, Color.Gray, CircleShape),
+            .border(2.dp, MyPurple, CircleShape),
         contentScale = ContentScale.Crop
     )
 }

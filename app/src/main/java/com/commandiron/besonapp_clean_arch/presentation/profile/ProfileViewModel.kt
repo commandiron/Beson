@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings.DONE_DIALOG_MESSAGE_REMOVED_FROM_FAVORITE
+import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_DELETED
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
@@ -53,7 +54,8 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileUserEvent.DeleteMyUpdate -> {
                 state = state.copy(
-                    showDeleteMyUpdateAlertDialog = true
+                    showDeleteMyUpdateAlertDialog = true,
+                    deletedPriceItem = userEvent.item
                 )
             }
             is ProfileUserEvent.UnFavoriteProfile -> {
@@ -65,7 +67,22 @@ class ProfileViewModel @Inject constructor(
                 state = state.copy(
                     showDeleteMyUpdateAlertDialog = false,
                 )
-                //Sil
+                state.deletedPriceItem?.let {
+                    viewModelScope.launch {
+                        useCases.deleteMyPrice(it).collect{ result ->
+                            when(result){
+                                is Result.Loading -> {}
+                                is Result.Error -> {
+                                    sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                                }
+                                is Result.Success -> {
+                                    sendUiEvent(UiEvent.ShowSnackbar(PRICE_DELETED))
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
             is ProfileUserEvent.DeleteMyUpdateAlertDialogDismiss -> {
                 state = state.copy(

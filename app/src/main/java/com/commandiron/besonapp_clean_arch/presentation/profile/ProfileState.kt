@@ -21,4 +21,5 @@ data class ProfileState(
     val showUnFavoriteAlertDialog: Boolean = false,
     val showDoneDialog: Boolean = false,
     val doneDialogMessage: String = "",
+    val deletedPriceItem: PriceItem? = null
 )

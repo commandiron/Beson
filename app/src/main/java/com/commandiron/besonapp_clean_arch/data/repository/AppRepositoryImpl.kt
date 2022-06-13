@@ -127,7 +127,9 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadProfilePictureToFirebaseStorage(uri: Uri): Flow<Result<String>> = callbackFlow {
+    override suspend fun uploadProfilePictureToFirebaseStorage(
+        uri: Uri
+    ): Flow<Result<String>> = callbackFlow {
         send(Result.Loading())
         val uuidImage = UUID.randomUUID()
         val imageName = "images/$uuidImage.jpg"
@@ -146,7 +148,9 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postPriceToFirebase(priceItem: PriceItem): Flow<Result<Unit>> = callbackFlow {
+    override suspend fun postPriceToFirebase(
+        priceItem: PriceItem
+    ): Flow<Result<Unit>> = callbackFlow {
         send(Result.Loading())
         val userUID = auth.currentUser?.uid.toString()
         val priceUID = UUID.randomUUID().toString()
@@ -163,7 +167,8 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMyPricesFromFirebase(): Flow<Result<List<PriceItem>?>> = callbackFlow {
+    override suspend fun getMyPricesFromFirebase(
+    ): Flow<Result<List<PriceItem>?>> = callbackFlow {
         send(Result.Loading())
         val userUID = auth.currentUser?.uid.toString()
         val databaseReference = firebaseDatabase.getReference("Prices").child(userUID)
@@ -187,7 +192,8 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllPricesFromFirebase(): Flow<Result<List<PriceItem>>> = callbackFlow {
+    override suspend fun getAllPricesFromFirebase(
+    ): Flow<Result<List<PriceItem>>> = callbackFlow {
         send(Result.Loading())
         val databaseReference = firebaseDatabase.getReference("Prices")
         databaseReference.addValueEventListener(object : ValueEventListener{
@@ -214,7 +220,9 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserProfileByIdFromFirebaseDb(userUid: String): Flow<Result<UserProfile>> = callbackFlow {
+    override suspend fun getUserProfileByIdFromFirebaseDb(
+        userUid: String
+    ): Flow<Result<UserProfile>> = callbackFlow {
         send(Result.Loading())
         val databaseReference = firebaseDatabase.getReference("Profiles").child(userUid)
         databaseReference.get().addOnSuccessListener { dataSnapshot ->
@@ -224,6 +232,38 @@ class AppRepositoryImpl @Inject constructor(
             } ?: trySend(Result.Success(UserProfile()))
         }.addOnFailureListener{
             trySend(Result.Error(it))
+        }
+        awaitClose {
+            channel.close()
+        }
+    }
+
+    override suspend fun deleteMyPriceFromFirebase(
+        priceItem: PriceItem
+    ): Flow<Result<Unit>> = callbackFlow{
+        send(Result.Loading())
+        val userUID = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Prices").child(userUID)
+        databaseReference.get().addOnCompleteListener { task ->
+            if(task.isSuccessful){
+                for(i in task.result.children){
+                    val firebasePriceItem = i.getValue(FirebasePriceItem::class.java)
+                    if(firebasePriceItem?.date == priceItem.date){
+                        firebaseDatabase
+                            .getReference("Prices")
+                            .child(userUID)
+                            .child(i.key ?: "")
+                            .setValue(null)
+                            .addOnSuccessListener {
+                                trySend(Result.Success(Unit))
+                            }.addOnFailureListener {
+                                trySend(Result.Error(it))
+                            }
+                    }
+                }
+            }else{
+                trySend(Result.Error(task.exception))
+            }
         }
         awaitClose {
             channel.close()

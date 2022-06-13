@@ -97,7 +97,6 @@ sealed class NavigationItem(
         withArgs = "prices"
     )
     object Details : NavigationItem(
-        title = DETAILS,
         isTopBarVisible = true,
         route = "details",
         withArgs = "details?userUid={userUid}"

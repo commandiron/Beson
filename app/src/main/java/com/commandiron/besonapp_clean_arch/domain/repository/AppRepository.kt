@@ -20,4 +20,5 @@ interface AppRepository {
     suspend fun getMyPricesFromFirebase(): Flow<Result<List<PriceItem>?>>
     suspend fun getAllPricesFromFirebase(): Flow<Result<List<PriceItem>>>
     suspend fun getUserProfileByIdFromFirebaseDb(userUid:String): Flow<Result<UserProfile>>
+    suspend fun deleteMyPriceFromFirebase(priceItem: PriceItem): Flow<Result<Unit>>
 }

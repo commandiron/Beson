@@ -32,5 +32,6 @@ class UseCases(
     val getPrices: GetPrices,
     val filterSearchResults: FilterSearchResults,
     val getUserProfileById: GetUserProfileById,
-    val formatPhoneNumber: FormatPhoneNumber
+    val formatPhoneNumber: FormatPhoneNumber,
+    val deleteMyPrice: DeleteMyPrice
 )

@@ -101,7 +101,8 @@ object AppModule {
             getPrices = GetPrices(repository),
             filterSearchResults = FilterSearchResults(),
             getUserProfileById = GetUserProfileById(repository),
-            formatPhoneNumber = FormatPhoneNumber()
+            formatPhoneNumber = FormatPhoneNumber(),
+            deleteMyPrice = DeleteMyPrice(repository)
         )
     }
 }

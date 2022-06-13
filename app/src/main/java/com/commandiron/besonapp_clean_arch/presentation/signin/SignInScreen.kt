@@ -24,6 +24,7 @@ import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppNa
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
 import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInLauncher
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
+import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 
 @Composable
 fun SignInScreen(
@@ -35,6 +36,7 @@ fun SignInScreen(
     showSnackbar:(String) -> Unit,
 ) {
     val spacing = LocalSpacing.current
+    val systemUiController = LocalSystemUiController.current
     val state = viewModel.state
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
@@ -48,6 +50,12 @@ fun SignInScreen(
             }
         }
     }
+    systemUiController.setStatusBarColor(
+        color = MaterialTheme.colorScheme.primary
+    )
+    systemUiController.setNavigationBarColor(
+        color = MaterialTheme.colorScheme.primary
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
