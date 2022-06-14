@@ -10,6 +10,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPP
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -49,7 +50,13 @@ class PricesViewModel @Inject constructor(
                 }
             }
             is PricesUserEvent.DetailClick -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Details.withArgs(userEvent.item.userByUid)))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(
+                            NavigationItem.Details.withArgs(userEvent.item.userByUid)
+                        )
+                    )
+                )
             }
             is PricesUserEvent.SearchChange -> {
                 state = state.copy(

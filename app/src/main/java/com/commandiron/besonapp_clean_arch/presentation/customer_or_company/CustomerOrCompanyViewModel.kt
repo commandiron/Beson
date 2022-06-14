@@ -12,6 +12,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPP
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 
@@ -75,10 +76,18 @@ class CustomerOrCompanyViewModel @Inject constructor(
                     is Result.Success -> {
                         when(state.userType){
                             UserType.CUSTOMER -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCustomer1.route))
+                                sendUiEvent(
+                                    UiEvent.NavigateTo(
+                                        NavigationOptions(NavigationItem.SignUpStepsAsCustomer1.route)
+                                    )
+                                )
                             }
                             UserType.COMPANY -> {
-                                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany1.route))
+                                sendUiEvent(
+                                    UiEvent.NavigateTo(
+                                        NavigationOptions(NavigationItem.SignUpStepsAsCompany1.route)
+                                    )
+                                )
                             }
                             null -> {}
                         }

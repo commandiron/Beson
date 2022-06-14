@@ -27,7 +27,7 @@ fun NavigationHost(
     shouldShowSplashAndIntro: Boolean,
     hideKeyboard:() -> Unit,
     navigateUp:() -> Unit,
-    navigateTo:(String) -> Unit,
+    navigateTo:(NavigationOptions) -> Unit,
     showSnackbar:(String) -> Unit,
     showLoadingScreen:(String) -> Unit,
     hideLoadingScreen:() -> Unit
@@ -46,7 +46,12 @@ fun NavigationHost(
         }
     ){
         composable(NavigationItem.HotSplash.route){
-            HotSplashScreen(onFinish = { navigateTo(NavigationItem.Intro.route) })
+            HotSplashScreen(
+                onFinish = {
+                    navController.popBackStack()
+                    navigateTo(NavigationOptions(NavigationItem.Intro.route))
+                }
+            )
         }
         composable(NavigationItem.Intro.route){
             IntroScreen(navigateTo = navigateTo)

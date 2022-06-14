@@ -10,6 +10,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.START_NOW
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 import com.commandiron.besonapp_clean_arch.ui.theme.PrimaryColor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +48,7 @@ class IntroViewModel @Inject constructor(
             }
             is IntroUserEvent.OnStartClick -> {
                 useCases.saveShouldShowSplashAndIntro(false)
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                sendUiEvent(UiEvent.NavigateTo(NavigationOptions(NavigationItem.SignUp.route)))
             }
         }
     }

@@ -13,6 +13,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPP
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,13 @@ class ProfileViewModel @Inject constructor(
     fun onEvent(userEvent: ProfileUserEvent) {
         when (userEvent) {
             is ProfileUserEvent.OnEditClick -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.EditProfile.route))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(
+                            route = NavigationItem.EditProfile.route,
+                        )
+                    )
+                )
             }
             ProfileUserEvent.MyUpdatesDropDownIconClick -> {
                 state = state.copy(

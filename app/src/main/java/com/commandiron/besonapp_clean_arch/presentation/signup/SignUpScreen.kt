@@ -23,6 +23,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_COMPANY_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_UP_AS_CUSTOMER_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.signup.components.AnimatableSignUpWindow
 import com.commandiron.besonapp_clean_arch.presentation.components.AnimatedAppExplainingStrip
 import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInButton
@@ -39,7 +40,7 @@ import com.google.accompanist.placeholder.material.shimmer
 fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
-    navigateTo:(String) -> Unit,
+    navigateTo:(NavigationOptions) -> Unit,
     showLoadingScreen:(String) -> Unit,
     hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
@@ -50,7 +51,7 @@ fun SignUpScreen(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 UiEvent.HideLoadingScreen -> hideLoadingScreen()

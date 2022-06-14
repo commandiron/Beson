@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
 import com.commandiron.besonapp_clean_arch.core.Strings.SNACKBAR_CLOSE_ACTION_TEXT
 import com.commandiron.besonapp_clean_arch.navigation.*
@@ -108,7 +109,20 @@ class MainActivity : ComponentActivity() {
                                     .shouldShowSplashAndIntro,
                                 hideKeyboard = { keyboardController?.hide() },
                                 navigateUp = { navController.navigateUp() },
-                                navigateTo = { navController.navigate(it) },
+                                navigateTo = { navigationOptions ->
+                                    if(navigationOptions.popBackStack){
+                                        navController.popBackStack()
+                                    }
+                                    navController.navigate(navigationOptions.route){
+                                        navigationOptions.popUpToRoute?.let {
+                                            popUpTo(it){
+                                                inclusive = navigationOptions.inclusive
+                                            }
+                                        }
+                                        launchSingleTop = navigationOptions.launchSingleTop
+                                    }
+                                    println(navController.previousBackStackEntry?.destination?.route )
+                                },
                                 showSnackbar = {
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(it, SNACKBAR_CLOSE_ACTION_TEXT)

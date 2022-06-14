@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.intro.components.CustomHorizontalPager
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
@@ -20,7 +21,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun IntroScreen(
     viewModel: IntroViewModel = hiltViewModel(),
-    navigateTo: (String) -> Unit
+    navigateTo: (NavigationOptions) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
@@ -28,7 +29,9 @@ fun IntroScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> {
+                    navigateTo(event.navigationOptions)
+                }
                 else -> {}
             }
         }

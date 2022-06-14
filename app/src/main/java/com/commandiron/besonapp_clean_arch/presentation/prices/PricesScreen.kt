@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.model.defaultSubConstructionItems
 import com.commandiron.besonapp_clean_arch.presentation.post_price.PostPriceUserEvent
 import com.commandiron.besonapp_clean_arch.presentation.prices.components.HorizontalCategorySelector
@@ -30,7 +31,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun PricesScreen(
     viewModel: PricesViewModel = hiltViewModel(),
     showSnackbar:(String) -> Unit,
-    navigateTo:(String) -> Unit,
+    navigateTo:(NavigationOptions) -> Unit,
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
@@ -39,7 +40,7 @@ fun PricesScreen(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 else -> {}
             }
         }

@@ -15,6 +15,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_SENDING
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.model.PriceItem
 import com.commandiron.besonapp_clean_arch.ui.theme.ErrorRed
 import com.commandiron.besonapp_clean_arch.ui.theme.NoErrorGreen
@@ -160,7 +161,7 @@ class PostPriceViewModel @Inject constructor(
                     placeholderIsVisible = false,
                     priceIsSent = false
                 )
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                sendUiEvent(UiEvent.NavigateTo(NavigationOptions(NavigationItem.Profile.route)))
             }
             PostPriceUserEvent.FineLocationPermissionDenied -> {
                 state = state.copy(

@@ -14,6 +14,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.ENTER_YOUR_NAME_OR_COMPA
 import com.commandiron.besonapp_clean_arch.core.Strings.NEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_NAME
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.RegistrationTextField
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
@@ -23,7 +24,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 fun SignUpStepsAsCompanyScreen1(
     viewModel: SignUpStepsAsCompanyViewModel = hiltViewModel(),
     navigateUp:() -> Unit,
-    navigateTo: (String) -> Unit
+    navigateTo: (NavigationOptions) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
@@ -32,7 +33,7 @@ fun SignUpStepsAsCompanyScreen1(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 is UiEvent.NavigateUp -> navigateUp()
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 else -> {}
             }
         }

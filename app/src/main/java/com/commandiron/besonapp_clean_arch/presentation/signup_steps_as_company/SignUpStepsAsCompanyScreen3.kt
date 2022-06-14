@@ -1,6 +1,5 @@
 package com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -11,20 +10,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings
-import com.commandiron.besonapp_clean_arch.core.Strings.BACK_TO_SIGN_UP_SCREEN
 import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_YOUR_PROFILE_PICTURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.ClickableToGalleryImage
-import com.commandiron.besonapp_clean_arch.ui.theme.LocalNavController
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 
 @Composable
 fun SignUpStepsAsCompanyScreen3(
     viewModel: SignUpStepsAsCompanyViewModel = hiltViewModel(),
-    navigateTo: (String) -> Unit
+    navigateTo: (NavigationOptions) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
@@ -32,7 +30,7 @@ fun SignUpStepsAsCompanyScreen3(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 else -> {}
             }
         }

@@ -14,6 +14,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.NOT_SELECTED_SUB_CONSTRU
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.presentation.signup.model.UserType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,16 +83,28 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                 state.name?.let {
                     useCases.saveSignUpStepsName(it)
                 }
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany2.route))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(NavigationItem.SignUpStepsAsCompany2.route)
+                    )
+                )
             }
             is SignUpStepsAsCompanyUserEvent.PhoneNumberScreenNext -> {
                 state.phoneNumber?.let {
                     useCases.saveSignUpStepsPhoneNumber(it)
                 }
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany3.route))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(NavigationItem.SignUpStepsAsCompany3.route)
+                    )
+                )
             }
             is SignUpStepsAsCompanyUserEvent.PictureScreenNext -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany4.route))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(NavigationItem.SignUpStepsAsCompany4.route)
+                    )
+                )
                 state.selectedPictureUri?.let { uri ->
                     uploadProfilePicture(uri)
                 }
@@ -101,7 +114,11 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                     sendUiEvent(UiEvent.ShowSnackbar(NOT_SELECTED_MAIN_CONSTRUCTION_CATEGORY))
                 }else{
                     useCases.saveSignUpStepsSelectedConsItemId(state.selectedMainConstructionItem!!.id)
-                    sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUpStepsAsCompany5.route))
+                    sendUiEvent(
+                        UiEvent.NavigateTo(
+                            NavigationOptions(NavigationItem.SignUpStepsAsCompany5.route)
+                        )
+                    )
                 }
             }
             is SignUpStepsAsCompanyUserEvent.SubConstructionCategoryScreenNext -> {
@@ -154,7 +171,11 @@ class SignUpStepsAsCompanyViewModel @Inject constructor(
                     }
                     is Result.Success -> {
                         sendUiEvent(UiEvent.HideLoadingScreen)
-                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                        sendUiEvent(
+                            UiEvent.NavigateTo(
+                                NavigationOptions(NavigationItem.Profile.route)
+                            )
+                        )
                     }
                 }
             }

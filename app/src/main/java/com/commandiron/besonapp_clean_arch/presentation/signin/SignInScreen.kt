@@ -19,6 +19,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.SIGNUP_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SIGN_IN_WITH_GOOGLE
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.components.GoogleSignInButton
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.FormTextField
@@ -30,7 +31,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
-    navigateTo:(String) -> Unit,
+    navigateTo:(NavigationOptions) -> Unit,
     showLoadingScreen:(String) -> Unit,
     hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
@@ -42,7 +43,7 @@ fun SignInScreen(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
                 UiEvent.HideLoadingScreen -> hideLoadingScreen()

@@ -13,6 +13,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.CREATE_PROFILE_TEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.NEXT
 import com.commandiron.besonapp_clean_arch.core.Strings.SELECT_MAIN_CONSTRUCTION_CATEGORY
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.signup_steps_as_company.components.SingleCategorySelector
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
@@ -21,7 +22,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
 @Composable
 fun SignUpStepsAsCompanyScreen4(
     viewModel: SignUpStepsAsCompanyViewModel = hiltViewModel(),
-    navigateTo: (String) -> Unit
+    navigateTo: (NavigationOptions) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val systemUiController = LocalSystemUiController.current
@@ -29,7 +30,7 @@ fun SignUpStepsAsCompanyScreen4(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
             when(event) {
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 else -> {}
             }
         }

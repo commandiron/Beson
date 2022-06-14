@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.besonapp_clean_arch.core.Strings.ADD_TO_FAVORITES
 import com.commandiron.besonapp_clean_arch.core.Strings.REMOVE_FROM_FAVORITES
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.ProfileImage
 import com.commandiron.besonapp_clean_arch.presentation.model.FavoriteStatus
@@ -24,7 +25,7 @@ fun DetailsScreen(
     viewModel: DetailsViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
     navigateUp: () -> Unit,
-    navigateTo: (String) -> Unit,
+    navigateTo: (NavigationOptions) -> Unit,
     showLoadingScreen: (String) -> Unit,
     hideLoadingScreen: () -> Unit,
     showSnackbar: (String) -> Unit,
@@ -36,7 +37,7 @@ fun DetailsScreen(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)

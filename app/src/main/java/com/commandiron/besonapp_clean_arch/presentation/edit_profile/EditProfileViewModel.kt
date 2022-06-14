@@ -13,6 +13,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PROFILE_UPDATED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +40,7 @@ class EditProfileViewModel @Inject constructor(
     fun onEvent(userEvent: EditProfileUserEvent) {
         when (userEvent) {
             is EditProfileUserEvent.Cancel -> {
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                sendUiEvent(UiEvent.NavigateTo(NavigationOptions(NavigationItem.Profile.route)))
             }
             is EditProfileUserEvent.NameChanged -> {
                 state = state.copy(
@@ -64,7 +65,16 @@ class EditProfileViewModel @Inject constructor(
             }
             EditProfileUserEvent.LogOut -> {
                 useCases.signOut()
-                sendUiEvent(UiEvent.NavigateTo(NavigationItem.SignUp.route))
+                sendUiEvent(
+                    UiEvent.NavigateTo(
+                        NavigationOptions(
+                            route = NavigationItem.SignUp.route,
+                            popBackStack = true,
+                            popUpToRoute = NavigationItem.Profile.route,
+                            inclusive = true
+                        )
+                    )
+                )
             }
         }
     }
@@ -135,7 +145,7 @@ class EditProfileViewModel @Inject constructor(
                     is Result.Success -> {
                         sendUiEvent(UiEvent.HideLoadingScreen)
                         sendUiEvent(UiEvent.ShowSnackbar(YOUR_PROFILE_UPDATED))
-                        sendUiEvent(UiEvent.NavigateTo(NavigationItem.Profile.route))
+                        sendUiEvent(UiEvent.NavigateTo(NavigationOptions(NavigationItem.Profile.route)))
                     }
                 }
             }

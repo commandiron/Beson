@@ -25,6 +25,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.PROFILE_WILL_BE_REMOVED_
 import com.commandiron.besonapp_clean_arch.core.Strings.TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE
 import com.commandiron.besonapp_clean_arch.core.Strings.YOUR_PRICE_WILL_GONE_ARE_YOU_SURE
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.navigation.NavigationOptions
 import com.commandiron.besonapp_clean_arch.presentation.post_price.components.CustomAlertDialog
 import com.commandiron.besonapp_clean_arch.presentation.components.DoneDialog
 import com.commandiron.besonapp_clean_arch.presentation.components.ProfileImage
@@ -38,7 +39,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.*
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     hideKeyboard:() -> Unit,
-    navigateTo:(String) -> Unit,
+    navigateTo:(NavigationOptions) -> Unit,
     showLoadingScreen:(String) -> Unit,
     hideLoadingScreen:() -> Unit,
     showSnackbar:(String) -> Unit,
@@ -57,7 +58,7 @@ fun ProfileScreen(
         viewModel.uiEvent.collect{ event ->
             when(event) {
                 UiEvent.HideKeyboard -> hideKeyboard()
-                is UiEvent.NavigateTo -> navigateTo(event.route)
+                is UiEvent.NavigateTo -> navigateTo(event.navigationOptions)
                 is UiEvent.ShowLoadingScreen -> showLoadingScreen(event.message)
                 is UiEvent.HideLoadingScreen -> hideLoadingScreen()
                 is UiEvent.ShowSnackbar -> showSnackbar(event.message)
