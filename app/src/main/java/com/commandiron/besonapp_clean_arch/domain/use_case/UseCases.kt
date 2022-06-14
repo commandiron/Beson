@@ -33,5 +33,9 @@ class UseCases(
     val filterSearchResults: FilterSearchResults,
     val getUserProfileById: GetUserProfileById,
     val formatPhoneNumber: FormatPhoneNumber,
-    val deleteMyPrice: DeleteMyPrice
+    val deleteMyPrice: DeleteMyPrice,
+    val addToFavorites: AddToFavorites,
+    val getUserFavoriteStatus: GetUserFavoriteStatus,
+    val removeFromFavorites: RemoveFromFavorites,
+    val getAllMyFavorites: GetAllMyFavorites
 )

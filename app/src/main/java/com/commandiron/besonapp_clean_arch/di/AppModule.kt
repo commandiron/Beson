@@ -102,7 +102,11 @@ object AppModule {
             filterSearchResults = FilterSearchResults(),
             getUserProfileById = GetUserProfileById(repository),
             formatPhoneNumber = FormatPhoneNumber(),
-            deleteMyPrice = DeleteMyPrice(repository)
+            deleteMyPrice = DeleteMyPrice(repository),
+            addToFavorites = AddToFavorites(repository),
+            getUserFavoriteStatus = GetUserFavoriteStatus(repository),
+            removeFromFavorites = RemoveFromFavorites(repository),
+            getAllMyFavorites = GetAllMyFavorites(repository)
         )
     }
 }

@@ -16,6 +16,7 @@ import com.commandiron.besonapp_clean_arch.core.Strings.REMOVE_FROM_FAVORITES
 import com.commandiron.besonapp_clean_arch.core.UiEvent
 import com.commandiron.besonapp_clean_arch.presentation.components.LogoWithAppName
 import com.commandiron.besonapp_clean_arch.presentation.components.ProfileImage
+import com.commandiron.besonapp_clean_arch.presentation.model.FavoriteStatus
 import com.commandiron.besonapp_clean_arch.ui.theme.*
 
 @Composable
@@ -93,14 +94,20 @@ fun DetailsScreen(
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-        Text(
-            text = if(state.alreadyInFavorite) REMOVE_FROM_FAVORITES else ADD_TO_FAVORITES,
-            style = MaterialTheme.typography.bodyMedium,
-            color = if(state.alreadyInFavorite) ErrorRed else NoErrorGreen,
-            modifier = Modifier.clickable {
-                viewModel.onEvent(DetailsUserEvent.Favorite)
-            }
-        )
+        if(state.favoriteStatus != FavoriteStatus.MY_PROFILE){
+            Text(
+                text = if(state.favoriteStatus == FavoriteStatus.ALREADY_IN_FAVORITES) {
+                    REMOVE_FROM_FAVORITES
+                } else ADD_TO_FAVORITES,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if(state.favoriteStatus == FavoriteStatus.ALREADY_IN_FAVORITES) {
+                    ErrorRed
+                }else NoErrorGreen,
+                modifier = Modifier.clickable {
+                    viewModel.onEvent(DetailsUserEvent.Favorite)
+                }
+            )
+        }
     }
     Box(
         modifier = Modifier

@@ -11,6 +11,6 @@ sealed  class ProfileUserEvent {
     object DeleteMyUpdateAlertDialogConfirm : ProfileUserEvent()
     object UnFavoriteAlertDialogDismiss : ProfileUserEvent()
     object UnFavoriteAlertDialogConfirm : ProfileUserEvent()
-    data class UnFavoriteProfile(val profileId: Int): ProfileUserEvent()
+    data class UnFavoriteProfile(val profileUid: String): ProfileUserEvent()
     object DoneDialogDismiss : ProfileUserEvent()
 }

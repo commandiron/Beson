@@ -6,9 +6,11 @@ import com.commandiron.besonapp_clean_arch.data.mapper.toFirebasePriceItem
 import com.commandiron.besonapp_clean_arch.data.mapper.toFirebaseUserProfile
 import com.commandiron.besonapp_clean_arch.data.mapper.toPriceItem
 import com.commandiron.besonapp_clean_arch.data.mapper.toUserProfile
+import com.commandiron.besonapp_clean_arch.data.model.FirebaseFavoriteUser
 import com.commandiron.besonapp_clean_arch.data.model.FirebasePriceItem
 import com.commandiron.besonapp_clean_arch.data.model.FirebaseUserProfile
 import com.commandiron.besonapp_clean_arch.domain.repository.AppRepository
+import com.commandiron.besonapp_clean_arch.presentation.model.FavoriteStatus
 import com.commandiron.besonapp_clean_arch.presentation.model.PriceItem
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.google.firebase.auth.FirebaseAuth
@@ -82,11 +84,11 @@ class AppRepositoryImpl @Inject constructor(
         userProfile: UserProfile
     ): Flow<Result<Unit>> = callbackFlow {
         send(Result.Loading())
-        val userUID = auth.currentUser?.uid.toString()
-        val databaseReference = firebaseDatabase.getReference("Profiles").child(userUID)
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Profiles").child(currentUserUid)
         databaseReference
             .setValue(
-                userProfile.toFirebaseUserProfile().copy(userUid = userUID)
+                userProfile.toFirebaseUserProfile().copy(userUid = currentUserUid)
             )
             .addOnSuccessListener {
                 trySend(Result.Success(Unit))
@@ -102,8 +104,8 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun getUserProfileFromFirebaseDb(
     ): Flow<Result<UserProfile>> = callbackFlow {
         send(Result.Loading())
-        val userUID = auth.currentUser?.uid.toString()
-        val databaseReference = firebaseDatabase.getReference("Profiles").child(userUID)
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Profiles").child(currentUserUid)
         databaseReference.get().addOnSuccessListener { dataSnapshot ->
             val firebaseUserProfile = dataSnapshot.getValue(FirebaseUserProfile::class.java)
             firebaseUserProfile?.let {
@@ -152,9 +154,9 @@ class AppRepositoryImpl @Inject constructor(
         priceItem: PriceItem
     ): Flow<Result<Unit>> = callbackFlow {
         send(Result.Loading())
-        val userUID = auth.currentUser?.uid.toString()
+        val currentUserUid = auth.currentUser?.uid.toString()
         val priceUID = UUID.randomUUID().toString()
-        val databaseReference = firebaseDatabase.getReference("Prices").child(userUID).child(priceUID)
+        val databaseReference = firebaseDatabase.getReference("Prices").child(currentUserUid).child(priceUID)
         databaseReference.setValue(priceItem.toFirebasePriceItem()).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 trySend(Result.Success(Unit))
@@ -170,8 +172,8 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun getMyPricesFromFirebase(
     ): Flow<Result<List<PriceItem>?>> = callbackFlow {
         send(Result.Loading())
-        val userUID = auth.currentUser?.uid.toString()
-        val databaseReference = firebaseDatabase.getReference("Prices").child(userUID)
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Prices").child(currentUserUid)
         databaseReference.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 var priceItems = listOf<PriceItem>()
@@ -242,8 +244,8 @@ class AppRepositoryImpl @Inject constructor(
         priceItem: PriceItem
     ): Flow<Result<Unit>> = callbackFlow{
         send(Result.Loading())
-        val userUID = auth.currentUser?.uid.toString()
-        val databaseReference = firebaseDatabase.getReference("Prices").child(userUID)
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Prices").child(currentUserUid)
         databaseReference.get().addOnCompleteListener { task ->
             if(task.isSuccessful){
                 for(i in task.result.children){
@@ -251,7 +253,7 @@ class AppRepositoryImpl @Inject constructor(
                     if(firebasePriceItem?.date == priceItem.date){
                         firebaseDatabase
                             .getReference("Prices")
-                            .child(userUID)
+                            .child(currentUserUid)
                             .child(i.key ?: "")
                             .setValue(null)
                             .addOnSuccessListener {
@@ -265,6 +267,129 @@ class AppRepositoryImpl @Inject constructor(
                 trySend(Result.Error(task.exception))
             }
         }
+        awaitClose {
+            channel.close()
+        }
+    }
+
+    override suspend fun addUserToFavoritesInFirebase(
+        userUid: String
+    ): Flow<Result<Unit>> = callbackFlow {
+        send(Result.Loading())
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Favorites").child(currentUserUid)
+        databaseReference
+            .child(userUid)
+            .setValue(
+                FirebaseFavoriteUser(userUid = userUid, favoriteState = true)
+            )
+            .addOnSuccessListener {
+                trySend(Result.Success(Unit))
+            }
+            .addOnFailureListener {
+                trySend(Result.Error(it))
+            }
+        awaitClose {
+            channel.close()
+        }
+    }
+
+    override suspend fun getUserFavoriteStatusFromFirebase(
+        userUid: String
+    ): Flow<Result<FavoriteStatus>> = callbackFlow {
+        send(Result.Loading())
+        val currentUserUid = auth.currentUser?.uid.toString()
+        if(currentUserUid == userUid){
+            trySend(Result.Success(FavoriteStatus.MY_PROFILE))
+        }else{
+            val databaseReference = firebaseDatabase
+                .getReference("Favorites")
+                .child(currentUserUid)
+                .child(userUid)
+            databaseReference.addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val firebaseFavoriteUser = snapshot.getValue(FirebaseFavoriteUser::class.java)
+                    firebaseFavoriteUser?.let {
+                        if(it.favoriteState){
+                            trySend(Result.Success(FavoriteStatus.ALREADY_IN_FAVORITES))
+                        }else{
+                            trySend(Result.Success(FavoriteStatus.NOT_IN_FAVORITES))
+                        }
+                    } ?: trySend(Result.Success(FavoriteStatus.NOT_IN_FAVORITES))
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(Result.Error(error.toException()))
+                }
+            })
+        }
+        awaitClose {
+            channel.close()
+        }
+    }
+
+    override suspend fun removeUserFromFavoritesInFirebase(
+        userUid: String
+    ): Flow<Result<Unit>> = callbackFlow {
+        send(Result.Loading())
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Favorites").child(currentUserUid)
+        databaseReference
+            .child(userUid)
+            .setValue(
+                FirebaseFavoriteUser(userUid = userUid, favoriteState = false)
+            )
+            .addOnSuccessListener {
+                trySend(Result.Success(Unit))
+            }
+            .addOnFailureListener {
+                trySend(Result.Error(it))
+            }
+        awaitClose {
+            channel.close()
+        }
+    }
+
+    override suspend fun getAllMyFavoritesUserUidFromFirebase(
+    ): Flow<Result<List<UserProfile>>> = callbackFlow {
+        send(Result.Loading())
+        val currentUserUid = auth.currentUser?.uid.toString()
+        val databaseReference = firebaseDatabase.getReference("Favorites").child(currentUserUid)
+        databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var listOfUser = listOf<UserProfile>()
+                var listOfUserUid = listOf<String>()
+                snapshot.children.forEach { dataSnapshot ->
+                    val firebaseFavoriteUser = dataSnapshot.getValue(FirebaseFavoriteUser::class.java)
+                    firebaseFavoriteUser?.let {
+                        if(it.favoriteState){
+                            listOfUserUid = listOfUserUid + it.userUid
+                        }
+                    }
+                }
+                listOfUserUid.forEach {
+                    firebaseDatabase
+                        .getReference("Profiles")
+                        .child(it)
+                        .addValueEventListener(object : ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val firebaseUserProfile = snapshot.getValue(FirebaseUserProfile::class.java)
+                                firebaseUserProfile?.let { profile ->
+                                    listOfUser = listOfUser + profile.toUserProfile()
+                                    trySend(Result.Success(listOfUser))
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                trySend(Result.Error(Exception(error.message)))
+                            }
+
+                        })
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Result.Error(Exception(error.message)))
+            }
+        })
         awaitClose {
             channel.close()
         }

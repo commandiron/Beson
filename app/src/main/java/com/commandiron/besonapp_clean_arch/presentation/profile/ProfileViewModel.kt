@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
 import com.commandiron.besonapp_clean_arch.core.Strings.DONE_DIALOG_MESSAGE_REMOVED_FROM_FAVORITE
 import com.commandiron.besonapp_clean_arch.core.Strings.PRICE_DELETED
+import com.commandiron.besonapp_clean_arch.core.Strings.REMOVED_FROM_FAVORITES
 import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.navigation.NavigationItem
@@ -35,6 +36,7 @@ class ProfileViewModel @Inject constructor(
     init {
         getUserProfile()
         getMyPrices()
+        getAllMyFavorites()
     }
 
     fun onEvent(userEvent: ProfileUserEvent) {
@@ -60,29 +62,15 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileUserEvent.UnFavoriteProfile -> {
                 state = state.copy(
-                    showUnFavoriteAlertDialog = true
+                    showUnFavoriteAlertDialog = true,
+                    deletedFavoriteProfileUid = userEvent.profileUid
                 )
             }
             is ProfileUserEvent.DeleteMyUpdateAlertDialogConfirm -> {
                 state = state.copy(
                     showDeleteMyUpdateAlertDialog = false,
                 )
-                state.deletedPriceItem?.let {
-                    viewModelScope.launch {
-                        useCases.deleteMyPrice(it).collect{ result ->
-                            when(result){
-                                is Result.Loading -> {}
-                                is Result.Error -> {
-                                    sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
-                                }
-                                is Result.Success -> {
-                                    sendUiEvent(UiEvent.ShowSnackbar(PRICE_DELETED))
-                                }
-                            }
-                        }
-                    }
-                }
-
+                deleteMyPrice()
             }
             is ProfileUserEvent.DeleteMyUpdateAlertDialogDismiss -> {
                 state = state.copy(
@@ -95,7 +83,7 @@ class ProfileViewModel @Inject constructor(
                     showDoneDialog = true,
                     doneDialogMessage = DONE_DIALOG_MESSAGE_REMOVED_FROM_FAVORITE
                 )
-                //Favoriden Çıkar
+                removefromFavorites()
             }
             is ProfileUserEvent.UnFavoriteAlertDialogDismiss -> {
                 state = state.copy(
@@ -143,6 +131,60 @@ class ProfileViewModel @Inject constructor(
                         state = state.copy(
                             myPrices = result.data?.sortedByDescending { it.date }
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getAllMyFavorites(){
+        viewModelScope.launch {
+            useCases.getAllMyFavorites().collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        result.data?.let {
+                            state = state.copy(
+                                favoriteUserProfiles = it
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteMyPrice(){
+        state.deletedPriceItem?.let {
+            viewModelScope.launch {
+                useCases.deleteMyPrice(it).collect{ result ->
+                    when(result){
+                        is Result.Loading -> {}
+                        is Result.Error -> {
+                            sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                        }
+                        is Result.Success -> {
+                            sendUiEvent(UiEvent.ShowSnackbar(PRICE_DELETED))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun removefromFavorites(){
+        state.deletedFavoriteProfileUid?.let {
+            viewModelScope.launch {
+                useCases.removeFromFavorites(it).collect{ result ->
+                    when(result){
+                        is Result.Loading -> {}
+                        is Result.Error -> {
+                            sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                        }
+                        is Result.Success -> {}
                     }
                 }
             }

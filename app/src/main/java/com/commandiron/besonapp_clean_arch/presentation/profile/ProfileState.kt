@@ -12,14 +12,11 @@ data class ProfileState(
     val myUpdatesSurfaceExpanded: Boolean = false,
     val myFavoriteProfilesSurfaceExpanded: Boolean = false,
     val myPrices: List<PriceItem>? = null,
-    val favoriteUserProfiles: List<UserProfile> = listOf(
-        UserProfile(name = "Emir Demirli", phoneNumber = "+905355085552"),
-        UserProfile(name = "Emir Demirli", phoneNumber = "+905357227406"),
-        UserProfile(name = "Yeşim Demirli", phoneNumber = "+905424129016")
-    ),
+    val favoriteUserProfiles: List<UserProfile>? = null,
     val showDeleteMyUpdateAlertDialog: Boolean = false,
     val showUnFavoriteAlertDialog: Boolean = false,
     val showDoneDialog: Boolean = false,
     val doneDialogMessage: String = "",
-    val deletedPriceItem: PriceItem? = null
+    val deletedPriceItem: PriceItem? = null,
+    val deletedFavoriteProfileUid: String? = null
 )

@@ -7,12 +7,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.commandiron.besonapp_clean_arch.core.Result
+import com.commandiron.besonapp_clean_arch.core.Strings.ADDED_TO_FAVORITES
+import com.commandiron.besonapp_clean_arch.core.Strings.REMOVED_FROM_FAVORITES
+import com.commandiron.besonapp_clean_arch.core.Strings.SORRY_SOMETHING_BAD_HAPPENED
 import com.commandiron.besonapp_clean_arch.domain.use_case.UseCases
 import com.commandiron.besonapp_clean_arch.core.UiEvent
+import com.commandiron.besonapp_clean_arch.presentation.model.FavoriteStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,22 +35,12 @@ class DetailsViewModel @Inject constructor(
     init {
         val userUid: String? = savedStateHandle["userUid"]
         userUid?.let {
-            viewModelScope.launch {
-                useCases.getUserProfileById(it).collect{ result ->
-                    when(result){
-                        is Result.Loading -> {}
-                        is Result.Error -> {}
-                        is Result.Success -> {
-                            state = state.copy(
-                                name = result.data?.name ?: "",
-                                phoneNumber = useCases.formatPhoneNumber(result.data?.phoneNumber ?: ""),
-                                imageUrl = result.data?.imageUrl ?: ""
-                            )
-                        }
-                    }
-                }
-            }
+            state = state.copy(
+                userUid = it
+            )
         }
+        getUserProfile()
+        getUserFavoriteState()
     }
 
     fun onEvent(userEvent: DetailsUserEvent) {
@@ -56,7 +49,83 @@ class DetailsViewModel @Inject constructor(
                 sendUiEvent(UiEvent.NavigateUp)
             }
             DetailsUserEvent.Favorite -> {
+                if(state.favoriteStatus == FavoriteStatus.ALREADY_IN_FAVORITES){
+                    removeFromFavorites()
+                }else{
+                    addToFavorites()
+                }
+            }
+        }
+    }
 
+    private fun getUserProfile(){
+        viewModelScope.launch {
+            useCases.getUserProfileById(state.userUid).collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        state = state.copy(
+                            name = result.data?.name ?: "",
+                            phoneNumber = useCases.formatPhoneNumber(result.data?.phoneNumber ?: ""),
+                            imageUrl = result.data?.imageUrl ?: ""
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getUserFavoriteState(){
+        viewModelScope.launch {
+            useCases.getUserFavoriteStatus(state.userUid).collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        result.data?.let {
+                            state = state.copy(
+                                favoriteStatus = it
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addToFavorites(){
+        viewModelScope.launch {
+            useCases.addToFavorites(state.userUid).collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(ADDED_TO_FAVORITES))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun removeFromFavorites(){
+        viewModelScope.launch {
+            useCases.removeFromFavorites(state.userUid).collect{ result ->
+                when(result){
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(SORRY_SOMETHING_BAD_HAPPENED))
+                    }
+                    is Result.Success -> {
+                        sendUiEvent(UiEvent.ShowSnackbar(REMOVED_FROM_FAVORITES))
+                    }
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 fun FavoriteProfilesExpandedMenuWithCarousel(
     height: Dp,
     userProfiles: List<UserProfile>,
-    unFavorite:(Int) -> Unit
+    unFavorite:(String) -> Unit
 ) {
     val spacing = LocalSpacing.current
     val lazyListState = rememberLazyListState()

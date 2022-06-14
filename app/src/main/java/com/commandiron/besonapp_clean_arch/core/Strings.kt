@@ -97,6 +97,8 @@ object Strings {
     const val THE_LOCATION_REQUIRES_PERMISSION = "Konum için izin gerekiyor."
     const val BACK = "Geri"
     const val ADD_TO_FAVORITES = "Favorilere Ekle"
+    const val ADDED_TO_FAVORITES = "Favorilere Eklendi."
     const val REMOVE_FROM_FAVORITES = "Favorilerden Çıkar"
+    const val REMOVED_FROM_FAVORITES = "Favorilerden Kaldırıldı."
     const val PRICE_DELETED = "Fiyat Silindi"
 }

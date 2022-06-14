@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.commandiron.besonapp_clean_arch.R
+import com.commandiron.besonapp_clean_arch.core.Strings.TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE
 import com.commandiron.besonapp_clean_arch.presentation.model.UserProfile
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.Orange
@@ -26,7 +27,7 @@ import com.commandiron.besonapp_clean_arch.ui.theme.Orange
 @Composable
 fun ProfileMenuItem(
     userProfile: UserProfile,
-    unFavorite:(Int) -> Unit
+    unFavorite:(String) -> Unit
 ) {
     val spacing = LocalSpacing.current
     Card(
@@ -68,14 +69,20 @@ fun ProfileMenuItem(
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceMedium))
                 Column {
-                    Text(text = userProfile.name ?: "")
-                    Text(text = userProfile.phoneNumber ?: "")
+                    Text(
+                        text = userProfile.name ?: "",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = TELEPHONE_NUMBER_WITH_TURKEY_PHONE_CODE + userProfile.phoneNumber,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
             Icon(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { unFavorite(0) }, //Buraya unfavorite edilen kullanıcının id'si gelecek.
+                    .clickable { unFavorite(userProfile.userUid ?: "") },
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
                 tint = Orange

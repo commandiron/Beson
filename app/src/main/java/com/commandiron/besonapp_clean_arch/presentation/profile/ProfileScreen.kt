@@ -130,19 +130,23 @@ fun ProfileScreen(
             }
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
         }
+
         CustomExpandableMenu(
             title = MY_FAVORITE_PROFILES,
             isExpanded = state.myFavoriteProfilesSurfaceExpanded,
             onDropDownIconClick = { viewModel.onEvent(ProfileUserEvent.FavoriteProfilesDropDownIconClick) }
         ){
-            FavoriteProfilesExpandedMenuWithCarousel(
-                height = spacing.expandableMenuHeight,
-                userProfiles = state.favoriteUserProfiles,
-                unFavorite = {
-                    viewModel.onEvent(ProfileUserEvent.UnFavoriteProfile(it))
-                }
-            )
+            state.favoriteUserProfiles?.let {
+                FavoriteProfilesExpandedMenuWithCarousel(
+                    height = spacing.expandableMenuHeight,
+                    userProfiles = it,
+                    unFavorite = { userUid ->
+                        viewModel.onEvent(ProfileUserEvent.UnFavoriteProfile(userUid))
+                    }
+                )
+            }
         }
+
     }
     if(state.showDeleteMyUpdateAlertDialog){
         CustomAlertDialog(
