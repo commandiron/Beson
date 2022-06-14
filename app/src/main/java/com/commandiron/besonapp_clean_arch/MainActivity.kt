@@ -109,20 +109,7 @@ class MainActivity : ComponentActivity() {
                                     .shouldShowSplashAndIntro,
                                 hideKeyboard = { keyboardController?.hide() },
                                 navigateUp = { navController.navigateUp() },
-                                navigateTo = { navigationOptions ->
-                                    if(navigationOptions.popBackStack){
-                                        navController.popBackStack()
-                                    }
-                                    navController.navigate(navigationOptions.route){
-                                        navigationOptions.popUpToRoute?.let {
-                                            popUpTo(it){
-                                                inclusive = navigationOptions.inclusive
-                                            }
-                                        }
-                                        launchSingleTop = navigationOptions.launchSingleTop
-                                    }
-                                    println(navController.previousBackStackEntry?.destination?.route )
-                                },
+                                navigateTo = { navController.navigateWithNavigationOptions(it) },
                                 showSnackbar = {
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(it, SNACKBAR_CLOSE_ACTION_TEXT)
