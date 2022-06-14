@@ -20,6 +20,9 @@ import com.commandiron.besonapp_clean_arch.presentation.prices.components.PriceM
 import com.commandiron.besonapp_clean_arch.presentation.prices.components.SearchTextField
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSpacing
 import com.commandiron.besonapp_clean_arch.ui.theme.LocalSystemUiController
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -46,6 +49,10 @@ fun PricesScreen(
     )
     systemUiController.setNavigationBarColor(
         color = MaterialTheme.colorScheme.primary
+    )
+    val placeholderModifier = Modifier.placeholder(
+        visible = state.isLoading,
+        highlight = PlaceholderHighlight.shimmer()
     )
     Column(
         modifier = Modifier
@@ -80,12 +87,16 @@ fun PricesScreen(
                 LazyColumn() {
                     items(it){ item ->
                         PriceMenuItem(
+                            modifier = placeholderModifier,
                             item = item,
                             onDetailClick = {
                                 viewModel.onEvent(PricesUserEvent.DetailClick(it))
                             }
                         )
                         Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
                     }
                 }
             }

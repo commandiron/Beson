@@ -24,11 +24,13 @@ import java.util.*
 
 @Composable
 fun PriceMenuItem(
+    modifier: Modifier = Modifier,
     item: PriceItem,
     onDetailClick:(PriceItem) -> Unit
 ) {
     val spacing = LocalSpacing.current
     Card(
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer
         ),
