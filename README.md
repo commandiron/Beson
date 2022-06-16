@@ -39,6 +39,7 @@ BESON is a native android construction market price tracking application written
         * database
         * storage
     * [Google Play Services](https://developers.google.com/android)
+        * auth
         * maps
         * location
     * [Jetpack](https://developer.android.com/jetpack)
