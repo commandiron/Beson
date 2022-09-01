@@ -1,6 +1,23 @@
-# Beson <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" width="80" height="20"> <img src="https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white" width="80" height="20">
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/50905347/188008214-5b673a01-ca09-469d-9c6f-b0ecfe063572.png" width="128" height="128">
+</p>
 
-Beson is a native android construction market price tracking application written in Kotlin using Jetpack Compose.
+<h1>
+  <p align="center">
+    Beson
+  </p>
+  <p align="center">
+    <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" width="80" height="20"> 
+    <img src="https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white" width="80" height="20">
+  </p>
+  <h4>
+    <br>
+    <p align="center">
+      Beson is a native android construction market price tracking application written in Kotlin using Jetpack Compose.
+    </p>
+    <br>
+  </h4>
+</h1>
 
 * Screenshots 🖼️
 
