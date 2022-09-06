@@ -12,7 +12,7 @@
   <h4>
     <br>
     <p align="center">
-      Beson is a native android construction market price tracking application written in Kotlin using Jetpack Compose.
+      Beson is a native android construction market price share & track application written in Kotlin using Jetpack Compose.
     </p>
     <br>
   </h4>
