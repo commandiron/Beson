@@ -18,6 +18,8 @@
   </h4>
 </h1>
 
+<img src="https://user-images.githubusercontent.com/50905347/211844728-61e52028-c915-4b63-8554-1af5240b81ed.png"> 
+
 * Screenshots 🖼️
 
 <img src="https://user-images.githubusercontent.com/50905347/188265230-457f0f78-1388-4cb0-9867-57172bfc903d.png" width="125" height="265">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/188265232-bdab2770-34c0-43be-9a4c-1080cadc9cbf.png" width="125" height="265">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/188265233-8c2c78ef-4425-4ee1-83ea-d8502ca1fe60.png" width="125" height="265">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/188265235-c3eb17cd-7678-48b8-bc33-3b5c400fe0db.png" width="125" height="265">&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/50905347/188265237-dda314e7-b1be-4bb5-bbcc-150b359a7c4f.png" width="125" height="265"><img src="https://user-images.githubusercontent.com/50905347/188265238-8dbe3d62-8bce-4cae-85fe-fdd01dbf9c2f.png" width="125" height="265">
