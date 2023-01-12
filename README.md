@@ -18,7 +18,7 @@
   </h4>
 </h1>
 
-<img src="https://user-images.githubusercontent.com/50905347/212010467-662fff1a-8064-4c29-9d0a-22c1cb12efcd.png"> 
+<img src="https://user-images.githubusercontent.com/50905347/212016053-6983662c-c792-4a99-824c-efc8e7bbe6b1.png"> 
 
 * Screenshots 🖼️
 
